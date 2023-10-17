@@ -28,7 +28,7 @@ const CountryAccordionItem = ({ country }) => {
         <Flex flexDirection="column">
           {cities.map(({ city, status }) => {
             return (
-              <Flex>
+              <Flex key={city}>
                 <Link>
                   <Text fontSize="20px">{city}</Text>
                 </Link>

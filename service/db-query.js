@@ -9,6 +9,15 @@ export const postCities = ({ country, cities }) =>
       cities,
     }),
   });
+export const postArticleStatus = ({ country, city, status }) =>
+  fetch(`/api/sql-query/post-article-status`, {
+    method: "POST",
+    body: JSON.stringify({
+      country,
+      city,
+      status,
+    }),
+  });
 export const postArticles = ({ country, cities, articles }) =>
   fetch(`/api/sql-query/post-articles`, {
     method: "POST",

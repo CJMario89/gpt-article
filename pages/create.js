@@ -19,7 +19,7 @@ export const getServerSideProps = async () => {
   const countries = await getCountries();
   const queryClient = new QueryClient();
   queryClient.setQueryData(["get-countries"], countries);
-  return { props: { countries } };
+  return { props: { countries: JSON.parse(JSON.stringify(countries)) } };
 };
 
 const LoginForm = () => {
