@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 const postCities = async (req, res) => {
   const now = new Date(Date.now()).toISOString().slice(0, 19).replace("T", " ");

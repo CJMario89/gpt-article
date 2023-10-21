@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
+
 const postArticleStatus = async (req, res) => {
   try {
     const { country, city, status } = JSON.parse(req.body);

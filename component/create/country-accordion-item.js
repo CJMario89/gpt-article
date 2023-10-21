@@ -3,41 +3,59 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Button,
   Flex,
   Heading,
-  Link,
-  Text,
 } from "@chakra-ui/react";
-import { useGetCities } from "../../hooks/db";
+import CityArticlePanel from "./city-article-panel";
+import { useGetCities, usePostCities } from "../../hooks/db";
+import { useNewCities } from "../../hooks/ai";
 
 const CountryAccordionItem = ({ country }) => {
   const { data: cities = [] } = useGetCities(
     { country },
     { enabled: !!country }
   );
-  console.log(cities);
+  const { mutate: postCities } = usePostCities({
+    opnSuccess: () => {
+      refetchCities();
+      console.log(countries);
+      refetchCountries();
+    },
+  });
+  const { mutate: newCities } = useNewCities({
+    onSuccess: (cities) => {
+      postCities({ country, cities });
+    },
+  });
   return (
     <AccordionItem>
       <AccordionButton>
-        <Heading as="h2" flex="1" textAlign="left">
+        <Heading as="h4" flex="1" textAlign="left">
           {country}
         </Heading>
         <AccordionIcon />
       </AccordionButton>
       <AccordionPanel pb={4}>
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" rowGap="4">
           {cities.map(({ city, status }) => {
             return (
-              <Flex key={city}>
-                <Link>
-                  <Text fontSize="20px">{city}</Text>
-                </Link>
-                {status === -1 && <Button>Generate</Button>}
-                {status === 0 && <Button>Deploy</Button>}
-                {status === 1 && <Button>Hide</Button>}
-              </Flex>
+              <CityArticlePanel
+                country={country}
+                city={city}
+                status={status}
+                key={city}
+              />
             );
           })}
+          <Button
+            onClick={() => {
+              newCities({ country });
+            }}
+            alignSelf="center"
+          >
+            Increase Cities
+          </Button>
         </Flex>
       </AccordionPanel>
     </AccordionItem>

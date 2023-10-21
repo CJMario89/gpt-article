@@ -14,6 +14,7 @@ import { useNewCities } from "../hooks/ai";
 import usePostCities from "../hooks/db/use-post-cities";
 import { useGetCities, useGetCountries } from "../hooks/db";
 import { QueryClient } from "@tanstack/react-query";
+import useNewCitiesImage from "../hooks/ai/use-new-cities-image";
 
 export const getServerSideProps = async () => {
   const countries = await getCountries();
@@ -59,9 +60,16 @@ const create = () => {
   const { mutate: postCities } = usePostCities({
     opnSuccess: () => {
       refetchCities();
+      console.log(countries);
       refetchCountries();
     },
   });
+
+  const { mutate: newCitiesImage, data } = useNewCitiesImage();
+  console.log(data);
+  useEffect(() => {
+    newCitiesImage({});
+  }, []);
 
   const { mutate: newCities } = useNewCities({
     onSuccess: (cities) => {
@@ -84,7 +92,7 @@ const create = () => {
             }}
           >
             <Flex rowGap="20px" flexDirection="column">
-              <Heading as="h1">country</Heading>
+              <Heading as="h3">country</Heading>
               <Accordion allowMultiple>
                 {Array.isArray(countries) &&
                   countries.map(({ country }) => (
