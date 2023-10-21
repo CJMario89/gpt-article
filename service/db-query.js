@@ -1,29 +1,13 @@
-export const getCountries = () => fetch(`/api/sql-query/get-countries`);
-export const getCities = ({ country }) =>
-  fetch(`/api/sql-query/get-cities?${new URLSearchParams({ country })}`);
-export const postCities = ({ country, cities }) =>
-  fetch(`/api/sql-query/post-cities`, {
-    method: "POST",
-    body: JSON.stringify({
-      country,
-      cities,
-    }),
-  });
-export const postArticleStatus = ({ country, city, status }) =>
-  fetch(`/api/sql-query/post-article-status`, {
-    method: "POST",
-    body: JSON.stringify({
-      country,
-      city,
-      status,
-    }),
-  });
-export const postArticles = ({ country, cities, articles }) =>
-  fetch(`/api/sql-query/post-articles`, {
-    method: "POST",
-    body: JSON.stringify({
-      country,
-      cities,
-      articles,
-    }),
-  });
+import { getRequest, postRequest } from "./common";
+
+export const getCountries = () => getRequest(`/api/sql-query/get-countries`);
+export const getCities = (query) =>
+  getRequest(`/api/sql-query/get-cities`, query);
+export const postCities = (body) =>
+  postRequest(`/api/sql-query/post-cities`, body);
+export const updateArticleStatus = (body) =>
+  postRequest(`/api/sql-query/update-article-status`, body);
+export const updateArticle = (body) =>
+  postRequest(`/api/sql-query/update-article`, body);
+export const postArticles = (body) =>
+  postRequest(`/api/sql-query/post-articles`, body);

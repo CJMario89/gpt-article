@@ -1,7 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import "../styles/globals.css";
-import theme from "../theme";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import theme from "theme";
 
 const queryClient = new QueryClient();
 

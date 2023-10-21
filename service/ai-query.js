@@ -1,4 +1,4 @@
-export const gptQuery = (text) =>
-  fetch(`/api/request-gpt?${new URLSearchParams({ text })}`);
-export const dalle2Query = (text) =>
-  fetch(`/api/request-dalle2?${new URLSearchParams({ text })}`);
+import { getRequest } from "./common";
+
+export const gptQuery = (query) => getRequest(`/api/request-gpt`, query);
+export const dalle2Query = (query) => getRequest(`/api/request-dalle2`, query);

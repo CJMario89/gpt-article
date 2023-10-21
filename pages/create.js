@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Accordion,
   Button,
@@ -8,13 +8,11 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import CountryAccordionItem from "../component/create/country-accordion-item";
-import { getCountries } from "./api/sql-query/get-countries";
-import { useNewCities } from "../hooks/ai";
-import usePostCities from "../hooks/db/use-post-cities";
-import { useGetCities, useGetCountries } from "../hooks/db";
 import { QueryClient } from "@tanstack/react-query";
-import useNewCitiesImage from "../hooks/ai/use-new-cities-image";
+import { useGetCities, useGetCountries, usePostCities } from "hooks/db";
+import { useNewCities } from "hooks/ai";
+import { CountryAccordionItem } from "component/create";
+import { getCountries } from "./api/sql-query/get-countries";
 
 export const getServerSideProps = async () => {
   const countries = await getCountries();
@@ -34,7 +32,7 @@ const LoginForm = () => {
           e.target.account.value === process.env.NEXT_PUBLIC_ACCOUNT &&
           e.target.password.value === process.env.NEXT_PUBLIC_PASSWORD
         ) {
-          setCanCreate(true);
+          console.log(".");
         } else {
           alert("login failed.");
         }
@@ -51,8 +49,7 @@ const LoginForm = () => {
   );
 };
 
-const create = () => {
-  const [canCreate, setCanCreate] = useState(true);
+const Create = () => {
   const [country, setCountry] = useState();
   const { data: countries, refetch: refetchCountries } = useGetCountries();
   console.log(countries);
@@ -65,12 +62,6 @@ const create = () => {
     },
   });
 
-  const { mutate: newCitiesImage, data } = useNewCitiesImage();
-  console.log(data);
-  useEffect(() => {
-    newCitiesImage({});
-  }, []);
-
   const { mutate: newCities } = useNewCities({
     onSuccess: (cities) => {
       postCities({ country, cities });
@@ -79,7 +70,7 @@ const create = () => {
 
   return (
     <Container maxW="container.xl" w="full" p="36px">
-      {!canCreate ? (
+      {false ? (
         <LoginForm />
       ) : (
         <Flex flexDirection="column" rowGap="20px">
@@ -116,4 +107,4 @@ const create = () => {
   );
 };
 
-export default create;
+export default Create;

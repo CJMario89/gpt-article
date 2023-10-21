@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { postArticleStatus } from "../../service/db-query";
+import { updateArticleStatus } from "service/db-query";
 
-const usePostArticleStatus = (option) => {
+const useUpdateArticleStatus = (option) => {
   return useMutation(
     async ({ country, city, status }) => {
       try {
-        const result = await postArticleStatus({ country, city, status });
+        const result = await updateArticleStatus({ country, city, status });
         return result.json();
       } catch (e) {
         console.log(e);
@@ -15,4 +15,4 @@ const usePostArticleStatus = (option) => {
   );
 };
 
-export default usePostArticleStatus;
+export default useUpdateArticleStatus;

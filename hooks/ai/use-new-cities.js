@@ -1,6 +1,6 @@
-import { gptQuery } from "../../service/ai-query";
+import { getCities } from "service/db-query";
 import { useMutation } from "@tanstack/react-query";
-import { getCities } from "../../service/db-query";
+import { gptQuery } from "service/ai-query";
 
 const mutationFn = async ({ country }) => {
   const data = await (await getCities({ country })).json();
@@ -10,7 +10,7 @@ const mutationFn = async ({ country }) => {
 2. without any other text
 3. not in ${cities}`;
   try {
-    const result = await gptQuery(text);
+    const result = await gptQuery({ text });
     const rawData = (await result.json()).trim();
     console.log(rawData);
     return JSON.parse(rawData);

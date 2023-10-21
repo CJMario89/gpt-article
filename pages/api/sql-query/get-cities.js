@@ -2,7 +2,8 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const getCities = async ({ country }) => {
+export const getCities = async (params = {}) => {
+  const { country } = params;
   const cities = await prisma.article.findMany({
     where: !!country
       ? {

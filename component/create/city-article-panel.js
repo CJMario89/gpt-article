@@ -1,8 +1,8 @@
 import { Button, Flex, Heading, Link } from "@chakra-ui/react";
-import { useNewCitiesArticle } from "../../hooks/ai";
 import CityArticlePreview from "./city-article-preview";
-import Loading from "../Loading";
-import usePostArticleStatus from "../../hooks/db/use-post-article-status";
+import Loading from "component/Loading";
+import { useNewCitiesArticle } from "hooks/ai";
+import { useUpdateArticleStatus } from "hooks/db";
 
 const CityArticlePanel = ({ country, city, status }) => {
   const {
@@ -11,7 +11,7 @@ const CityArticlePanel = ({ country, city, status }) => {
     data = {},
     reset,
   } = useNewCitiesArticle();
-  const { mutate: postArticleStatus } = usePostArticleStatus({
+  const { mutate: postArticleStatus } = useUpdateArticleStatus({
     onSuccess: () => {
       alert("success");
     },

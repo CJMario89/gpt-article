@@ -7,19 +7,19 @@ import {
   Flex,
   Heading,
 } from "@chakra-ui/react";
+import { useNewCities } from "hooks/ai";
+import { useGetCities, useGetCountries, usePostCities } from "hooks/db";
 import CityArticlePanel from "./city-article-panel";
-import { useGetCities, usePostCities } from "../../hooks/db";
-import { useNewCities } from "../../hooks/ai";
 
 const CountryAccordionItem = ({ country }) => {
-  const { data: cities = [] } = useGetCities(
+  const { data: cities = [], refetch: refetchCities } = useGetCities(
     { country },
     { enabled: !!country }
   );
+  const { refetch: refetchCountries } = useGetCountries();
   const { mutate: postCities } = usePostCities({
     opnSuccess: () => {
       refetchCities();
-      console.log(countries);
       refetchCountries();
     },
   });

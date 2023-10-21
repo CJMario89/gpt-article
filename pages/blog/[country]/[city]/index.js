@@ -1,10 +1,10 @@
-import { getArticle } from "../../../api/sql-query/get-article";
-import { getCities } from "../../../api/sql-query/get-cities";
-import Markdown from "../../../../component/Markdown";
 import { Container, Flex } from "@chakra-ui/react";
+import Markdown from "component/Markdown";
+import { getArticle } from "pages/api/sql-query/get-article";
+import { getCities } from "pages/api/sql-query/get-cities";
 
 export const getStaticPaths = async () => {
-  const cities = await getCities({});
+  const cities = await getCities();
   return {
     paths: cities.map(({ country, city }) => ({
       params: {

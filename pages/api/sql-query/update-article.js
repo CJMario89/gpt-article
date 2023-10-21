@@ -2,16 +2,19 @@ import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
 
-const postArticleStatus = async (req, res) => {
+const updateArticleStatus = async (req, res) => {
   try {
-    const { country, city, status } = JSON.parse(req.body);
+    const { country, city, article } = JSON.parse(req.body);
+    const { title, description, content } = article;
     await prisma.article.update({
       where: {
         country,
         city,
       },
       data: {
-        status,
+        title,
+        description,
+        content,
       },
     });
     await res.status(200).json({ status: "success" });
@@ -21,4 +24,4 @@ const postArticleStatus = async (req, res) => {
   }
 };
 
-export default postArticleStatus;
+export default updateArticleStatus;

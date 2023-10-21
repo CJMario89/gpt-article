@@ -1,5 +1,5 @@
-import { postCities } from "../../service/db-query";
 import { useMutation } from "@tanstack/react-query";
+import { postCities } from "service/db-query";
 
 const usePostCities = (options) => {
   return useMutation(

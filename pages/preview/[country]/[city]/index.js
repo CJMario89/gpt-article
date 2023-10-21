@@ -1,9 +1,9 @@
-import { getArticle } from "../../../api/sql-query/get-article";
-import { getCities } from "../../../api/sql-query/get-cities";
 import { Button, Container, Flex, Textarea } from "@chakra-ui/react";
+import { getArticle } from "pages/api/sql-query/get-article";
+import { getCities } from "pages/api/sql-query/get-cities";
 
 export const getStaticPaths = async () => {
-  const cities = await getCities({});
+  const cities = await getCities();
   return {
     paths: cities.map(({ country, city }) => ({
       params: {
@@ -21,6 +21,7 @@ export const getStaticProps = async ({ params }) => {
   return { props: { article: JSON.parse(JSON.stringify(article)) } };
 };
 const index = ({ article }) => {
+  const { title, description, content } = article;
   return (
     <Container
       as={Flex}
@@ -30,8 +31,14 @@ const index = ({ article }) => {
       alignItems="center"
     >
       <Flex w="full" flexDirection="column" rowGap="8">
+        <Textarea w="full" resize="none">
+          {title}
+        </Textarea>
+        <Textarea w="full" h="25vh" resize="none">
+          {description}
+        </Textarea>
         <Textarea w="full" h="85vh" resize="none">
-          {article.content}
+          {content}
         </Textarea>
         <Flex columnGap="4">
           <Button>Confirm</Button>

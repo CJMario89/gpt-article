@@ -7,7 +7,6 @@ const postArticles = async (req, res) => {
     const { country, cities, articles } = JSON.parse(req.body);
     console.log(articles[0].content?.replaceAll("'", "''"));
     console.log(cities);
-    const data = [];
     await Promise.all(
       cities.map(async (city, i) => {
         const { title, description, content } = articles[i];

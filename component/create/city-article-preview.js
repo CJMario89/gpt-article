@@ -1,6 +1,6 @@
-import { Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { usePostArticles } from "../../hooks/db";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import Markdown from "../Markdown";
+import { usePostArticles } from "hooks/db";
 
 const CityArticlePreview = ({ country, city, article, clearPreview }) => {
   const { title, description, content } = article;

@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { gptQuery } from "../../service/ai-query";
+import { gptQuery } from "service/ai-query";
+import { processArticle } from "utils/article";
 
 const mutationFn = async ({ cities }) => {
   try {
@@ -9,7 +10,7 @@ const mutationFn = async ({ cities }) => {
                   1. return in markdown form which can be parsed by markdown.js
                   2. without image`;
         console.log(text);
-        const result = await gptQuery(text);
+        const result = await gptQuery({ text });
         console.log(result);
         const article = await result.json();
         console.log(article);
@@ -29,14 +30,5 @@ const useNewCitiesArticle = (options) => {
     ...options,
   });
 };
-
-function processArticle(article) {
-  const parseArticle = article.split("\n");
-  const title = parseArticle[0].split("#")[1].trim();
-  const description =
-    parseArticle[1] !== "" ? parseArticle[1].trim() : parseArticle[2].trim();
-  const regex = /\*(.*?)\*/g;
-  return { content: article.replace(regex, "").trim(), title, description };
-}
 
 export default useNewCitiesArticle;
