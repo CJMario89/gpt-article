@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 export const prisma = new PrismaClient();
 
-const updateArticleStatus = async (req, res) => {
+const updateArticle = async (req, res) => {
   try {
     const { country, city, article } = JSON.parse(req.body);
     const { title, description, content } = article;
@@ -24,4 +24,4 @@ const updateArticleStatus = async (req, res) => {
   }
 };
 
-export default updateArticleStatus;
+export default updateArticle;

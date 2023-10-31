@@ -2,8 +2,8 @@ export const styles = {
   global: {
     // styles for the `body`
     body: {
-      bg: "white.300",
-      color: "white",
+      bg: "white",
+      color: "black",
     },
     // styles for the `a`
     a: {

@@ -26,8 +26,6 @@ const LoginForm = () => {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        console.log(process.env.NEXT_PUBLIC_ACCOUNT);
-        console.log(process.env.NEXT_PUBLIC_PASSWORD);
         if (
           e.target.account.value === process.env.NEXT_PUBLIC_ACCOUNT &&
           e.target.password.value === process.env.NEXT_PUBLIC_PASSWORD
@@ -55,19 +53,18 @@ const Create = () => {
   console.log(countries);
   const { refetch: refetchCities } = useGetCities({ country });
   const { mutate: postCities } = usePostCities({
-    opnSuccess: () => {
+    onSuccess: () => {
       refetchCities();
       console.log(countries);
       refetchCountries();
     },
   });
 
-  const { mutate: newCities } = useNewCities({
+  const { mutate: newCities, isLoading } = useNewCities({
     onSuccess: (cities) => {
       postCities({ country, cities });
     },
   });
-
   return (
     <Container maxW="container.xl" w="full" p="36px">
       {false ? (
@@ -96,7 +93,12 @@ const Create = () => {
                 alignSelf="self-start"
                 w="200px"
               />
-              <Button type="submit" alignSelf="self-start">
+              <Button
+                type="submit"
+                alignSelf="self-start"
+                isDisabled={isLoading}
+                isLoading={isLoading}
+              >
                 create
               </Button>
             </Flex>

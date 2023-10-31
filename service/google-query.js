@@ -1,4 +1,4 @@
 import { getRequest } from "./common";
 
-export const requestGoogleMapPhotoQuery = (query) =>
-  getRequest("/api/request-google-map-photo", query);
+export const requestCityPhotoQuery = (query) =>
+  getRequest("/api/new-city-photo", query);

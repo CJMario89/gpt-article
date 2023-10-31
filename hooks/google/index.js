@@ -1,1 +1,1 @@
-export { default as useNewGoogleMapPhoto } from "./use-new-google-map-photo";
+export { default as useNewCityPhoto } from "./use-new-city-photo";

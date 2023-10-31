@@ -1,0 +1,6 @@
+.card:hover{
+  transform: scale(1.05);
+}
+.card:hover .title{
+  transform: translateY(0%);
+}

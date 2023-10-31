@@ -3,8 +3,6 @@ import { PrismaClient } from "@prisma/client";
 export const prisma = new PrismaClient();
 
 const postCities = async (req, res) => {
-  const now = new Date(Date.now()).toISOString().slice(0, 19).replace("T", " ");
-  console.log(now);
   try {
     const { country, cities } = JSON.parse(req.body);
     const data = [];
@@ -16,8 +14,6 @@ const postCities = async (req, res) => {
         description: "",
         status: "-1",
         content: "",
-        // createdAt: now,
-        // updatedAt: now,
       });
     });
     console.log(cities);

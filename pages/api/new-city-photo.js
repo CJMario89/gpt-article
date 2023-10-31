@@ -1,13 +1,16 @@
 import { getRequest } from "service/common";
 import * as fs from "fs";
+import { PrismaClient } from "@prisma/client";
+export const prisma = new PrismaClient();
+
 const key = process.env.PLACE_APIKEY;
-const requestGoogleMapPhoto = async (req, res) => {
+const newCityPhoto = async (req, res) => {
   try {
-    const { text } = req.query;
+    const { city } = req.query;
     const response1 = await getRequest(
       "https://maps.googleapis.com/maps/api/place/textsearch/json",
       {
-        query: text,
+        query: city,
         location: "40,120",
         key,
       }
@@ -23,12 +26,22 @@ const requestGoogleMapPhoto = async (req, res) => {
     );
     const placePhotoArrayBuffer = await response2.arrayBuffer();
     const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
-    fs.writeFile(`${text}.png`, placePhotoBuffer, "binary", (err) => {
+    const url = `/public/${city}.png`;
+    fs.writeFile(`.${url}`, placePhotoBuffer, "binary", (err) => {
       if (err) {
         console.error(err);
       } else {
-        console.log(`Image saved as ${text}.png`);
+        console.log(`Image saved as ${city}.png`);
       }
+    });
+    const country = (await prisma.article.findUnique({ where: { city } }))
+      .country;
+    await prisma.image.create({
+      data: {
+        country,
+        city,
+        url,
+      },
     });
     console.log(htmlAttributions);
     res.status(200).json({ success: "success" });
@@ -38,4 +51,4 @@ const requestGoogleMapPhoto = async (req, res) => {
   }
 };
 
-export default requestGoogleMapPhoto;
+export default newCityPhoto;

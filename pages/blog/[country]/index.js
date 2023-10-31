@@ -1,0 +1,63 @@
+import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
+import { CityCard } from "component/blog";
+import { getCities } from "pages/api/sql-query/get-cities";
+import { getCountries } from "pages/api/sql-query/get-countries";
+
+export const getStaticPaths = async () => {
+  const countries = await getCountries();
+  return {
+    paths: countries.map(({ country }) => ({
+      params: {
+        country,
+      },
+    })),
+    fallback: true,
+  };
+};
+
+export const getStaticProps = async ({ params }) => {
+  const { country } = params;
+  console.log(country);
+  const cities = await Promise.all(
+    (
+      await getCities({ country })
+    )
+      .filter(({ status }) => status === "1")
+      .map(async (article) => {
+        const image = await import(`../../../public/${article.city}.png`);
+
+        return {
+          ...article,
+          image,
+        };
+      })
+  );
+  console.log(cities);
+  return { props: { country, cities: JSON.parse(JSON.stringify(cities)) } };
+};
+
+const Index = ({ country, cities }) => {
+  console.log(cities);
+  console.log(country);
+  return (
+    <Container maxW="container.lg" as={Flex} flexDirection="column" rowGap="4">
+      <Heading as="h2">{country}</Heading>
+      <SimpleGrid gap="8" columns={{ sm: "2", md: "3" }}>
+        {cities.map(({ city, title, description, image }) => {
+          console.log(image);
+          return (
+            <CityCard
+              key={city}
+              city={city}
+              title={title}
+              image={image}
+              description={description}
+            />
+          );
+        })}
+      </SimpleGrid>
+    </Container>
+  );
+};
+
+export default Index;

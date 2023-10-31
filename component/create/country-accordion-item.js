@@ -16,18 +16,20 @@ const CountryAccordionItem = ({ country }) => {
     { country },
     { enabled: !!country }
   );
+  console.log(cities);
   const { refetch: refetchCountries } = useGetCountries();
   const { mutate: postCities } = usePostCities({
-    opnSuccess: () => {
+    onSuccess: () => {
       refetchCities();
       refetchCountries();
     },
   });
-  const { mutate: newCities } = useNewCities({
+  const { mutate: newCities, isLoading } = useNewCities({
     onSuccess: (cities) => {
       postCities({ country, cities });
     },
   });
+
   return (
     <AccordionItem>
       <AccordionButton>
@@ -53,6 +55,8 @@ const CountryAccordionItem = ({ country }) => {
               newCities({ country });
             }}
             alignSelf="center"
+            isLoading={isLoading}
+            isDisabled={isLoading}
           >
             Increase Cities
           </Button>

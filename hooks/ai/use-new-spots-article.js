@@ -2,11 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import { gptQuery } from "service/ai-query";
 import { processArticle } from "utils/article";
 
-const mutationFn = async ({ cities }) => {
+const mutationFn = async ({ spots }) => {
   try {
     return await Promise.all(
-      cities.map(async (city) => {
-        const text = `Please produce a popular traveling article about '${city}' with following rules:
+      spots.map(async (spot) => {
+        const text = `Please produce a popular traveling article about '${spot}' with following rules:
 1. return in markdown form which can be parsed by markdown.js
 2. without image
 3. without gpt hint commentary`;
@@ -24,12 +24,12 @@ const mutationFn = async ({ cities }) => {
   }
 };
 
-const useNewCitiesArticle = (options) => {
+const useNewSpotsArticle = (options) => {
   return useMutation({
     mutationFn,
-    mutationKey: ["new-cities-article"],
+    mutationKey: ["new-spots-article"],
     ...options,
   });
 };
 
-export default useNewCitiesArticle;
+export default useNewSpotsArticle;

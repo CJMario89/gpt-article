@@ -3,6 +3,8 @@ import { getRequest, postRequest } from "./common";
 export const getCountries = () => getRequest(`/api/sql-query/get-countries`);
 export const getCities = (query) =>
   getRequest(`/api/sql-query/get-cities`, query);
+export const getCityArticle = (query) =>
+  getRequest(`/api/sql-query/get-city-article`, query);
 export const postCities = (body) =>
   postRequest(`/api/sql-query/post-cities`, body);
 export const updateArticleStatus = (body) =>

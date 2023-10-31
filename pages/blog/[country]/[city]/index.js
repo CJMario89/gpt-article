@@ -1,7 +1,7 @@
 import { Container, Flex } from "@chakra-ui/react";
 import Markdown from "component/Markdown";
-import { getArticle } from "pages/api/sql-query/get-article";
 import { getCities } from "pages/api/sql-query/get-cities";
+import { getCityArticle } from "pages/api/sql-query/get-city-article";
 
 export const getStaticPaths = async () => {
   const cities = await getCities();
@@ -18,9 +18,17 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
-  const article = await getArticle({ country, city });
+  const article = await getCityArticle({ country, city });
   return { props: { article: JSON.parse(JSON.stringify(article)) } };
 };
+
+//SEO, share, other function
+//article of spot is a short description
+//image cache control
+//what attract people
+//backend structure
+//frontend structure
+//product structure
 const index = ({ article }) => {
   return (
     <Container

@@ -8,9 +8,11 @@ const requestGPT = async (req, res) => {
       model: "gpt-3.5-turbo",
     });
     const data = completion.choices[0].message.content;
+    console.log(data);
     res.status(200).json(data);
   } catch (e) {
     console.log(e);
+    res.status(500).json(e);
   }
 };
 

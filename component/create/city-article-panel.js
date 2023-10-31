@@ -3,6 +3,7 @@ import CityArticlePreview from "./city-article-preview";
 import Loading from "component/Loading";
 import { useNewCitiesArticle } from "hooks/ai";
 import { useUpdateArticleStatus } from "hooks/db";
+import { useNewCityPhoto } from "hooks/google";
 
 const CityArticlePanel = ({ country, city, status }) => {
   const {
@@ -16,12 +17,27 @@ const CityArticlePanel = ({ country, city, status }) => {
       alert("success");
     },
   });
+  const { mutate: newCityPhoto, isLoading: isNewingPhoto } = useNewCityPhoto({
+    onSuccess: () => {
+      alert("success");
+    },
+  });
+
   return (
     <Flex flexDirection="column" rowGap="2">
       <Flex key={city} alignItems="center" columnGap="4">
         <Link>
           <Heading as="h5">{city}</Heading>
         </Link>
+        <Button
+          onClick={() => {
+            newCityPhoto({ city });
+          }}
+          isLoading={isNewingPhoto}
+          isDisabled={isNewingPhoto}
+        >
+          New photo
+        </Button>
         {status === "-1" && (
           <Button
             onClick={() => {

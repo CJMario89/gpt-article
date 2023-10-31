@@ -2,9 +2,8 @@
 const nextConfig = {
   env: {
     GPT_APIKEY: process.env.GPT_APIKEY,
-    PASSWORD: process.env.POSTGRES_DATABASE,
-    PASSWORD: process.env.POSTGRES_ACCOUNT,
-    PASSWORD: process.env.POSTGRES_PASSWORD,
+    POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+    PLACE_APIKEY: process.env.PLACE_APIKEY,
   },
 };
 

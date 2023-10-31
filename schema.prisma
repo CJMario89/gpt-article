@@ -27,3 +27,26 @@ model image {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
+
+model subArticle {
+  id          Int      @id @default(autoincrement())
+  country     String
+  city        String
+  spot        String   @unique
+  status      String
+  title       String
+  description String
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
+}
+
+model subImage {
+  id        Int      @id @default(autoincrement())
+  country   String
+  city      String
+  spot      String   @unique
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}

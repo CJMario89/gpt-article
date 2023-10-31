@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export const getCities = async (params = {}) => {
   const { country } = params;
   const cities = await prisma.article.findMany({
-    where: !!country
+    where: country
       ? {
           country,
         }
@@ -13,10 +13,17 @@ export const getCities = async (params = {}) => {
     select: {
       country: true,
       city: true,
+      title: true,
+      description: true,
       status: true,
     },
   });
-  return cities;
+  const sortCities = cities.sort((a, b) => {
+    if (Number(a.status) > Number(b.status)) return 1;
+    else if (Number(a.status) < Number(b.status)) return -1;
+    else return 0;
+  });
+  return sortCities;
 };
 
 const GetCities = async (req, res) => {
