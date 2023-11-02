@@ -1,7 +1,6 @@
 import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
+import { getCities, getCountries } from "backend-service/get";
 import { CityCard } from "component/blog";
-import { getCities } from "pages/api/sql-query/get-cities";
-import { getCountries } from "pages/api/sql-query/get-countries";
 
 export const getStaticPaths = async () => {
   const countries = await getCountries();

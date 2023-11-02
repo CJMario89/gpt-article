@@ -1,7 +1,6 @@
 import { Container, Flex } from "@chakra-ui/react";
 import Markdown from "component/Markdown";
-import { getCities } from "pages/api/sql-query/get-cities";
-import { getCityArticle } from "pages/api/sql-query/get-city-article";
+import { getCities, getCityArticle } from "backend-service/get";
 
 export const getStaticPaths = async () => {
   const cities = await getCities();

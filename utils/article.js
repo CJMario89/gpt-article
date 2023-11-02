@@ -4,5 +4,9 @@ export function processArticle(article) {
   const description =
     parseArticle[1] !== "" ? parseArticle[1].trim() : parseArticle[2].trim();
   const regex = /\*(.*?)\*/g;
-  return { content: article.replace(regex, "").trim(), title, description };
+  return {
+    content: article.replace(regex, "").trim().replaceAll("'", "''"),
+    title,
+    description,
+  };
 }

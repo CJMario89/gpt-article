@@ -40,11 +40,12 @@ const CountryAccordionItem = ({ country }) => {
       </AccordionButton>
       <AccordionPanel pb={4}>
         <Flex flexDirection="column" rowGap="4">
-          {cities.map(({ city, status }) => {
+          {cities.map(({ city, title, status }) => {
             return (
               <CityArticlePanel
                 country={country}
                 city={city}
+                title={title}
                 status={status}
                 key={city}
               />

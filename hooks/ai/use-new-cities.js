@@ -6,7 +6,7 @@ const mutationFn = async ({ country }) => {
   const data = await (await getCities({ country })).json();
   const cities = data.map(({ city }) => city);
   const text = `Please list three resort cities of ${country} with following rules:
-1. return in an array (JS array with [] and double quotes, e.x. ['a', 'b', 'c'])
+1. return in an array (JS array with [] and double quotes, e.x. ["a", "b", "c"])
 2. without any other text
 3. cities not in ${cities}`;
   try {

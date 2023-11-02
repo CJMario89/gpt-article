@@ -1,18 +1,9 @@
-import {
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Text,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button, Container, Flex, Heading, Textarea } from "@chakra-ui/react";
+import { getCities, getCityArticle } from "backend-service/get";
 import Markdown from "component/Markdown";
-import useNewSpots from "hooks/ai/use-new-spots";
-import useNewSpotsArticle from "hooks/ai/use-new-spots-article";
-import { useUpdateArticle } from "hooks/db";
+import { useNewSpots, useNewSpotsArticle } from "hooks/ai";
+import { usePostArticle } from "hooks/db";
 import { useNewCityPhoto } from "hooks/google";
-import { getCities } from "pages/api/sql-query/get-cities";
-import { getCityArticle } from "pages/api/sql-query/get-city-article";
 import { useState } from "react";
 
 export const getStaticPaths = async () => {
@@ -43,7 +34,7 @@ const Index = ({ article, city, country }) => {
   const { mutate: newCityPhoto, data } = useNewCityPhoto();
   console.log(data);
 
-  const { mutate: updateArticle, isLoading, isSuccess } = useUpdateArticle();
+  const { mutate: postArticle, isLoading, isSuccess } = usePostArticle();
 
   const { mutate: newSpots, data: spots } = useNewSpots();
   const { mutate: newSpotArticle, data: spotArticle } = useNewSpotsArticle();
@@ -62,7 +53,7 @@ const Index = ({ article, city, country }) => {
         style={{ width: "100%" }}
         onSubmit={(e) => {
           e.preventDefault();
-          updateArticle({
+          postArticle({
             country,
             city,
             article: {

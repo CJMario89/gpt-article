@@ -1,20 +1,20 @@
 -- CreateTable
-CREATE TABLE "article" (
+CREATE TABLE "cityArticle" (
     "id" SERIAL NOT NULL,
     "country" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
+    "status" INTEGER NOT NULL DEFAULT 0,
+    "title" TEXT NOT NULL DEFAULT '',
+    "description" TEXT NOT NULL DEFAULT '',
+    "content" TEXT NOT NULL DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "article_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "cityArticle_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "image" (
+CREATE TABLE "cityImage" (
     "id" SERIAL NOT NULL,
     "country" TEXT NOT NULL,
     "city" TEXT NOT NULL,
@@ -22,45 +22,46 @@ CREATE TABLE "image" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "image_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "cityImage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "subArticle" (
+CREATE TABLE "spotArticle" (
     "id" SERIAL NOT NULL,
     "country" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "spot" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "content" TEXT NOT NULL,
+    "status" INTEGER NOT NULL DEFAULT 0,
+    "title" TEXT NOT NULL DEFAULT '',
+    "description" TEXT NOT NULL DEFAULT '',
+    "content" TEXT NOT NULL DEFAULT '',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "subArticle_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "spotArticle_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "subImage" (
+CREATE TABLE "spotImage" (
     "id" SERIAL NOT NULL,
     "country" TEXT NOT NULL,
+    "city" TEXT NOT NULL,
     "spot" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "subImage_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "spotImage_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "article_city_key" ON "article"("city");
+CREATE UNIQUE INDEX "cityArticle_city_key" ON "cityArticle"("city");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "image_city_key" ON "image"("city");
+CREATE UNIQUE INDEX "cityImage_city_key" ON "cityImage"("city");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "subArticle_spot_key" ON "subArticle"("spot");
+CREATE UNIQUE INDEX "spotArticle_spot_key" ON "spotArticle"("spot");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "subImage_spot_key" ON "subImage"("spot");
+CREATE UNIQUE INDEX "spotImage_spot_key" ON "spotImage"("spot");

@@ -1,18 +1,18 @@
-import { Button, Flex, Heading, Link } from "@chakra-ui/react";
+import { Button, Flex, Heading, Link, SimpleGrid } from "@chakra-ui/react";
 import CityArticlePreview from "./city-article-preview";
 import Loading from "component/Loading";
 import { useNewCitiesArticle } from "hooks/ai";
-import { useUpdateArticleStatus } from "hooks/db";
+import { usePostArticleStatus } from "hooks/db";
 import { useNewCityPhoto } from "hooks/google";
 
-const CityArticlePanel = ({ country, city, status }) => {
+const CityArticlePanel = ({ country, city, title, status }) => {
   const {
     mutate: newArticles,
     isLoading,
     data = {},
     reset,
   } = useNewCitiesArticle();
-  const { mutate: postArticleStatus } = useUpdateArticleStatus({
+  const { mutate: postArticleStatus } = usePostArticleStatus({
     onSuccess: () => {
       alert("success");
     },
@@ -22,10 +22,13 @@ const CityArticlePanel = ({ country, city, status }) => {
       alert("success");
     },
   });
-
+  const deployed = status === 1;
+  const unDeployed = status === 0;
+  const existed = title !== "";
+  const generated = data[0]?.title;
   return (
     <Flex flexDirection="column" rowGap="2">
-      <Flex key={city} alignItems="center" columnGap="4">
+      <SimpleGrid key={city} columns={6} alignItems="center" columnGap="4">
         <Link>
           <Heading as="h5">{city}</Heading>
         </Link>
@@ -38,42 +41,40 @@ const CityArticlePanel = ({ country, city, status }) => {
         >
           New photo
         </Button>
-        {status === "-1" && (
-          <Button
-            onClick={() => {
-              newArticles({ cities: [city] });
-            }}
-            isDisabled={isLoading}
-            rightIcon={isLoading && <Loading />}
-          >
-            Generate
-          </Button>
-        )}
-        {status === "0" && (
-          <Button
-            onClick={() => {
-              postArticleStatus({ country, city, status: "1" });
-            }}
-          >
-            Deploy
-          </Button>
-        )}
-        {status === "1" && (
-          <Button
-            onClick={() => {
-              postArticleStatus({ country, city, status: "0" });
-            }}
-          >
-            Hide
-          </Button>
-        )}
-        {status !== "-1" && (
-          <Button as={Link} href={`/preview/${country}/${city}`}>
-            Preview
-          </Button>
-        )}
-      </Flex>
-      {data[0]?.title && (
+        <Button
+          onClick={() => {
+            newArticles({ cities: [city] });
+          }}
+          isDisabled={isLoading || existed || generated}
+          rightIcon={isLoading && <Loading />}
+        >
+          Generate
+        </Button>
+        <Button
+          onClick={() => {
+            postArticleStatus({ country, city, status: 1 });
+          }}
+          isDisabled={deployed || !existed}
+        >
+          Deploy
+        </Button>
+        <Button
+          onClick={() => {
+            postArticleStatus({ country, city, status: 0 });
+          }}
+          isDisabled={unDeployed}
+        >
+          Hide
+        </Button>
+        <Button
+          as={Link}
+          isDisabled={!existed}
+          href={`/preview/${country}/${city}`}
+        >
+          Preview
+        </Button>
+      </SimpleGrid>
+      {generated && (
         <CityArticlePreview
           country={country}
           city={city}

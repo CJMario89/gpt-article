@@ -1,11 +1,11 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import Markdown from "../Markdown";
-import { usePostArticles } from "hooks/db";
+import { usePostArticle } from "hooks/db";
 
 const CityArticlePreview = ({ country, city, article, clearPreview }) => {
   const { title, description, content } = article;
 
-  const { mutate: postArticles } = usePostArticles({
+  const { mutate: postArticle } = usePostArticle({
     onSuccess: () => {
       alert("success");
       clearPreview();
@@ -19,7 +19,7 @@ const CityArticlePreview = ({ country, city, article, clearPreview }) => {
       <Button
         alignSelf="center"
         onClick={() => {
-          postArticles({ country, cities: [city], articles: [article] });
+          postArticle({ country, city, article });
         }}
       >
         Confirm

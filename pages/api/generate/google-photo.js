@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 export const prisma = new PrismaClient();
 
 const key = process.env.PLACE_APIKEY;
-const newCityPhoto = async (req, res) => {
+const requestGooglePhoto = async (req, res) => {
   try {
     const { city } = req.query;
     const response1 = await getRequest(
@@ -34,9 +34,9 @@ const newCityPhoto = async (req, res) => {
         console.log(`Image saved as ${city}.png`);
       }
     });
-    const country = (await prisma.article.findUnique({ where: { city } }))
+    const country = (await prisma.cityArticle.findUnique({ where: { city } }))
       .country;
-    await prisma.image.create({
+    await prisma.cityImage.create({
       data: {
         country,
         city,
@@ -51,4 +51,4 @@ const newCityPhoto = async (req, res) => {
   }
 };
 
-export default newCityPhoto;
+export default requestGooglePhoto;
