@@ -20,12 +20,13 @@ model cityArticle {
 }
 
 model cityImage {
-  id        Int      @id @default(autoincrement())
-  country   String
-  city      String   @unique
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  country       String
+  city          String   @unique
+  url           String
+  referenceLink String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 }
 
 model spotArticle {
@@ -42,11 +43,12 @@ model spotArticle {
 }
 
 model spotImage {
-  id        Int      @id @default(autoincrement())
-  country   String
-  city      String
-  spot      String   @unique
-  url       String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  country       String
+  city          String
+  spot          String   @unique
+  url           String
+  referenceLink String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 }
