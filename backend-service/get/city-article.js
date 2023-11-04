@@ -3,9 +3,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export const getCityArticle = async (params = {}) => {
-  const { country, city } = params;
+  const { country, city, status } = params;
   const article = await prisma.cityArticle.findUnique({
-    where: { country, city, status: 1 },
+    where: { country, city, ...(status ? { status } : {}) },
     select: {
       country: true,
       city: true,

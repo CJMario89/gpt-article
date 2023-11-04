@@ -5,7 +5,7 @@ const useGetCityArticle = ({ country, city }) => {
   return useQuery({
     queryKey: ["get-city-article", country, city],
     queryFn: async () => {
-      const response = await getCityArticle({ country, city });
+      const response = await getCityArticle({ country, city, status: 1 });
       return response.json();
     },
   });

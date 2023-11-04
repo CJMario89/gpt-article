@@ -1,6 +1,7 @@
 import { Button, Container, Flex, Heading, Textarea } from "@chakra-ui/react";
 import { getCities, getCityArticle } from "backend-service/get";
 import Markdown from "component/Markdown";
+import GooglePhotoGenerator from "component/create/google-photo-generator";
 import { useNewSpots, useNewSpotsArticle } from "hooks/ai";
 import { usePostArticle } from "hooks/db";
 import { useNewCityPhoto } from "hooks/google";
@@ -21,24 +22,19 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
-  console.log(country);
-  console.log(city);
   const article = await getCityArticle({ country, city });
   return {
-    props: { article: JSON.parse(JSON.stringify(article)), country, city },
+    props: { article, country, city },
   };
 };
 const Index = ({ article, city, country }) => {
   const [spot, setSpot] = useState();
   const { title, description, content } = article;
-  const { mutate: newCityPhoto, data } = useNewCityPhoto();
-  console.log(data);
 
   const { mutate: postArticle, isLoading, isSuccess } = usePostArticle();
 
   const { mutate: newSpots, data: spots } = useNewSpots();
   const { mutate: newSpotArticle, data: spotArticle } = useNewSpotsArticle();
-  // const {mutate:newPhoto, data:photo} = useNewCityPhoto()
 
   console.log(isSuccess);
   return (
@@ -90,14 +86,11 @@ const Index = ({ article, city, country }) => {
             </Button>
             <Button>Cancel</Button>
           </Flex>
-          <Button
-            onClick={() => {
-              newCityPhoto({ city });
-            }}
-            alignSelf="self-start"
-          >
-            New photo
-          </Button>
+          <GooglePhotoGenerator
+            country={country}
+            city={city}
+            generateButtonProps={{ alignSelf: "self-start" }}
+          />
           <Flex flexDirection="column" rowGap="4">
             <Heading as="h5">Spots</Heading>
             <Button

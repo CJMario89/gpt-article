@@ -3,7 +3,7 @@ import CityArticlePreview from "./city-article-preview";
 import Loading from "component/Loading";
 import { useNewCitiesArticle } from "hooks/ai";
 import { usePostArticleStatus } from "hooks/db";
-import { useNewCityPhoto } from "hooks/google";
+import GooglePhotoGenerator from "./google-photo-generator";
 
 const CityArticlePanel = ({ country, city, title, status }) => {
   const {
@@ -12,16 +12,8 @@ const CityArticlePanel = ({ country, city, title, status }) => {
     data = {},
     reset,
   } = useNewCitiesArticle();
-  const { mutate: postArticleStatus } = usePostArticleStatus({
-    onSuccess: () => {
-      alert("success");
-    },
-  });
-  const { mutate: newCityPhoto, isLoading: isNewingPhoto } = useNewCityPhoto({
-    onSuccess: () => {
-      alert("success");
-    },
-  });
+  const { mutate: postArticleStatus } = usePostArticleStatus();
+
   const deployed = status === 1;
   const unDeployed = status === 0;
   const existed = title !== "";
@@ -32,15 +24,6 @@ const CityArticlePanel = ({ country, city, title, status }) => {
         <Link>
           <Heading as="h5">{city}</Heading>
         </Link>
-        <Button
-          onClick={() => {
-            newCityPhoto({ city });
-          }}
-          isLoading={isNewingPhoto}
-          isDisabled={isNewingPhoto}
-        >
-          New photo
-        </Button>
         <Button
           onClick={() => {
             newArticles({ cities: [city] });
@@ -74,6 +57,7 @@ const CityArticlePanel = ({ country, city, title, status }) => {
           Preview
         </Button>
       </SimpleGrid>
+      <GooglePhotoGenerator country={country} city={city} />
       {generated && (
         <CityArticlePreview
           country={country}

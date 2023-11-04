@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
-import { requestCityPhotoQuery } from "service/google-query";
+import { requestStoreCityPhoto } from "service/google-query";
 
 const mutationFn = async ({ city }) => {
-  const response = await requestCityPhotoQuery({ city });
+  const response = await requestStoreCityPhoto({ place: city });
   return response.json();
 };
 

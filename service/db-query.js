@@ -9,3 +9,5 @@ export const postCityArticleStatus = (body) =>
   postRequest(`/api/post/city-article-status`, body);
 export const postCityArticle = (body) =>
   postRequest(`/api/post/city-article`, body);
+export const postCityPhoto = (body) =>
+  postRequest(`/api/post/city-photo`, body);

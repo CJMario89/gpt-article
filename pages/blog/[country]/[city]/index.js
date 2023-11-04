@@ -17,7 +17,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
-  const article = await getCityArticle({ country, city });
+  const article = await getCityArticle({ country, city, status: 1 });
   return { props: { article: JSON.parse(JSON.stringify(article)) } };
 };
 
