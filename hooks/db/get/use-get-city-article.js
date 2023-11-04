@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCityArticle } from "service/db-query";
+import { getCityArticle } from "service/backend-query";
 
 const useGetCityArticle = ({ country, city }) => {
   return useQuery({

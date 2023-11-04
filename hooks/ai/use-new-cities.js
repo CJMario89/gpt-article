@@ -1,4 +1,4 @@
-import { getCities } from "service/db-query";
+import { getCities } from "service/backend-query";
 import { useMutation } from "@tanstack/react-query";
 import { gptQuery } from "service/ai-query";
 

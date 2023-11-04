@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { postCityArticleStatus } from "service/db-query";
+import { postCityArticleStatus } from "service/backend-query";
 
 const usePostArticleStatus = (option) => {
   return useMutation(

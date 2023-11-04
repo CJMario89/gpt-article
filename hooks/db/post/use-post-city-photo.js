@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { postCityPhoto } from "service/db-query";
+import { postCityPhoto } from "service/backend-query";
 
 const usePostCityPhoto = (option) => {
   return useMutation(
