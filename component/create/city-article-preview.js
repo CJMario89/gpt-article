@@ -1,11 +1,11 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import Markdown from "../Markdown";
-import { usePostArticle } from "hooks/db";
+import { usePostCityArticle } from "hooks/db";
 
 const CityArticlePreview = ({ country, city, article, clearPreview }) => {
   const { title, description, content } = article;
 
-  const { mutate: postArticle } = usePostArticle({
+  const { mutate: postArticle } = usePostCityArticle({
     onSuccess: () => {
       alert("success");
       clearPreview();

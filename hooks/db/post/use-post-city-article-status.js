@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { postCityArticleStatus } from "service/backend-query";
 
-const usePostArticleStatus = (option) => {
+const usePostCityArticleStatus = (option) => {
   return useMutation(
     async ({ country, city, status }) => {
       console.log({ country, city, status });
@@ -12,4 +12,4 @@ const usePostArticleStatus = (option) => {
   );
 };
 
-export default usePostArticleStatus;
+export default usePostCityArticleStatus;

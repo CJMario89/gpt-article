@@ -3,7 +3,7 @@ import { getCities, getCityArticle } from "backend-service/get";
 import Markdown from "component/Markdown";
 import GooglePhotoGenerator from "component/create/google-photo-generator";
 import { useNewSpots, useNewSpotsArticle } from "hooks/ai";
-import { usePostArticle } from "hooks/db";
+import { usePostCityArticle } from "hooks/db";
 import { useNewCityPhoto } from "hooks/google";
 import { useState } from "react";
 
@@ -31,7 +31,7 @@ const Index = ({ article, city, country }) => {
   const [spot, setSpot] = useState();
   const { title, description, content } = article;
 
-  const { mutate: postArticle, isLoading, isSuccess } = usePostArticle();
+  const { mutate: postArticle, isLoading, isSuccess } = usePostCityArticle();
 
   const { mutate: newSpots, data: spots } = useNewSpots();
   const { mutate: newSpotArticle, data: spotArticle } = useNewSpotsArticle();

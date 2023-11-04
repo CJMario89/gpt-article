@@ -1,11 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { postCityArticle } from "service/backend-query";
-import { requestCityPhotoQuery } from "service/google-query";
 
-const usePostArticle = (option) => {
+const usePostCityArticle = (option) => {
   return useMutation(
     async ({ country, city, article }) => {
-      await requestCityPhotoQuery({ city });
       const result = await postCityArticle({ country, city, article });
       return result.json();
     },
@@ -13,4 +11,4 @@ const usePostArticle = (option) => {
   );
 };
 
-export default usePostArticle;
+export default usePostCityArticle;

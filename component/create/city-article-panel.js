@@ -2,17 +2,22 @@ import { Button, Flex, Heading, Link, SimpleGrid } from "@chakra-ui/react";
 import CityArticlePreview from "./city-article-preview";
 import Loading from "component/Loading";
 import { useNewCitiesArticle } from "hooks/ai";
-import { usePostArticleStatus } from "hooks/db";
+import { useGetCities, usePostCityArticleStatus } from "hooks/db";
 import GooglePhotoGenerator from "./google-photo-generator";
 
 const CityArticlePanel = ({ country, city, title, status }) => {
+  const { refetch: reFetchCities } = useGetCities({ country });
   const {
     mutate: newArticles,
     isLoading,
     data = {},
     reset,
   } = useNewCitiesArticle();
-  const { mutate: postArticleStatus } = usePostArticleStatus();
+  const { mutate: postArticleStatus } = usePostCityArticleStatus({
+    onSuccess: () => {
+      reFetchCities();
+    },
+  });
 
   const deployed = status === 1;
   const unDeployed = status === 0;
