@@ -1,8 +1,9 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import style from "./city-card.module.css";
+import Link from "next/link";
 
-const CityCard = ({ city, title, image }) => {
+const CityCard = ({ country, city, title, image, ...restProps }) => {
   console.log(image);
   return (
     <Box
@@ -15,6 +16,9 @@ const CityCard = ({ city, title, image }) => {
       cursor="pointer"
       transition="all 0.2 ease-in-out"
       overflow="hidden"
+      as={Link}
+      href={`/blog/${country}/${city}`}
+      {...restProps}
     >
       <Box
         w="100%"
@@ -25,7 +29,7 @@ const CityCard = ({ city, title, image }) => {
         overflow="hidden"
       >
         <Image
-          alt=""
+          alt={city}
           width="2048"
           height="2048"
           src={image}

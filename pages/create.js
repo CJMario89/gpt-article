@@ -1,43 +1,45 @@
 import { useState } from "react";
-import {
-  Accordion,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Input,
-} from "@chakra-ui/react";
+import { Accordion, Button, Container, Flex, Input } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/react-query";
-import { useGetCities, useGetCountries, usePostCities } from "hooks/db";
-import { useNewCities } from "hooks/ai";
-import { CountryAccordionItem } from "component/create";
+import { useGetCountries, useGetPlacesByParams, usePostPlaces } from "hooks/db";
+import { useNewPlaces } from "hooks/ai";
+import { PlacesAccordionItem } from "component/create";
 import { getCountries } from "backend-service/get";
 
 export const getServerSideProps = async () => {
   const countries = await getCountries();
   const queryClient = new QueryClient();
   queryClient.setQueryData(["get-countries"], countries);
-  return { props: { countries: JSON.parse(JSON.stringify(countries)) } };
+  return { props: { countries } };
 };
 
 const Create = () => {
   const [country, setCountry] = useState();
   const { data: countries, refetch: refetchCountries } = useGetCountries();
   console.log(countries);
-  const { refetch: refetchCities } = useGetCities({ country });
-  const { mutate: postCities } = usePostCities({
-    onSuccess: () => {
-      refetchCities();
-      console.log(countries);
-      refetchCountries();
-    },
+  const { refetch: refetchCities } = useGetPlacesByParams({
+    type: "city",
+    country,
   });
+  const { mutate: postCities } = usePostPlaces(
+    { type: "city" },
+    {
+      onSuccess: () => {
+        refetchCities();
+        console.log(countries);
+        refetchCountries();
+      },
+    }
+  );
 
-  const { mutate: newCities, isLoading } = useNewCities({
-    onSuccess: (cities) => {
-      postCities({ country, cities });
-    },
-  });
+  const { mutate: newCities, isLoading } = useNewPlaces(
+    { type: "city" },
+    {
+      onSuccess: (cities) => {
+        postCities({ country, cities });
+      },
+    }
+  );
   return (
     <Container maxW="container.xl" w="full" p="36px">
       <Flex flexDirection="column" rowGap="20px">
@@ -54,7 +56,11 @@ const Create = () => {
             <Accordion allowMultiple>
               {Array.isArray(countries) &&
                 countries.map(({ country }) => (
-                  <CountryAccordionItem country={country} key={country} />
+                  <PlacesAccordionItem
+                    type="city"
+                    country={country}
+                    key={country}
+                  />
                 ))}
             </Accordion>
             <Input

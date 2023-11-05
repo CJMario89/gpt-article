@@ -1,1 +1,1 @@
-export { default as useNewCityPhoto } from "./use-new-city-photo";
+export { default as useNewPhoto } from "./use-new-photo";

@@ -1,3 +1,4 @@
-export { default as useGetCities } from "./use-get-cities";
+export { default as useGetPlacesByParams } from "./use-get-places-by-params";
 export { default as useGetCountries } from "./use-get-countries";
-export { default as useGetCityArticle } from "./use-get-city-article";
+export { default as useGetArticle } from "./use-get-article";
+export { default as useGetAllPlaces } from "./use-get-all-places";

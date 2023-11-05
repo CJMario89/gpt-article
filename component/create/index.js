@@ -1,3 +1,3 @@
-export { default as CityArticlePanel } from "./city-article-panel";
-export { default as CityArticlePreview } from "./city-article-preview";
-export { default as CountryAccordionItem } from "./country-accordion-item";
+export { default as ArticlePanel } from "./article-panel";
+export { default as ArticlePreview } from "./article-preview";
+export { default as PlacesAccordionItem } from "./places-accordion-item";

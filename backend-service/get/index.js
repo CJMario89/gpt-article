@@ -1,3 +1,4 @@
-export * from "./cities";
+export * from "./places-by-params";
 export * from "./countries";
-export * from "./city-article";
+export * from "./all-places";
+export * from "./article";

@@ -1,5 +1,5 @@
 import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
-import { getCities, getCountries } from "backend-service/get";
+import { getCountries, getPlacesByParams } from "backend-service/get";
 import { CityCard } from "component/blog";
 
 export const getStaticPaths = async () => {
@@ -16,37 +16,30 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country } = params;
-  console.log(country);
   const cities = await Promise.all(
     (
-      await getCities({ country })
-    )
-      .filter(({ status }) => status === "1")
-      .map(async (article) => {
-        const image = await import(`../../../public/${article.city}.png`);
-
-        return {
-          ...article,
-          image,
-        };
-      })
+      await getPlacesByParams({ country, status: 1 })
+    ).map(async (article) => {
+      const image = await import(`../../../public/${article.city}.png`);
+      return {
+        ...article,
+        image: JSON.parse(JSON.stringify(image)),
+      };
+    })
   );
-  console.log(cities);
-  return { props: { country, cities: JSON.parse(JSON.stringify(cities)) } };
+  return { props: { country, cities } };
 };
 
 const Index = ({ country, cities }) => {
-  console.log(cities);
-  console.log(country);
   return (
     <Container maxW="container.lg" as={Flex} flexDirection="column" rowGap="4">
       <Heading as="h2">{country}</Heading>
       <SimpleGrid gap="8" columns={{ sm: "2", md: "3" }}>
         {cities.map(({ city, title, description, image }) => {
-          console.log(image);
           return (
             <CityCard
               key={city}
+              country={country}
               city={city}
               title={title}
               image={image}

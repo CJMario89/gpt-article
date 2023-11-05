@@ -1,16 +1,9 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import Markdown from "../Markdown";
-import { usePostCityArticle } from "hooks/db";
 
-const CityArticlePreview = ({ country, city, article, clearPreview }) => {
+const ArticlePreview = ({ article, postArticle, cancel }) => {
   const { title, description, content } = article;
 
-  const { mutate: postArticle } = usePostCityArticle({
-    onSuccess: () => {
-      alert("success");
-      clearPreview();
-    },
-  });
   return (
     <Flex flexDirection="column" rowGap="4">
       <Heading as="h4">Title: {title}</Heading>
@@ -19,7 +12,7 @@ const CityArticlePreview = ({ country, city, article, clearPreview }) => {
       <Button
         alignSelf="center"
         onClick={() => {
-          postArticle({ country, city, article });
+          postArticle();
         }}
       >
         Confirm
@@ -27,7 +20,7 @@ const CityArticlePreview = ({ country, city, article, clearPreview }) => {
       <Button
         alignSelf="center"
         onClick={() => {
-          clearPreview();
+          cancel();
         }}
       >
         Cancel
@@ -36,4 +29,4 @@ const CityArticlePreview = ({ country, city, article, clearPreview }) => {
   );
 };
 
-export default CityArticlePreview;
+export default ArticlePreview;

@@ -1,14 +1,19 @@
-import { Button, Container, Flex, Heading, Textarea } from "@chakra-ui/react";
-import { getCities, getCityArticle } from "backend-service/get";
-import Markdown from "component/Markdown";
+import {
+  Accordion,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  Textarea,
+} from "@chakra-ui/react";
+import { getAllPlaces, getArticle } from "backend-service/get";
+import { PlacesAccordionItem } from "component/create";
 import GooglePhotoGenerator from "component/create/google-photo-generator";
-import { useNewSpots, useNewSpotsArticle } from "hooks/ai";
-import { usePostCityArticle } from "hooks/db";
-import { useNewCityPhoto } from "hooks/google";
-import { useState } from "react";
+import { usePostArticle } from "hooks/db";
+import Image from "next/image";
 
 export const getStaticPaths = async () => {
-  const cities = await getCities();
+  const cities = await getAllPlaces({ type: "city" });
   return {
     paths: cities.map(({ country, city }) => ({
       params: {
@@ -22,26 +27,43 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
-  const article = await getCityArticle({ country, city });
+  const article = await getArticle({ type: "city", country, city });
+  const image = await import(`../../../../public/${city}.png`);
   return {
-    props: { article, country, city },
+    props: { article, country, city, image: JSON.parse(JSON.stringify(image)) },
   };
 };
-const Index = ({ article, city, country }) => {
-  const [spot, setSpot] = useState();
+
+const Spots = ({ country, city }) => {
+  return (
+    <Flex w="full" flexDirection="column" rowGap="4">
+      <Heading as="h5">Spots</Heading>
+      <Accordion allowMultiple>
+        <PlacesAccordionItem type="spot" country={country} city={city} />
+      </Accordion>
+    </Flex>
+  );
+};
+
+const Index = ({ article, city, country, image }) => {
   const { title, description, content } = article;
 
-  const { mutate: postArticle, isLoading, isSuccess } = usePostCityArticle();
+  const { mutate: postArticle, isLoading: isPostCityArticleLoading } =
+    usePostArticle(
+      { type: "city" },
+      {
+        onSuccess: () => {
+          alert("success");
+        },
+      }
+    );
 
-  const { mutate: newSpots, data: spots } = useNewSpots();
-  const { mutate: newSpotArticle, data: spotArticle } = useNewSpotsArticle();
-
-  console.log(isSuccess);
   return (
     <Container
       as={Flex}
       maxW="container.lg"
       p="8"
+      rowGap="8"
       flexDirection="column"
       alignItems="center"
     >
@@ -81,57 +103,27 @@ const Index = ({ article, city, country }) => {
             defaultValue={content}
           />
           <Flex columnGap="4">
-            <Button isLoading={isLoading} isDisabled={isLoading} type="submit">
+            <Button
+              isLoading={isPostCityArticleLoading}
+              isDisabled={isPostCityArticleLoading}
+              type="submit"
+            >
               Confirm
             </Button>
             <Button>Cancel</Button>
           </Flex>
-          <GooglePhotoGenerator
-            country={country}
-            city={city}
-            generateButtonProps={{ alignSelf: "self-start" }}
-          />
           <Flex flexDirection="column" rowGap="4">
-            <Heading as="h5">Spots</Heading>
-            <Button
-              onClick={() => {
-                newSpots({ city });
-              }}
-              alignSelf="self-start"
-            >
-              add spots
-            </Button>
-            <Flex columnGap="4">
-              {Array.isArray(spots) &&
-                spots.map((spot) => {
-                  return (
-                    <Button
-                      key={spot}
-                      onClick={() => {
-                        setSpot(spot);
-                      }}
-                    >
-                      {spot}
-                    </Button>
-                  );
-                })}
-            </Flex>
-            <Flex flexDirection="column" rowGap="4">
-              <Heading as="h4">{spot}</Heading>
-              <Markdown>{spotArticle}</Markdown>
-              {/* <Image alt="" src={}/> */}
-              <Button
-                onClick={() => {
-                  newSpotArticle({ spots: [spot] });
-                }}
-                alignSelf="self-start"
-              >
-                Generate introduction
-              </Button>
-            </Flex>
+            <Heading as="h4">Photo</Heading>
+            {image && <Image alt={city} src={image} />}
+            <GooglePhotoGenerator
+              country={country}
+              city={city}
+              generateButtonProps={{ alignSelf: "self-start" }}
+            />
           </Flex>
         </Flex>
       </form>
+      <Spots country={country} city={city} />
     </Container>
   );
 };

@@ -5,11 +5,11 @@ export const prisma = new PrismaClient();
 
 const key = process.env.PLACE_APIKEY;
 
-export const requestStoreGooglePhoto = async ({ place }) => {
+export const requestStoreGooglePhoto = async ({ country, place }) => {
   const response1 = await getRequest(
     "https://maps.googleapis.com/maps/api/place/textsearch/json",
     {
-      query: place,
+      query: `${country} ${place}`,
       location: "40,120",
       key,
     }
@@ -25,14 +25,9 @@ export const requestStoreGooglePhoto = async ({ place }) => {
   );
   const placePhotoArrayBuffer = await response2.arrayBuffer();
   const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
-  const url = `/public/${place}.png`;
-  fs.writeFile(`.${url}`, placePhotoBuffer, "binary", (err) => {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log(`Image saved as ${place}.png`);
-    }
-  });
+  const url = `/${place}.png`;
+  fs.writeFileSync(`./public${url}`, placePhotoBuffer, "binary");
+  console.log(`Image saved as ${place}.png`);
 
   return {
     url,

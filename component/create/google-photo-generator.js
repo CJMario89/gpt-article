@@ -1,33 +1,41 @@
 import { Button, Flex } from "@chakra-ui/react";
-import { usePostCityPhoto } from "hooks/db";
-import { useNewCityPhoto } from "hooks/google";
+import { usePostPhoto } from "hooks/db";
+import { useNewPhoto } from "hooks/google";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
 const GooglePhotoGenerator = ({
+  type,
   country,
   city,
+  spot,
   generateButtonProps,
   ...restProps
 }) => {
   const [photoDisplay, setPhotoDisplay] = useState(false);
   const {
-    mutate: newCityPhoto,
+    mutate: newPhoto,
     isLoading: isNewingPhoto,
     data: photo,
-  } = useNewCityPhoto({
-    onSuccess: () => {
-      setPhotoDisplay(true);
-    },
-  });
+  } = useNewPhoto(
+    { type },
+    {
+      onSuccess: () => {
+        setPhotoDisplay(true);
+      },
+    }
+  );
 
-  const { mutate: postCityPhoto } = usePostCityPhoto({
-    onSuccess: () => {
-      setPhotoDisplay(false);
-      alert("success");
-    },
-  });
+  const { mutate: postPhoto } = usePostPhoto(
+    { type },
+    {
+      onSuccess: () => {
+        setPhotoDisplay(false);
+        alert("success");
+      },
+    }
+  );
 
   const reference = useMemo(() => {
     if (typeof window !== "undefined") {
@@ -41,23 +49,23 @@ const GooglePhotoGenerator = ({
       };
     }
   }, [photo?.referenceLink]);
-
   return (
     <Flex flexDirection="column" rowGap="4" {...restProps}>
       <Button
         onClick={() => {
-          newCityPhoto({ city });
+          newPhoto({ country, city, spot });
         }}
+        alignSelf="self-start"
         isLoading={isNewingPhoto}
         isDisabled={isNewingPhoto}
         {...generateButtonProps}
       >
         New photo
       </Button>
-      {photoDisplay && (
+      {photoDisplay && photo?.url && (
         <Flex flexDirection="column" rowGap="4">
           <Image
-            alt=""
+            alt={city}
             width="2048"
             height="2048"
             src={window?.location?.origin + photo?.url}
@@ -70,9 +78,10 @@ const GooglePhotoGenerator = ({
           <Link href={reference?.href}>{reference?.innerHTML}</Link>
           <Button
             onClick={() => {
-              postCityPhoto({
+              postPhoto({
                 country,
                 city,
+                spot,
                 url: photo.url,
                 referenceLink: reference?.href,
                 referenceName: reference?.innerHTML,

@@ -1,13 +1,12 @@
 import { getRequest, postRequest } from "./common";
 
 export const getCountries = () => getRequest(`/api/get/countries`);
-export const getCities = (query) => getRequest(`/api/get/cities`, query);
-export const getCityArticle = (query) =>
-  getRequest(`/api/get/city-article`, query);
-export const postCities = (body) => postRequest(`/api/post/cities`, body);
-export const postCityArticleStatus = (body) =>
-  postRequest(`/api/post/city-article-status`, body);
-export const postCityArticle = (body) =>
-  postRequest(`/api/post/city-article`, body);
-export const postCityPhoto = (body) =>
-  postRequest(`/api/post/city-photo`, body);
+export const getAllPlaces = (query) => getRequest(`/api/get/all-places`, query);
+export const getPlacesByParams = (query) =>
+  getRequest(`/api/get/places-by-params`, query);
+export const getArticle = (query) => getRequest(`/api/get/article`, query);
+export const postPlaces = (body) => postRequest(`/api/post/places`, body);
+export const postArticleStatus = (body) =>
+  postRequest(`/api/post/article-status`, body);
+export const postArticle = (body) => postRequest(`/api/post/article`, body);
+export const postPhoto = (body) => postRequest(`/api/post/photo`, body);

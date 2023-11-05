@@ -1,4 +1,4 @@
 import { getRequest } from "./common";
 
-export const requestStoreCityPhoto = (query) =>
+export const requestStorePhoto = (query) =>
   getRequest("/api/generate/google-photo", query);

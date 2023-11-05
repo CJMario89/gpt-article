@@ -1,13 +1,13 @@
 import { updateArticle } from "backend-service/update";
 
-const postCityArticle = async (req, res) => {
+const postArticle = async (req, res) => {
   try {
     await updateArticle(JSON.parse(req.body));
-    await res.status(200).json({ status: "success" });
+    res.status(200).json({ status: "success" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error });
   }
 };
 
-export default postCityArticle;
+export default postArticle;
