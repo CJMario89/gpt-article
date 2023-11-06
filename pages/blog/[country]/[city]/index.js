@@ -6,7 +6,7 @@ import {
   getPlacesByParams,
 } from "backend-service/get";
 import Image from "next/image";
-import { CityCard } from "component/blog";
+import { PlaceCard } from "component/blog";
 
 export const getStaticPaths = async () => {
   const cities = await getAllPlaces({ type: "city" });
@@ -27,9 +27,9 @@ export const getStaticProps = async ({ params }) => {
   const image = await import(`../../../../public/${city}.png`);
   const spots = await Promise.all(
     (
-      await getPlacesByParams({ country, city, status: 1 })
+      await getPlacesByParams({ type: "spot", country, city, status: 1 })
     ).map(async (article) => {
-      const image = await import(`../../../../public/${article.spots}.png`);
+      const image = await import(`../../../../public/${article.spot}.png`);
       return {
         ...article,
         image: JSON.parse(JSON.stringify(image)),
@@ -61,15 +61,17 @@ const index = ({ article, image, city, spots }) => {
         <Image alt={city} src={image} />
         <Markdown>{article?.content}</Markdown>
       </Flex>
-      <Flex flexDirection="column" rowGap="4">
+      <Flex w="full" flexDirection="column" rowGap="4">
         <Heading as="h2">Spots in {city}</Heading>
         <SimpleGrid gap="8" columns={{ sm: "2", md: "3" }}>
-          {spots.map(({ city, title, description, image }) => {
+          {spots.map(({ country, city, spot, title, description, image }) => {
             return (
-              <CityCard
-                key={city}
-                country={city}
+              <PlaceCard
+                type="spot"
+                key={spot}
+                country={country}
                 city={city}
+                spot={spot}
                 title={title}
                 image={image}
                 description={description}

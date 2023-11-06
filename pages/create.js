@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Accordion, Button, Container, Flex, Input } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/react-query";
-import { useGetCountries, useGetPlacesByParams, usePostPlaces } from "hooks/db";
-import { useNewPlaces } from "hooks/ai";
+import {
+  useBatchGenerate,
+  useGetCountries,
+  useGetPlacesByParams,
+} from "hooks/db";
 import { PlacesAccordionItem } from "component/create";
 import { getCountries } from "backend-service/get";
 
@@ -21,25 +24,12 @@ const Create = () => {
     type: "city",
     country,
   });
-  const { mutate: postCities } = usePostPlaces(
-    { type: "city" },
-    {
-      onSuccess: () => {
-        refetchCities();
-        console.log(countries);
-        refetchCountries();
-      },
-    }
-  );
-
-  const { mutate: newCities, isLoading } = useNewPlaces(
-    { type: "city" },
-    {
-      onSuccess: (cities) => {
-        postCities({ country, cities });
-      },
-    }
-  );
+  const { isLoading, mutate: batchGenerate } = useBatchGenerate({
+    onSuccess: () => {
+      refetchCities();
+      refetchCountries();
+    },
+  });
   return (
     <Container maxW="container.xl" w="full" p="36px">
       <Flex flexDirection="column" rowGap="20px">
@@ -47,7 +37,7 @@ const Create = () => {
           onSubmit={async (e) => {
             e.preventDefault();
             const country = e.target.country.value;
-            newCities({ country });
+            batchGenerate({ country });
             setCountry(country);
           }}
         >
@@ -72,10 +62,10 @@ const Create = () => {
             <Button
               type="submit"
               alignSelf="self-start"
-              isDisabled={isLoading}
               isLoading={isLoading}
+              isDisabled={isLoading}
             >
-              create
+              Batch Generate
             </Button>
           </Flex>
         </form>

@@ -1,10 +1,21 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import Image from "next/image";
-import style from "./city-card.module.css";
+import style from "./place-card.module.css";
 import Link from "next/link";
 
-const CityCard = ({ country, city, title, image, ...restProps }) => {
+const PlaceCard = ({
+  type,
+  country,
+  city,
+  spot,
+  title,
+  image,
+  ...restProps
+}) => {
+  const isSpot = type === "spot";
+  const place = isSpot ? spot : city;
   console.log(image);
+  console.log(spot);
   return (
     <Box
       w="100%"
@@ -17,7 +28,7 @@ const CityCard = ({ country, city, title, image, ...restProps }) => {
       transition="all 0.2 ease-in-out"
       overflow="hidden"
       as={Link}
-      href={`/blog/${country}/${city}`}
+      href={`/blog/${country}/${city}${isSpot ? `/${spot}` : ""}`}
       {...restProps}
     >
       <Box
@@ -29,7 +40,7 @@ const CityCard = ({ country, city, title, image, ...restProps }) => {
         overflow="hidden"
       >
         <Image
-          alt={city}
+          alt={place}
           width="2048"
           height="2048"
           src={image}
@@ -49,7 +60,7 @@ const CityCard = ({ country, city, title, image, ...restProps }) => {
         w="full"
       >
         <Heading as="h4" textAlign="center">
-          {city}
+          {place}
         </Heading>
         {/* <Text>{description}</Text> */}
       </Flex>
@@ -70,4 +81,4 @@ const CityCard = ({ country, city, title, image, ...restProps }) => {
   );
 };
 
-export default CityCard;
+export default PlaceCard;

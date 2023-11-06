@@ -31,7 +31,7 @@ export const batchGenerate = async ({ country }) => {
     console.log("requestGpt article", city);
     const articleRaw = await requestGpt({ text: cityArticleText });
     const article = processArticle(articleRaw);
-    await updateArticle({ type, country, city, article });
+    await updateArticle({ type, country, city, article, status });
     const cityPhotoReference = await requestStoreGooglePhoto({
       type,
       country,
@@ -62,7 +62,7 @@ export const batchGenerate = async ({ country }) => {
       console.log("requestGpt article", spot);
       const articleRaw = await requestGpt({ text: spotArticleText });
       const article = processArticle(articleRaw);
-      await updateArticle({ type, country, city, article, spot });
+      await updateArticle({ type, country, city, article, spot, status });
       const spotPhotoReference = await requestStoreGooglePhoto({
         type,
         country,

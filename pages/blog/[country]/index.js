@@ -1,6 +1,6 @@
 import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
 import { getCountries, getPlacesByParams } from "backend-service/get";
-import { CityCard } from "component/blog";
+import { PlaceCard } from "component/blog";
 
 export const getStaticPaths = async () => {
   const countries = await getCountries();
@@ -37,8 +37,9 @@ const Index = ({ country, cities }) => {
       <SimpleGrid gap="8" columns={{ sm: "2", md: "3" }}>
         {cities.map(({ city, title, description, image }) => {
           return (
-            <CityCard
+            <PlaceCard
               key={city}
+              type="city"
               country={country}
               city={city}
               title={title}

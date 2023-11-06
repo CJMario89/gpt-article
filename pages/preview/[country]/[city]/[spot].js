@@ -1,24 +1,17 @@
-import {
-  Accordion,
-  Button,
-  Container,
-  Flex,
-  Heading,
-  Textarea,
-} from "@chakra-ui/react";
+import { Button, Container, Flex, Heading, Textarea } from "@chakra-ui/react";
 import { getAllPlaces, getArticle } from "backend-service/get";
-import { PlacesAccordionItem } from "component/create";
 import GooglePhotoGenerator from "component/create/google-photo-generator";
 import { usePostArticle } from "hooks/db";
 import Image from "next/image";
 
 export const getStaticPaths = async () => {
-  const cities = await getAllPlaces({ type: "city" });
+  const cities = await getAllPlaces({ type: "spot" });
   return {
-    paths: cities.map(({ country, city }) => ({
+    paths: cities.map(({ country, city, spot }) => ({
       params: {
         country,
         city,
+        spot,
       },
     })),
     fallback: true,
@@ -26,31 +19,26 @@ export const getStaticPaths = async () => {
 };
 
 export const getStaticProps = async ({ params }) => {
-  const { country, city } = params;
-  const article = await getArticle({ type: "city", country, city });
-  const image = await import(`../../../../public/${city}.png`);
+  const { country, city, spot } = params;
+  const article = await getArticle({ type: "spot", country, city, spot });
+  const image = await import(`../../../../public/${spot}.png`);
   return {
-    props: { article, country, city, image: JSON.parse(JSON.stringify(image)) },
+    props: {
+      article,
+      country,
+      city,
+      spot,
+      image: JSON.parse(JSON.stringify(image)),
+    },
   };
 };
 
-const Spots = ({ country, city }) => {
-  return (
-    <Flex w="full" flexDirection="column" rowGap="4">
-      <Heading as="h5">Spots</Heading>
-      <Accordion allowMultiple>
-        <PlacesAccordionItem type="spot" country={country} city={city} />
-      </Accordion>
-    </Flex>
-  );
-};
-
-const Index = ({ article, city, country, image }) => {
+const Index = ({ article, country, city, spot, image }) => {
   const { title, description, content } = article;
 
   const { mutate: postArticle, isLoading: isPostCityArticleLoading } =
     usePostArticle(
-      { type: "city" },
+      { type: "spot" },
       {
         onSuccess: () => {
           alert("success");
@@ -116,15 +104,15 @@ const Index = ({ article, city, country, image }) => {
             <Heading as="h4">Photo</Heading>
             {image && <Image alt={city} src={image} />}
             <GooglePhotoGenerator
-              type="city"
+              type="spot"
               country={country}
               city={city}
+              spot={spot}
               generateButtonProps={{ alignSelf: "self-start" }}
             />
           </Flex>
         </Flex>
       </form>
-      <Spots country={country} city={city} />
     </Container>
   );
 };

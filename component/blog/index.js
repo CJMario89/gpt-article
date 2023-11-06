@@ -1,1 +1,1 @@
-export { default as CityCard } from "./city-card";
+export { default as PlaceCard } from "./place-card";
