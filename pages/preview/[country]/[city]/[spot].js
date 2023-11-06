@@ -20,6 +20,7 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city, spot } = params;
+  console.log(spot);
   const article = await getArticle({ type: "spot", country, city, spot });
   const image = await import(`../../../../public/${spot}.png`);
   return {
@@ -33,7 +34,7 @@ export const getStaticProps = async ({ params }) => {
   };
 };
 
-const Index = ({ article, country, city, spot, image }) => {
+const Index = ({ article = {}, country, city, spot, image }) => {
   const { title, description, content } = article;
 
   const { mutate: postArticle, isLoading: isPostCityArticleLoading } =

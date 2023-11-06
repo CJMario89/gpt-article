@@ -48,7 +48,7 @@ export const getStaticProps = async ({ params }) => {
 //backend structure
 //frontend structure
 //product structure
-const index = ({ article, image, city, spots }) => {
+const index = ({ article, image, city, spots = [] }) => {
   return (
     <Container
       as={Flex}

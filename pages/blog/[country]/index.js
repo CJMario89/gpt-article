@@ -30,7 +30,7 @@ export const getStaticProps = async ({ params }) => {
   return { props: { country, cities } };
 };
 
-const Index = ({ country, cities }) => {
+const Index = ({ country, cities = [] }) => {
   return (
     <Container maxW="container.lg" as={Flex} flexDirection="column" rowGap="4">
       <Heading as="h2">{country}</Heading>

@@ -21,7 +21,6 @@ const PlacesAccordionItem = ({ type, country, city }) => {
     { type, country, city },
     { enabled: !!country }
   );
-  console.log(places);
   const { mutate: postPlaces } = usePostPlaces(
     { type },
     {

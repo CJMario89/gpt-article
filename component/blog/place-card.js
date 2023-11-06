@@ -14,8 +14,6 @@ const PlaceCard = ({
 }) => {
   const isSpot = type === "spot";
   const place = isSpot ? spot : city;
-  console.log(image);
-  console.log(spot);
   return (
     <Box
       w="100%"

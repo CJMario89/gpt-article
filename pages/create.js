@@ -19,7 +19,6 @@ export const getServerSideProps = async () => {
 const Create = () => {
   const [country, setCountry] = useState();
   const { data: countries, refetch: refetchCountries } = useGetCountries();
-  console.log(countries);
   const { refetch: refetchCities } = useGetPlacesByParams({
     type: "city",
     country,

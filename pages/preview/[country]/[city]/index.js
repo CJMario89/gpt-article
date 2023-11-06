@@ -45,7 +45,7 @@ const Spots = ({ country, city }) => {
   );
 };
 
-const Index = ({ article, city, country, image }) => {
+const Index = ({ article = {}, city, country, image }) => {
   const { title, description, content } = article;
 
   const { mutate: postArticle, isLoading: isPostCityArticleLoading } =
