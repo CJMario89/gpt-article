@@ -8,7 +8,11 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { useNewPlaces } from "hooks/ai";
-import { useGetPlacesByParams, usePostPlaces } from "hooks/db";
+import {
+  useBatchGenerate,
+  useGetPlacesByParams,
+  usePostPlaces,
+} from "hooks/db";
 import ArticlePanel from "./article-panel";
 
 const PlacesAccordionItem = ({ type, country, city }) => {
@@ -39,11 +43,28 @@ const PlacesAccordionItem = ({ type, country, city }) => {
     }
   );
 
+  const { mutate: batchGenerate } = useBatchGenerate({
+    onSuccess: (data) => {
+      alert(data);
+    },
+  });
+
   return (
     <AccordionItem>
       <AccordionButton>
         <Heading as="h4" flex="1" textAlign="left">
-          {isSpot ? city : country}
+          <Flex justifyContent="space-between">
+            {isSpot ? city : country}
+            {!isSpot && (
+              <Button
+                onClick={() => {
+                  batchGenerate({ country });
+                }}
+              >
+                Batch Generate
+              </Button>
+            )}
+          </Flex>
         </Heading>
         <AccordionIcon />
       </AccordionButton>

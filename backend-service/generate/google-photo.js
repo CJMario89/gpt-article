@@ -5,15 +5,22 @@ export const prisma = new PrismaClient();
 
 const key = process.env.PLACE_APIKEY;
 
-export const requestStoreGooglePhoto = async ({ country, place }) => {
+export const requestStoreGooglePhoto = async ({
+  type,
+  country,
+  city,
+  spot,
+}) => {
+  const isSpot = type === "spot";
   const response1 = await getRequest(
     "https://maps.googleapis.com/maps/api/place/textsearch/json",
     {
-      query: `${country} ${place}`,
+      query: `${country} ${city}${isSpot ? ` ${spot}` : ""}`,
       location: "40,120",
       key,
     }
   );
+  const place = isSpot ? spot : city;
   const placeData = await response1.json();
   console.log(placeData.results);
   const photo = placeData.results[0].photos[0];

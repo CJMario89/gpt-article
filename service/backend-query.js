@@ -10,3 +10,5 @@ export const postArticleStatus = (body) =>
   postRequest(`/api/post/article-status`, body);
 export const postArticle = (body) => postRequest(`/api/post/article`, body);
 export const postPhoto = (body) => postRequest(`/api/post/photo`, body);
+export const batchGenerate = (body) =>
+  postRequest(`/api/post/batch-generate`, body);
