@@ -8,7 +8,7 @@ const PlaceCard = ({
   city,
   spot,
   title,
-  photo,
+  photo = {},
   ...restProps
 }) => {
   const { image } = photo;

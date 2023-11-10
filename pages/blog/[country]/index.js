@@ -54,7 +54,7 @@ const Index = ({ country, cities = [] }) => {
                 photo={photo}
                 description={description}
               />
-              <Link href={referenceLink} target="_blank">
+              <Link href={referenceLink ?? ""} target="_blank">
                 {referenceName}
               </Link>
             </Flex>

@@ -9,6 +9,10 @@ const nextConfig = {
     formats: ["image/avif", "image/webp"],
     domains: ["localhost"],
   },
+  experimental: {
+    //largePageDataBytes: 128 * 1000, // 128KB by default
+    largePageDataBytes: 128 * 100000,
+  },
 };
 
 module.exports = nextConfig;

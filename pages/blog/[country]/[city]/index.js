@@ -55,7 +55,7 @@ export const getStaticProps = async ({ params }) => {
 //backend structure
 //frontend structure
 //product structure
-const index = ({ article, city, photo, spots = [] }) => {
+const index = ({ article = {}, city, photo, spots = [] }) => {
   const { title, description, content } = article;
   return (
     <Container
@@ -87,7 +87,7 @@ const index = ({ article, city, photo, spots = [] }) => {
                   photo={photo}
                   description={description}
                 />
-                <Link href={referenceLink} target="_blank">
+                <Link href={referenceLink ?? ""} target="_blank">
                   Photo reference: {referenceName}
                 </Link>
               </Flex>

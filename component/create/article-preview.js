@@ -1,7 +1,7 @@
 import { Button, Flex, Heading } from "@chakra-ui/react";
 import Markdown from "../Markdown";
 
-const ArticlePreview = ({ article, postArticle, cancel }) => {
+const ArticlePreview = ({ article = {}, postArticle, cancel }) => {
   const { title, description, content } = article;
 
   return (

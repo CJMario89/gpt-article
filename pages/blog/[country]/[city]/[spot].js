@@ -39,7 +39,7 @@ export const getStaticProps = async ({ params }) => {
 //backend structure
 //frontend structure
 //product structure
-const index = ({ article, photo }) => {
+const index = ({ article = {}, photo }) => {
   const { title, description, content } = article;
   return (
     <Container
