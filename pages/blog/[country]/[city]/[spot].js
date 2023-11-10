@@ -1,7 +1,9 @@
 import { Container, Flex } from "@chakra-ui/react";
 import Markdown from "component/Markdown";
-import { getAllPlaces, getArticle } from "backend-service/get";
+import { getAllPlaces, getArticle, getPhoto } from "backend-service/get";
 import Image from "next/image";
+import { jsonlize } from "utils/jsonlize";
+import { PhotoDisplayer } from "component/create";
 
 export const getStaticPaths = async () => {
   const cities = await getAllPlaces({ type: "spot" });
@@ -26,9 +28,9 @@ export const getStaticProps = async ({ params }) => {
     spot,
     status: 1,
   });
-  const image = await import(`../../../../public/${spot}.png`);
+  const photo = await getPhoto({ type: "spot", country, city, spot });
   return {
-    props: { article, image: JSON.parse(JSON.stringify(image)), spot },
+    props: { article, spot, photo: jsonlize(photo) },
   };
 };
 
@@ -39,7 +41,7 @@ export const getStaticProps = async ({ params }) => {
 //backend structure
 //frontend structure
 //product structure
-const index = ({ article, image, spot }) => {
+const index = ({ article, spot, photo }) => {
   return (
     <Container
       as={Flex}
@@ -49,7 +51,7 @@ const index = ({ article, image, spot }) => {
       alignItems="center"
     >
       <Flex w="fit-content" flexDirection="column">
-        <Image alt={spot} src={image} />
+        <PhotoDisplayer photo={photo} />
         <Markdown>{article?.content}</Markdown>
       </Flex>
     </Container>

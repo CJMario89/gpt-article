@@ -24,11 +24,11 @@ model cityImage {
   id            Int      @id @default(autoincrement())
   country       String
   city          String   @unique
-  url           String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
+  image         Bytes
   referenceLink String   @default("")
   referenceName String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 }
 
 model spotArticle {
@@ -49,9 +49,9 @@ model spotImage {
   country       String
   city          String
   spot          String   @unique
-  url           String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @default(now())
+  image         Bytes
   referenceLink String   @default("")
   referenceName String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 }

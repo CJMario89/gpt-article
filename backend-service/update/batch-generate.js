@@ -8,7 +8,6 @@ import {
   getCitiesPromptText,
   getSpotsPromptText,
 } from "utils/gpt-prompt-text";
-import { updatePhoto } from "./photo";
 import { processArticle } from "utils/article";
 import { updateArticle } from "./article";
 import { JSDOM } from "jsdom";
@@ -31,20 +30,12 @@ export const batchGenerate = async ({ country }) => {
     console.log("requestGpt article", city);
     const articleRaw = await requestGpt({ text: cityArticleText });
     const article = processArticle(articleRaw);
-    await updateArticle({ type, country, city, article, status });
-    const cityPhotoReference = await requestStoreGooglePhoto({
+    await updateArticle({ type, country, city, article, status: 1 });
+    await requestStoreGooglePhoto({
       type,
       country,
       city,
     });
-    await updatePhoto({
-      type,
-      country,
-      city,
-      url: cityPhotoReference.url,
-      ...parseReference(cityPhotoReference.referenceLink),
-    });
-
     //spot
     const existSpots = (
       await getPlacesByParams({ type: "spot", country, city })
@@ -62,26 +53,18 @@ export const batchGenerate = async ({ country }) => {
       console.log("requestGpt article", spot);
       const articleRaw = await requestGpt({ text: spotArticleText });
       const article = processArticle(articleRaw);
-      await updateArticle({ type, country, city, article, spot, status });
-      const spotPhotoReference = await requestStoreGooglePhoto({
+      await updateArticle({ type, country, city, article, spot, status: 1 });
+      await requestStoreGooglePhoto({
         type,
         country,
         city,
         spot,
-      });
-      await updatePhoto({
-        type,
-        country,
-        city,
-        spot,
-        url: spotPhotoReference.url,
-        ...parseReference(spotPhotoReference.referenceLink),
       });
     });
   });
 };
 
-function parseReference(link) {
+export function parseReference(link) {
   const dom = new JSDOM(link);
   const node = dom.window.document.querySelector("a");
   return {

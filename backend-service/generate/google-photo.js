@@ -1,6 +1,7 @@
 import { getRequest } from "service/common";
-import * as fs from "fs";
+// import * as fs from "fs";
 import { PrismaClient } from "@prisma/client";
+import { parseReference } from "backend-service/update";
 export const prisma = new PrismaClient();
 
 const key = process.env.PLACE_APIKEY;
@@ -33,7 +34,25 @@ export const requestStoreGooglePhoto = async ({
   const placePhotoArrayBuffer = await response2.arrayBuffer();
   const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
   const url = `/${place}.png`;
-  fs.writeFileSync(`./public${url}`, placePhotoBuffer, "binary");
+  const data = {
+    image: placePhotoBuffer,
+    ...parseReference(referenceLink),
+  };
+  if (isSpot) {
+    await prisma.spotImage.upsert({
+      where: { country, city, spot },
+      update: data,
+      create: { country, city, spot, ...data },
+    });
+  } else {
+    await prisma.cityImage.upsert({
+      where: { country, city },
+      update: data,
+      create: { country, city, ...data },
+    });
+  }
+
+  // fs.writeFileSync(`./public${url}`, placePhotoBuffer, "binary");
   console.log(`Image saved as ${place}.png`);
 
   return {

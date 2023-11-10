@@ -1,8 +1,7 @@
 export function processArticle(article) {
   const parseArticle = article.split("\n");
-  const title = parseArticle[0].split("#")[1].trim();
-  const description =
-    parseArticle[1] !== "" ? parseArticle[1].trim() : parseArticle[2].trim();
+  const title = parseArticle.shift().replace(/#/g, "").trim();
+  const description = shiftTillContentExist(parseArticle);
   const regex = /\*(.*?)\*/g;
   const _article = removeGPTHint(parseArticle);
   return {
@@ -12,8 +11,18 @@ export function processArticle(article) {
   };
 }
 
+function shiftTillContentExist(parseArticle) {
+  //too many space between description and title
+  const description = parseArticle.shift();
+  if (description !== "") {
+    return description.trim();
+  }
+  return shiftTillContentExist(parseArticle);
+}
+
 function removeGPTHint(parseArticle) {
+  const regexUnwantedText = /gpt|markdown/i;
   return parseArticle
-    .filter((paragraph) => !paragraph.includes("GPT"))
+    .filter((paragraph) => !regexUnwantedText.test(paragraph))
     .join("\n");
 }

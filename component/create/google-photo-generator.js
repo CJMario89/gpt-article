@@ -75,7 +75,9 @@ const GooglePhotoGenerator = ({
               height: "100%",
             }}
           />
-          <Link href={reference?.href}>{reference?.innerHTML}</Link>
+          <Link passHref href={reference?.href}>
+            Photo reference: {reference?.innerHTML}
+          </Link>
           <Button
             onClick={() => {
               postPhoto({

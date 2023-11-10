@@ -19,7 +19,7 @@ export const getPlacesByParams = async (params = {}) => {
     });
   } else {
     places = await prisma.cityArticle.findMany({
-      where: { country, ...(status ? { status } : {}) },
+      where: { country },
       select: {
         country: true,
         city: true,

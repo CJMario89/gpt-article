@@ -1,8 +1,15 @@
 import { PrismaClient } from "@prisma/client";
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-export const updateArticle = async ({ type, country, city, spot, article }) => {
+export const updateArticle = async ({
+  type,
+  country,
+  city,
+  spot,
+  article,
+  status,
+}) => {
   const { title, description, content } = article;
   if (type === "spot") {
     const data = {
@@ -12,6 +19,7 @@ export const updateArticle = async ({ type, country, city, spot, article }) => {
       title,
       description,
       content,
+      status,
     };
     await prisma.spotArticle.upsert({
       where: {

@@ -3,10 +3,13 @@ import Markdown from "component/Markdown";
 import {
   getAllPlaces,
   getArticle,
+  getPhoto,
   getPlacesByParams,
 } from "backend-service/get";
-import Image from "next/image";
 import { PlaceCard } from "component/blog";
+import { jsonlize } from "utils/jsonlize";
+import { PhotoDisplayer } from "component/create";
+import Link from "next/link";
 
 export const getStaticPaths = async () => {
   const cities = await getAllPlaces({ type: "city" });
@@ -24,20 +27,24 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
   const article = await getArticle({ type: "city", country, city, status: 1 });
-  const image = await import(`../../../../public/${city}.png`);
+  const photo = await getPhoto({ type: "city", country, city });
   const spots = await Promise.all(
     (
       await getPlacesByParams({ type: "spot", country, city, status: 1 })
-    ).map(async (article) => {
-      const image = await import(`../../../../public/${article.spot}.png`);
+    ).map(async ({ country, city, spot, title, description }) => {
+      const photo = await getPhoto({ type: "spot", country, city, spot });
       return {
-        ...article,
-        image: JSON.parse(JSON.stringify(image)),
+        country,
+        city,
+        spot,
+        title,
+        description,
+        photo: jsonlize(photo),
       };
     })
   );
   return {
-    props: { article, image: JSON.parse(JSON.stringify(image)), spots },
+    props: { article, city, photo: jsonlize(photo), spots },
   };
 };
 
@@ -48,7 +55,7 @@ export const getStaticProps = async ({ params }) => {
 //backend structure
 //frontend structure
 //product structure
-const index = ({ article, image, city, spots = [] }) => {
+const index = ({ article, city, photo, spots = [] }) => {
   return (
     <Container
       as={Flex}
@@ -58,24 +65,29 @@ const index = ({ article, image, city, spots = [] }) => {
       alignItems="center"
     >
       <Flex w="fit-content" flexDirection="column">
-        <Image alt={city} src={image} />
+        <PhotoDisplayer photo={photo} />
         <Markdown>{article?.content}</Markdown>
       </Flex>
       <Flex w="full" flexDirection="column" rowGap="4">
         <Heading as="h2">Spots in {city}</Heading>
         <SimpleGrid gap="8" columns={{ sm: "2", md: "3" }}>
-          {spots.map(({ country, city, spot, title, description, image }) => {
+          {spots.map(({ country, city, spot, title, description, photo }) => {
+            const { referenceLink, referenceName } = photo;
             return (
-              <PlaceCard
-                type="spot"
-                key={spot}
-                country={country}
-                city={city}
-                spot={spot}
-                title={title}
-                image={image}
-                description={description}
-              />
+              <Flex key={spot} flexDirection="column">
+                <PlaceCard
+                  type="spot"
+                  country={country}
+                  city={city}
+                  spot={spot}
+                  title={title}
+                  photo={photo}
+                  description={description}
+                />
+                <Link href={referenceLink} target="_blank">
+                  Photo reference: {referenceName}
+                </Link>
+              </Flex>
             );
           })}
         </SimpleGrid>

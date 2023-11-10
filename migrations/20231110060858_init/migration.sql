@@ -16,11 +16,11 @@ CREATE TABLE "cityImage" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "country" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "url" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "image" BLOB NOT NULL,
     "referenceLink" TEXT NOT NULL DEFAULT '',
-    "referenceName" TEXT NOT NULL DEFAULT ''
+    "referenceName" TEXT NOT NULL DEFAULT '',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
@@ -43,11 +43,11 @@ CREATE TABLE "spotImage" (
     "country" TEXT NOT NULL,
     "city" TEXT NOT NULL,
     "spot" TEXT NOT NULL,
-    "url" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "image" BLOB NOT NULL,
     "referenceLink" TEXT NOT NULL DEFAULT '',
-    "referenceName" TEXT NOT NULL DEFAULT ''
+    "referenceName" TEXT NOT NULL DEFAULT '',
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateIndex

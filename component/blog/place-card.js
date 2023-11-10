@@ -1,7 +1,6 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import style from "./place-card.module.css";
-import Link from "next/link";
 
 const PlaceCard = ({
   type,
@@ -9,9 +8,13 @@ const PlaceCard = ({
   city,
   spot,
   title,
-  image,
+  photo,
   ...restProps
 }) => {
+  const { image } = photo;
+  const imageUrl = `data:image/jpeg;base64,${Buffer.from(image.data).toString(
+    "base64"
+  )}`;
   const isSpot = type === "spot";
   const place = isSpot ? spot : city;
   return (
@@ -41,7 +44,7 @@ const PlaceCard = ({
           alt={place}
           width="2048"
           height="2048"
-          src={image}
+          src={imageUrl}
           style={{
             objectFit: "cover",
             width: "100%",
@@ -74,6 +77,10 @@ const PlaceCard = ({
         className={style.title}
       >
         <Text textAlign="center">{title}</Text>
+        {/* <Link href={referenceLink} target="_blank">
+          {referenceName}
+        </Link> */}
+        {/* link in link hydration */}
       </Flex>
     </Box>
   );
