@@ -56,6 +56,7 @@ export const getStaticProps = async ({ params }) => {
 //frontend structure
 //product structure
 const index = ({ article, city, photo, spots = [] }) => {
+  const { title, description, content } = article;
   return (
     <Container
       as={Flex}
@@ -66,7 +67,9 @@ const index = ({ article, city, photo, spots = [] }) => {
     >
       <Flex w="fit-content" flexDirection="column">
         <PhotoDisplayer photo={photo} />
-        <Markdown>{article?.content}</Markdown>
+        <Heading as="h2">{title}</Heading>
+        <Heading as="h5">{description}</Heading>
+        <Markdown>{content}</Markdown>
       </Flex>
       <Flex w="full" flexDirection="column" rowGap="4">
         <Heading as="h2">Spots in {city}</Heading>

@@ -1,7 +1,9 @@
 export function processArticle(article) {
   const parseArticle = article.split("\n");
-  const title = parseArticle.shift().replace(/#/g, "").trim();
-  const description = shiftTillContentExist(parseArticle);
+  const title = parseArticle.shift().replace(/#|\*/g, "").trim();
+  const description = shiftTillContentExist(parseArticle)
+    .replace(/#|\*/g, "")
+    .trim();
   const regex = /\*(.*?)\*/g;
   const _article = removeGPTHint(parseArticle);
   return {
@@ -15,7 +17,7 @@ function shiftTillContentExist(parseArticle) {
   //too many space between description and title
   const description = parseArticle.shift();
   if (description !== "") {
-    return description.trim();
+    return description;
   }
   return shiftTillContentExist(parseArticle);
 }
