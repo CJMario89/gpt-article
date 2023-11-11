@@ -37,6 +37,7 @@ export const updateArticle = async ({
       title,
       description,
       content,
+      status,
     };
     await prisma.cityArticle.upsert({
       where: {

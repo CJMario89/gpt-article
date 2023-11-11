@@ -43,6 +43,7 @@ export const getStaticProps = async ({ params }) => {
       };
     })
   );
+  console.log(article);
   return {
     props: { article, city, photo: jsonlize(photo), spots },
   };
