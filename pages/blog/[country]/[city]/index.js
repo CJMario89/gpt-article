@@ -1,15 +1,12 @@
-import { Container, Flex, Heading, SimpleGrid } from "@chakra-ui/react";
-import Markdown from "component/Markdown";
+import { Container, Flex } from "@chakra-ui/react";
 import {
   getAllPlaces,
   getArticle,
   getPhoto,
   getPlacesByParams,
 } from "backend-service/get";
-import { PlaceCard } from "component/blog";
+import { Blog } from "component/blog";
 import { jsonlize } from "utils/jsonlize";
-import { PhotoDisplayer } from "component/create";
-import Link from "next/link";
 
 export const getStaticPaths = async () => {
   const cities = await getAllPlaces({ type: "city" });
@@ -56,46 +53,16 @@ export const getStaticProps = async ({ params }) => {
 //backend structure
 //frontend structure
 //product structure
-const index = ({ article = {}, city, photo, spots = [] }) => {
-  const { title, description, content } = article;
+const index = ({ article = {}, photo, spots = [] }) => {
   return (
     <Container
       as={Flex}
-      maxW="container.lg"
+      maxW="container.md"
       p="8"
       flexDirection="column"
       alignItems="center"
     >
-      <Flex w="fit-content" flexDirection="column">
-        <PhotoDisplayer photo={photo} />
-        <Heading as="h2">{title}</Heading>
-        <Heading as="h5">{description}</Heading>
-        <Markdown>{content}</Markdown>
-      </Flex>
-      <Flex w="full" flexDirection="column" rowGap="4">
-        <Heading as="h2">Spots in {city}</Heading>
-        <SimpleGrid gap="8" columns={{ sm: "2", md: "3" }}>
-          {spots.map(({ country, city, spot, title, description, photo }) => {
-            const { referenceLink, referenceName } = photo;
-            return (
-              <Flex key={spot} flexDirection="column">
-                <PlaceCard
-                  type="spot"
-                  country={country}
-                  city={city}
-                  spot={spot}
-                  title={title}
-                  photo={photo}
-                  description={description}
-                />
-                <Link href={referenceLink ?? ""} target="_blank">
-                  Photo reference: {referenceName}
-                </Link>
-              </Flex>
-            );
-          })}
-        </SimpleGrid>
-      </Flex>
+      <Blog photo={photo} article={article} spots={spots} />
     </Container>
   );
 };

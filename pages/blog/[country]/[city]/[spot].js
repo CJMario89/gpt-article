@@ -1,8 +1,7 @@
-import { Container, Flex, Heading } from "@chakra-ui/react";
-import Markdown from "component/Markdown";
+import { Container, Flex } from "@chakra-ui/react";
 import { getAllPlaces, getArticle, getPhoto } from "backend-service/get";
 import { jsonlize } from "utils/jsonlize";
-import { PhotoDisplayer } from "component/create";
+import { Blog } from "component/blog";
 
 export const getStaticPaths = async () => {
   const cities = await getAllPlaces({ type: "spot" });
@@ -40,21 +39,15 @@ export const getStaticProps = async ({ params }) => {
 //frontend structure
 //product structure
 const index = ({ article = {}, photo }) => {
-  const { title, description, content } = article;
   return (
     <Container
       as={Flex}
-      maxW="container.lg"
+      maxW="container.md"
       p="8"
       flexDirection="column"
       alignItems="center"
     >
-      <Flex w="fit-content" flexDirection="column">
-        <PhotoDisplayer photo={photo} />
-        <Heading as="h2">{title}</Heading>
-        <Heading as="h5">{description}</Heading>
-        <Markdown>{content}</Markdown>
-      </Flex>
+      <Blog photo={photo} article={article} />
     </Container>
   );
 };

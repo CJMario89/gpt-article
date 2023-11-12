@@ -1,6 +1,7 @@
 import { Box, Flex, Heading, Link, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import style from "./place-card.module.css";
+import { useRouter } from "next/router";
 
 const PlaceCard = ({
   type,
@@ -8,38 +9,43 @@ const PlaceCard = ({
   city,
   spot,
   title,
+  description,
   photo = {},
   ...restProps
 }) => {
-  const { image } = photo;
+  const router = useRouter();
+  const { image, referenceLink, referenceName } = photo;
   const imageUrl = `data:image/jpeg;base64,${Buffer.from(image.data).toString(
     "base64"
   )}`;
   const isSpot = type === "spot";
   const place = isSpot ? spot : city;
   return (
-    <Box
+    <Flex
       w="100%"
-      pt="100%"
-      h="0px"
       flex="1"
       position="relative"
       className={style.card}
       cursor="pointer"
-      transition="all 0.2 ease-in-out"
+      transition="all 0.5s ease-in-out"
       overflow="hidden"
-      as={Link}
-      href={`/blog/${country}/${city}${isSpot ? `/${spot}` : ""}`}
+      p="8"
+      pb="12"
+      _before={{
+        content: '""',
+        position: "absolute",
+        bottom: "0px",
+        left: "24px",
+        width: "calc(100% - 48px)",
+        height: "0.5px",
+        backgroundColor: "#aaaaaa",
+      }}
+      onClick={() => {
+        router.push(`/blog/${country}/${city}${isSpot ? `/${spot}` : ""}`);
+      }}
       {...restProps}
     >
-      <Box
-        w="100%"
-        h="100%"
-        position="absolute"
-        top="0px"
-        borderRadius="12px"
-        overflow="hidden"
-      >
+      <Box position="relative" w="200px" h="200px" mt="6px" flexShrink="0">
         <Image
           alt={place}
           width="2048"
@@ -47,42 +53,61 @@ const PlaceCard = ({
           src={imageUrl}
           style={{
             objectFit: "cover",
-            width: "100%",
-            height: "100%",
+            width: "200px",
+            height: "200px",
           }}
         />
+        <Flex
+          position="absolute"
+          fontSize="12px"
+          color="gray.700"
+          bottom="-8"
+          left="0.5"
+          columnGap="2"
+        >
+          Photo reference:
+          <Link href={referenceLink ?? ""} target="_blank">
+            {referenceName}
+          </Link>
+        </Flex>
       </Box>
       <Flex
-        position="absolute"
-        top="0px"
-        background="whiteAlpha.800"
-        justifyContent="center"
-        p="2"
+        flexDirection="column"
+        alignItems="flex-start"
         w="full"
+        ml="12"
+        rowGap="2"
+        position="relative"
       >
         <Heading as="h4" textAlign="center">
           {place}
         </Heading>
-        {/* <Text>{description}</Text> */}
+        <Heading as="h5">{title}</Heading>
+        <Text
+          height="48px"
+          overflow="hidden"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: "2",
+            WebkitBoxOrient: "vertical",
+          }}
+        >
+          {description}
+        </Text>
       </Flex>
-      <Flex
-        w="full"
+      <Text
         position="absolute"
-        bottom="0px"
-        background="whiteAlpha.800"
-        justifyContent="center"
-        p="2"
-        transform="translateY(100%)"
-        transition="all 0.2s ease-in-out"
-        className={style.title}
+        fontSize="12px"
+        color="gray.600"
+        right="6"
+        bottom="4"
+        _hover={{
+          color: "gray.400",
+        }}
       >
-        <Text textAlign="center">{title}</Text>
-        {/* <Link href={referenceLink} target="_blank">
-          {referenceName}
-        </Link> */}
-        {/* link in link hydration */}
-      </Flex>
-    </Box>
+        Read more...
+      </Text>
+    </Flex>
   );
 };
 

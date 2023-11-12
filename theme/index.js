@@ -8,6 +8,10 @@ const theme = extendTheme({
     Heading,
   },
   styles,
+  fonts: {
+    heading: `'Montserrat', sans-serif`,
+    body: `'Montserrat', sans-serif`,
+  },
   config: {
     initialColorMode: "light",
     useSystemColorMode: false,

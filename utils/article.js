@@ -28,3 +28,7 @@ function removeGPTHint(parseArticle) {
     .filter((paragraph) => !regexUnwantedText.test(paragraph))
     .join("\n");
 }
+
+export function processArticleInBlog(article = "") {
+  return article.split("\n");
+}

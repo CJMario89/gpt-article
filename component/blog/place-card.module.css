@@ -1,6 +1,12 @@
 .card:hover{
-  transform: scale(1.05);
+  background: linear-gradient(to right, rgba(230, 230, 230, 0.6) 0%, rgba(230, 230, 230, 0.6) 50%, #ffffff 100%) ;
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
 }
-.card:hover .title{
-  transform: translateY(0%);
+.card{
+  background: linear-gradient(to right, rgba(230, 230, 230, 0.6) 0%, rgba(230, 230, 230, 0.6) 50%, #ffffff 100%) ;
+  background-size: 200% 100%;
+  background-position: 200% 0%;
+  background-repeat: no-repeat;
 }
