@@ -9,9 +9,16 @@ const useNewArticles = ({ type }, options) => {
       const places = type === "city" ? cities : spots;
       return await Promise.all(
         places.map(async (place) => {
-          const text = getArticlePromptText({ place });
-          const result = await gptQuery({ text });
-          console.log(result);
+          const { text, tokensIncrease, tokensDecrease } = getArticlePromptText(
+            {
+              place,
+            }
+          );
+          const result = await gptQuery({
+            text,
+            tokensIncrease,
+            tokensDecrease,
+          });
           const article = await result.json();
           console.log(article);
 

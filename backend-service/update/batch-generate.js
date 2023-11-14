@@ -17,8 +17,15 @@ export const batchGenerate = async ({ country }) => {
     ({ city }) => city
   );
 
-  const citiesText = getCitiesPromptText({ country, cities: existCities });
-  const generateCitiesRaw = await requestGpt({ text: citiesText });
+  const { text, tokensDecrease, tokensIncrease } = getCitiesPromptText({
+    country,
+    cities: existCities,
+  });
+  const generateCitiesRaw = await requestGpt({
+    text,
+    tokensDecrease,
+    tokensIncrease,
+  });
 
   const generateCities = JSON.parse(generateCitiesRaw.trim()).map((place) => {
     return place.replace(/ /g, "-");
@@ -49,9 +56,15 @@ export const batchGenerate = async ({ country }) => {
     });
     generateSpots.map(async (spot) => {
       const type = "spot";
-      const spotArticleText = getArticlePromptText({ place: spot });
+      const { text, tokensDecrease, tokensIncrease } = getArticlePromptText({
+        place: spot,
+      });
       console.log("requestGpt article", spot);
-      const articleRaw = await requestGpt({ text: spotArticleText });
+      const articleRaw = await requestGpt({
+        text,
+        tokensDecrease,
+        tokensIncrease,
+      });
       const article = processArticle(articleRaw);
       await updateArticle({ type, country, city, article, spot, status: 1 });
       await requestStoreGooglePhoto({
