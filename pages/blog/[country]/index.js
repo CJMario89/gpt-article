@@ -32,6 +32,7 @@ export const getStaticProps = async ({ params }) => {
     })
   );
   console.log(cities);
+  console.log(cities);
   return { props: { country, cities } };
 };
 

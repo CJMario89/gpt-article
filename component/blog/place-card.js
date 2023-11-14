@@ -10,14 +10,15 @@ const PlaceCard = ({
   spot,
   title,
   description,
-  photo = {},
+  photo,
   ...restProps
 }) => {
   const router = useRouter();
-  const { image, referenceLink, referenceName } = photo;
-  const imageUrl = `data:image/jpeg;base64,${Buffer.from(image.data).toString(
-    "base64"
-  )}`;
+  console.log(city);
+  const { image, referenceLink, referenceName } = photo ?? {};
+  const imageUrl =
+    image?.data &&
+    `data:image/jpeg;base64,${Buffer.from(image?.data).toString("base64")}`;
   const isSpot = type === "spot";
   const place = isSpot ? spot : city;
   return (
@@ -46,17 +47,31 @@ const PlaceCard = ({
       {...restProps}
     >
       <Box position="relative" w="200px" h="200px" mt="6px" flexShrink="0">
-        <Image
-          alt={place}
-          width="2048"
-          height="2048"
-          src={imageUrl}
-          style={{
-            objectFit: "cover",
-            width: "200px",
-            height: "200px",
-          }}
-        />
+        {imageUrl ? (
+          <Image
+            alt={place}
+            width="2048"
+            height="2048"
+            src={imageUrl}
+            style={{
+              objectFit: "cover",
+              width: "200px",
+              height: "200px",
+            }}
+          />
+        ) : (
+          <Image
+            alt={place}
+            width="2048"
+            height="2048"
+            src={imageUrl}
+            style={{
+              objectFit: "cover",
+              width: "200px",
+              height: "200px",
+            }}
+          />
+        )}
         <Flex
           position="absolute"
           fontSize="12px"
