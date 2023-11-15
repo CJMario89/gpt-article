@@ -1,8 +1,7 @@
 import { getRequest } from "service/common";
 // import * as fs from "fs";
-import { PrismaClient } from "@prisma/client";
 import { parseReference } from "backend-service/update";
-export const prisma = new PrismaClient();
+import { prisma } from "backend-service/prisma";
 
 const key = process.env.PLACE_APIKEY;
 

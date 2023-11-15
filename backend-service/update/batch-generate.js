@@ -1,6 +1,3 @@
-//five cities and spots
-//articles and photo
-
 import { requestGpt, requestStoreGooglePhoto } from "backend-service/generate";
 import { getPlacesByParams } from "backend-service/get";
 import {

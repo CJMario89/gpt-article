@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "backend-service/prisma";
 
 export const getPlacesByParams = async (params = {}) => {
   const { type, country, city, status } = params;
