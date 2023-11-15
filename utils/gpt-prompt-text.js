@@ -9,7 +9,7 @@ export const getSpotsPromptText = ({ city, spots = [] }) => {
 
 export const getCitiesPromptText = ({ country, cities = [] }) => {
   return {
-    text: `Give me three cities in ${country} that observe the following rules
+    text: `Give me three resort city in ${country} that observe the following rules
 1. return in an array (JS array with square brackets and double quotes, e.x. ["a", "b", "c"])
 2. without any other text`,
     tokensDecrease: cities,

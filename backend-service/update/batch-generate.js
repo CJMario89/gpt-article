@@ -45,22 +45,27 @@ export const batchGenerate = async ({ country }) => {
       await getPlacesByParams({ type: "spot", country, city })
     ).map(({ spot }) => spot);
 
-    const spotsText = getSpotsPromptText({ city, spots: existSpots });
+    const { text, tokensDecrease, tokensIncrease } = getSpotsPromptText({
+      city,
+      spots: existSpots,
+    });
     console.log("requestGpt spots", city);
-    const generateSpotsRaw = await requestGpt({ text: spotsText });
+    const generateSpotsRaw = await requestGpt({
+      text,
+      tokensDecrease,
+      tokensIncrease,
+    });
     const generateSpots = JSON.parse(generateSpotsRaw.trim()).map((place) => {
       return place.replace(/ /g, "-");
     });
     generateSpots.map(async (spot) => {
       const type = "spot";
-      const { text, tokensDecrease, tokensIncrease } = getArticlePromptText({
+      const spotArticleText = getArticlePromptText({
         place: spot,
       });
       console.log("requestGpt article", spot);
       const articleRaw = await requestGpt({
-        text,
-        tokensDecrease,
-        tokensIncrease,
+        text: spotArticleText,
       });
       const article = processArticle(articleRaw);
       await updateArticle({ type, country, city, article, spot, status: 1 });
