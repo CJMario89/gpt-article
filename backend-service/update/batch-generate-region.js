@@ -29,6 +29,7 @@ export async function generateRegion(city) {
   const response = await requestGpt({
     text: getRegionalPromptText({ place: city }),
   });
+  console.log(response);
   const json = JSON.parse(response);
   const region = json.region;
   await articleInstance({ type: "city" }).update({

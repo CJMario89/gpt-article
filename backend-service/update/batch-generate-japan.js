@@ -1,5 +1,5 @@
 import { requestGpt, requestStoreGooglePhoto } from "backend-service/generate";
-import { getAllPlaces, getPlacesByParams } from "backend-service/get";
+import { getAllPlaces, getSimplePlacesByParams } from "backend-service/get";
 import {
   getArticlePromptText,
   getSpotsPromptText,
@@ -11,7 +11,7 @@ import { japanCities } from "../../japan-cities";
 import { generateRegion } from "./batch-generate-region";
 
 const country = "Japan";
-const requestCitiesNumber = 12;
+const requestCitiesNumber = 30;
 export const batchGenerateJapan = async () => {
   const existedCities = (await getAllPlaces({ type: "city" })).map(
     (place) => place.city
@@ -31,7 +31,7 @@ export const batchGenerateJapan = async () => {
         await generateSpots(city),
         await generateRegion(city),
       ]);
-
+      console.log(generateSpots);
       await Promise.all(
         generatedSpots.map(async (spot) => {
           await generateSpotArticle(city, spot);
@@ -58,8 +58,9 @@ async function generateCityArticle(city) {
 }
 
 async function generateSpots(city) {
+  console.log(await getSimplePlacesByParams({ type: "spot", country, city }));
   const existSpots = (
-    await getPlacesByParams({ type: "spot", country, city })
+    await getSimplePlacesByParams({ type: "spot", country, city })
   ).map(({ spot }) => spot);
 
   const { text, tokensDecrease, tokensIncrease } = getSpotsPromptText({
