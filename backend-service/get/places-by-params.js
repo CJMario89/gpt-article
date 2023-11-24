@@ -1,7 +1,7 @@
 import { articleInstance } from "backend-service/common";
 
 export const getPlacesByParams = async (params = {}) => {
-  const { type, country, city, region, status, page, limit } = params;
+  const { type, country, city, region, page, limit } = params;
   console.log(params);
   const isSpot = type === "spot";
   const places = await articleInstance({ type }).findMany({
@@ -9,7 +9,6 @@ export const getPlacesByParams = async (params = {}) => {
       country,
       ...(region ? { region } : {}),
       ...(isSpot ? { city } : {}),
-      ...(status ? { status } : {}),
     },
     skip: (page - 1) * limit,
     take: Number(limit),
@@ -24,7 +23,6 @@ export const getPlacesByParams = async (params = {}) => {
       preview_image: true,
       image_reference_link: true,
       image_reference_name: true,
-      status: true,
     },
   });
 
@@ -33,7 +31,6 @@ export const getPlacesByParams = async (params = {}) => {
       country,
       ...(region ? { region } : {}),
       ...(isSpot ? { city } : {}),
-      ...(status ? { status } : {}),
     },
   });
   const totalPage = Math.ceil(total / limit);

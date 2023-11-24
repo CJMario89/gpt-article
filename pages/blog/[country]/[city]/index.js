@@ -22,10 +22,10 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
-  const article = await getArticle({ type: "city", country, city, status: 1 });
+  const article = await getArticle({ type: "city", country, city });
   const spots = await Promise.all(
     (
-      await getPlacesByParams({ type: "spot", country, city, status: 1 })
+      await getPlacesByParams({ type: "spot", country, city })
     ).map((spot) => {
       return jsonlize(spot);
     })

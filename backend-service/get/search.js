@@ -3,7 +3,6 @@ import { articleInstance } from "backend-service/common";
 export const search = async ({ type, region, limit = 10, text }) => {
   const places = await articleInstance({ type }).findMany({
     where: {
-      status: 1,
       ...(region ? { region } : {}),
     },
     orderBy: {

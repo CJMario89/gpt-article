@@ -1,14 +1,13 @@
 import { articleInstance } from "backend-service/common";
 
 export const getArticle = async (params = {}) => {
-  const { type, country, city, spot, status } = params;
+  const { type, country, city, spot } = params;
   const isSpot = type === "spot";
   return await articleInstance({ type }).findUnique({
     where: {
       country,
       city,
       ...(isSpot ? { spot } : {}),
-      ...(status ? { status } : {}),
     },
     select: {
       country: true,

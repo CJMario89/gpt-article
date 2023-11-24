@@ -12,7 +12,6 @@ model CityArticle {
   id                   Int            @id @default(autoincrement())
   country              String         @default("")
   city                 String         @unique
-  status               Int            @default(0)
   title                String         @default("")
   description          String         @default("")
   region               String         @default("")
@@ -36,7 +35,6 @@ model SpotArticle {
   city                 String
   city_article         CityArticle    @relation(fields: [city], references: [city])
   spot                 String         @unique
-  status               Int            @default(0)
   title                String         @default("")
   description          String         @default("")
   content              String         @default("")

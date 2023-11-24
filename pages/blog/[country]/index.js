@@ -32,7 +32,7 @@ import { useState } from "react";
 //   const { country } = params;
 //   const cities = await Promise.all(
 //     (
-//       await getPlacesByParams({ type: "city", country, status: 1 })
+//       await getPlacesByParams({ type: "city", country })
 //     ).map((place) => {
 //       return jsonlize(place);
 //     })

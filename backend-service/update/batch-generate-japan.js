@@ -49,7 +49,7 @@ async function generateCityArticle(city) {
   console.log("requestGpt article", city);
   const articleRaw = await requestGpt({ text: cityArticleText });
   const article = processArticle(articleRaw);
-  await updateArticle({ type, country, city, article, status: 1 });
+  await updateArticle({ type, country, city, article });
   await requestStoreGooglePhoto({
     type,
     country,
@@ -88,7 +88,7 @@ async function generateSpotArticle(city, spot) {
     text: spotArticleText,
   });
   const article = processArticle(articleRaw);
-  await updateArticle({ type, country, city, article, spot, status: 1 });
+  await updateArticle({ type, country, city, article, spot });
   await requestStoreGooglePhoto({
     type,
     country,

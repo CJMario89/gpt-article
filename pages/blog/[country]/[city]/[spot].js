@@ -24,7 +24,6 @@ export const getStaticProps = async ({ params }) => {
     country,
     city,
     spot,
-    status: 1,
   });
   return {
     props: { article: jsonlize(article), spot },

@@ -1,13 +1,6 @@
 import { articleInstance } from "backend-service/common";
 
-export const updateArticle = async ({
-  type,
-  country,
-  city,
-  spot,
-  article,
-  status,
-}) => {
+export const updateArticle = async ({ type, country, city, spot, article }) => {
   const { title, description, content } = article;
   const isSpot = type === "spot";
   const data = {
@@ -17,7 +10,6 @@ export const updateArticle = async ({
     title,
     description,
     content,
-    status,
   };
   await articleInstance({ type }).upsert({
     where: {

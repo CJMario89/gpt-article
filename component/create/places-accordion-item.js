@@ -70,7 +70,7 @@ const PlacesAccordionItem = ({ type, country, city }) => {
       <AccordionPanel pb={4}>
         <Flex flexDirection="column" rowGap="8">
           <div />
-          {places.map(({ city, spot, title, status }) => {
+          {places.map(({ city, spot, title }) => {
             return (
               <ArticlePanel
                 type={type}
@@ -78,7 +78,6 @@ const PlacesAccordionItem = ({ type, country, city }) => {
                 city={city}
                 spot={spot}
                 title={title}
-                status={status}
                 key={isSpot ? spot : city}
               />
             );
