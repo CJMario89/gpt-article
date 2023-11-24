@@ -2,7 +2,6 @@ import { Container, Flex } from "@chakra-ui/react";
 import {
   getAllPlaces,
   getArticle,
-  getPhoto,
   getPlacesByParams,
 } from "backend-service/get";
 import { Blog } from "component/blog";
@@ -24,36 +23,22 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
   const article = await getArticle({ type: "city", country, city, status: 1 });
-  const photo = await getPhoto({ type: "city", country, city });
   const spots = await Promise.all(
     (
       await getPlacesByParams({ type: "spot", country, city, status: 1 })
-    ).map(async ({ country, city, spot, title, description }) => {
-      const photo = await getPhoto({ type: "spot", country, city, spot });
-      return {
-        country,
-        city,
-        spot,
-        title,
-        description,
-        photo: jsonlize(photo),
-      };
+    ).map((spot) => {
+      return jsonlize(spot);
     })
   );
   console.log(article);
   return {
-    props: { article, city, photo: jsonlize(photo), spots },
+    props: { article: jsonlize(article), city, spots },
   };
 };
 
 //SEO, share, other function
-//article of spot is a short description
-//image cache control
-//what attract people
-//backend structure
-//frontend structure
-//product structure
-const index = ({ article = {}, photo, spots = [] }) => {
+
+const index = ({ article = {}, spots = [] }) => {
   return (
     <Container
       as={Flex}
@@ -62,7 +47,7 @@ const index = ({ article = {}, photo, spots = [] }) => {
       flexDirection="column"
       alignItems="center"
     >
-      <Blog photo={photo} article={article} spots={spots} />
+      <Blog article={article} spots={spots} />
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import { prisma } from "backend-service/prisma";
+import { articleInstance } from "backend-service/common";
 
 export const updateArticleStatus = async ({
   type,
@@ -7,26 +7,15 @@ export const updateArticleStatus = async ({
   spot,
   status,
 }) => {
-  if (type === "spot") {
-    await prisma.spotArticle.update({
-      where: {
-        country,
-        city,
-        spot,
-      },
-      data: {
-        status,
-      },
-    });
-  } else {
-    await prisma.cityArticle.update({
-      where: {
-        country,
-        city,
-      },
-      data: {
-        status,
-      },
-    });
-  }
+  const isSpot = type === "spot";
+  await articleInstance({ type }).update({
+    where: {
+      country,
+      city,
+      ...(isSpot ? { spot } : {}),
+    },
+    data: {
+      status,
+    },
+  });
 };

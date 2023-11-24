@@ -1,29 +1,25 @@
-import { prisma } from "backend-service/prisma";
+import { articleInstance } from "backend-service/common";
 
 export const getArticle = async (params = {}) => {
   const { type, country, city, spot, status } = params;
-  if (type === "spot") {
-    return await prisma.spotArticle.findUnique({
-      where: { country, city, spot, ...(status ? { status } : {}) },
-      select: {
-        country: true,
-        city: true,
-        spot: true,
-        title: true,
-        description: true,
-        content: true,
-      },
-    });
-  } else {
-    return await prisma.cityArticle.findUnique({
-      where: { country, city, ...(status ? { status } : {}) },
-      select: {
-        country: true,
-        city: true,
-        title: true,
-        description: true,
-        content: true,
-      },
-    });
-  }
+  const isSpot = type === "spot";
+  return await articleInstance({ type }).findUnique({
+    where: {
+      country,
+      city,
+      ...(isSpot ? { spot } : {}),
+      ...(status ? { status } : {}),
+    },
+    select: {
+      country: true,
+      city: true,
+      ...(isSpot ? { spot: true } : {}),
+      title: true,
+      description: true,
+      content: true,
+      image: true,
+      image_reference_link: true,
+      image_reference_name: true,
+    },
+  });
 };

@@ -1,4 +1,4 @@
-import { prisma } from "backend-service/prisma";
+import { articleInstance } from "backend-service/common";
 
 export const updatePlaces = async ({ type, country, cities, spots }) => {
   const data = [];
@@ -10,8 +10,6 @@ export const updatePlaces = async ({ type, country, cities, spots }) => {
         spot,
       });
     });
-    console.log(data);
-    await prisma.spotArticle.createMany({ data });
   } else {
     cities.forEach((city) => {
       data.push({
@@ -19,8 +17,8 @@ export const updatePlaces = async ({ type, country, cities, spots }) => {
         city,
       });
     });
-    console.log(data);
-
-    await prisma.cityArticle.createMany({ data });
   }
+  console.log(data);
+
+  await articleInstance({ type }).createMany({ data });
 };

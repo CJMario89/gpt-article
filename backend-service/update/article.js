@@ -1,4 +1,4 @@
-import { prisma } from "backend-service/prisma";
+import { articleInstance } from "backend-service/common";
 
 export const updateArticle = async ({
   type,
@@ -9,41 +9,23 @@ export const updateArticle = async ({
   status,
 }) => {
   const { title, description, content } = article;
-  if (type === "spot") {
-    const data = {
+  const isSpot = type === "spot";
+  const data = {
+    country,
+    city,
+    spot,
+    title,
+    description,
+    content,
+    status,
+  };
+  await articleInstance({ type }).upsert({
+    where: {
       country,
       city,
-      spot,
-      title,
-      description,
-      content,
-      status,
-    };
-    await prisma.spotArticle.upsert({
-      where: {
-        country,
-        city,
-        spot,
-      },
-      update: data,
-      create: data,
-    });
-  } else {
-    const data = {
-      country,
-      city,
-      title,
-      description,
-      content,
-      status,
-    };
-    await prisma.cityArticle.upsert({
-      where: {
-        country,
-        city,
-      },
-      create: data,
-      update: data,
-    });
-  }
+      ...(isSpot ? { spot } : {}),
+    },
+    update: data,
+    create: data,
+  });
 };

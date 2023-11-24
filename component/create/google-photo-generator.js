@@ -1,5 +1,4 @@
 import { Button, Flex } from "@chakra-ui/react";
-import { usePostPhoto } from "hooks/db";
 import { useNewPhoto } from "hooks/google";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,17 +21,7 @@ const GooglePhotoGenerator = ({
     { type },
     {
       onSuccess: () => {
-        setPhotoDisplay(true);
-      },
-    }
-  );
-
-  const { mutate: postPhoto } = usePostPhoto(
-    { type },
-    {
-      onSuccess: () => {
-        setPhotoDisplay(false);
-        alert("success");
+        setPhotoDisplay(false); // todo: get image by query
       },
     }
   );
@@ -40,7 +29,7 @@ const GooglePhotoGenerator = ({
   const reference = useMemo(() => {
     if (typeof window !== "undefined") {
       const referenceNode = new DOMParser().parseFromString(
-        photo?.referenceLink,
+        photo?.image_reference_link,
         "text/html"
       ).body.firstChild;
       return {
@@ -48,7 +37,7 @@ const GooglePhotoGenerator = ({
         href: referenceNode.href,
       };
     }
-  }, [photo?.referenceLink]);
+  }, [photo?.image_reference_link]);
   return (
     <Flex flexDirection="column" rowGap="4" {...restProps}>
       <Button
@@ -62,13 +51,13 @@ const GooglePhotoGenerator = ({
       >
         New photo
       </Button>
-      {photoDisplay && photo?.url && (
+      {photoDisplay && (
         <Flex flexDirection="column" rowGap="4">
           <Image
             alt={city}
             width="2048"
             height="2048"
-            src={window?.location?.origin + photo?.url}
+            src={""} //blob
             style={{
               objectFit: "cover",
               width: "100%",
@@ -78,21 +67,6 @@ const GooglePhotoGenerator = ({
           <Link passHref href={reference?.href ?? ""}>
             Photo reference: {reference?.innerHTML}
           </Link>
-          <Button
-            onClick={() => {
-              postPhoto({
-                country,
-                city,
-                spot,
-                url: photo.url,
-                referenceLink: reference?.href,
-                referenceName: reference?.innerHTML,
-              });
-            }}
-            alignSelf="self-start"
-          >
-            confirm
-          </Button>
         </Flex>
       )}
     </Flex>

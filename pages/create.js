@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Accordion, Button, Container, Flex, Input } from "@chakra-ui/react";
+import { Accordion, Button, Container, Flex } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/react-query";
 import {
-  useBatchGenerate,
+  useBatchGenerateJapan,
   useGetCountries,
   useGetPlacesByParams,
 } from "hooks/db";
@@ -23,10 +23,11 @@ const Create = () => {
     type: "city",
     country,
   });
-  const { isLoading, mutate: batchGenerate } = useBatchGenerate({
+  const { isLoading, mutate: batchGenerateJapan } = useBatchGenerateJapan({
     onSuccess: () => {
-      refetchCities();
-      refetchCountries();
+      // refetchCities();
+      // refetchCountries();
+      // batchGenerateJapan();
     },
   });
   return (
@@ -35,14 +36,14 @@ const Create = () => {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            const country = e.target.country.value;
-            batchGenerate({ country });
-            setCountry(country);
+            // const country = e.target.country.value;
+            batchGenerateJapan();
+            setCountry("Japan");
           }}
         >
           <Flex rowGap="20px" flexDirection="column">
             {/* <Heading as="h3">country</Heading> */}
-            <Accordion allowMultiple>
+            {/* <Accordion allowMultiple>
               {Array.isArray(countries) &&
                 countries.map(({ country }) => (
                   <PlacesAccordionItem
@@ -51,13 +52,13 @@ const Create = () => {
                     key={country}
                   />
                 ))}
-            </Accordion>
-            <Input
+            </Accordion> */}
+            {/* <Input
               name="country"
               type="text"
               alignSelf="self-start"
               w="200px"
-            />
+            /> */}
             <Button
               type="submit"
               alignSelf="self-start"

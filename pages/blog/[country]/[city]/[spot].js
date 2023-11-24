@@ -1,5 +1,5 @@
 import { Container, Flex } from "@chakra-ui/react";
-import { getAllPlaces, getArticle, getPhoto } from "backend-service/get";
+import { getAllPlaces, getArticle } from "backend-service/get";
 import { jsonlize } from "utils/jsonlize";
 import { Blog } from "component/blog";
 
@@ -26,9 +26,8 @@ export const getStaticProps = async ({ params }) => {
     spot,
     status: 1,
   });
-  const photo = await getPhoto({ type: "spot", country, city, spot });
   return {
-    props: { article, spot, photo: jsonlize(photo) },
+    props: { article: jsonlize(article), spot },
   };
 };
 

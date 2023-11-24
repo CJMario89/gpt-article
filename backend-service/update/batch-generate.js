@@ -83,7 +83,7 @@ export function parseReference(link) {
   const dom = new JSDOM(link);
   const node = dom.window.document.querySelector("a");
   return {
-    referenceLink: node.href,
-    referenceName: node.innerHTML,
+    image_reference_link: node.href,
+    image_reference_name: node.innerHTML,
   };
 }

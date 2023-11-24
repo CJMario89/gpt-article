@@ -6,7 +6,7 @@ import {
   Heading,
   Textarea,
 } from "@chakra-ui/react";
-import { getAllPlaces, getArticle, getPhoto } from "backend-service/get";
+import { getAllPlaces, getArticle } from "backend-service/get";
 import { PhotoDisplayer, PlacesAccordionItem } from "component/create";
 import GooglePhotoGenerator from "component/create/google-photo-generator";
 import { usePostArticle } from "hooks/db";
@@ -28,9 +28,8 @@ export const getStaticPaths = async () => {
 export const getStaticProps = async ({ params }) => {
   const { country, city } = params;
   const article = await getArticle({ type: "city", country, city });
-  const photo = await getPhoto({ type: "city", country, city });
   return {
-    props: { country, city, photo: jsonlize(photo), article },
+    props: { country, city, article: jsonlize(article) },
   };
 };
 
@@ -46,7 +45,14 @@ const Spots = ({ country, city }) => {
 };
 
 const Index = ({ country, city, article = {}, photo }) => {
-  const { title, description, content } = article;
+  const {
+    title,
+    description,
+    content,
+    image,
+    image_reference_link,
+    image_reference_name,
+  } = article;
   console.log(photo);
   const { mutate: postArticle, isLoading: isPostCityArticleLoading } =
     usePostArticle(
@@ -114,7 +120,9 @@ const Index = ({ country, city, article = {}, photo }) => {
           </Flex>
           <Flex flexDirection="column" rowGap="4">
             <Heading as="h4">Photo</Heading>
-            <PhotoDisplayer photo={photo} />
+            <PhotoDisplayer
+              photo={{ image, image_reference_link, image_reference_name }}
+            />
             <GooglePhotoGenerator
               type="city"
               country={country}

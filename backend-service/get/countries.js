@@ -1,4 +1,4 @@
-import { prisma } from "backend-service/prisma";
+import { prisma } from "backend-service/common";
 
 export const getCountries = async () => {
   const countries = await prisma.cityArticle.groupBy({

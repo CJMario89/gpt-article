@@ -3,24 +3,26 @@ import Image from "next/image";
 import style from "./place-card.module.css";
 import { useRouter } from "next/router";
 
-const PlaceCard = ({
-  type,
-  country,
-  city,
-  spot,
-  title,
-  description,
-  photo,
-  ...restProps
-}) => {
+const PlaceCard = ({ place, ...restProps }) => {
+  const {
+    type,
+    country,
+    city,
+    spot,
+    title,
+    description,
+    preview_image,
+    image_reference_link,
+    image_reference_name,
+  } = place;
   const router = useRouter();
-  console.log(city);
-  const { image, referenceLink, referenceName } = photo ?? {};
   const imageUrl =
-    image?.data &&
-    `data:image/jpeg;base64,${Buffer.from(image?.data).toString("base64")}`;
+    preview_image?.data &&
+    `data:image/jpeg;base64,${Buffer.from(preview_image?.data).toString(
+      "base64"
+    )}`;
   const isSpot = type === "spot";
-  const place = isSpot ? spot : city;
+  const placeName = isSpot ? spot : city;
   return (
     <Flex
       w="100%"
@@ -47,21 +49,9 @@ const PlaceCard = ({
       {...restProps}
     >
       <Box position="relative" w="200px" h="200px" mt="6px" flexShrink="0">
-        {imageUrl ? (
+        {imageUrl && (
           <Image
-            alt={place}
-            width="2048"
-            height="2048"
-            src={imageUrl}
-            style={{
-              objectFit: "cover",
-              width: "200px",
-              height: "200px",
-            }}
-          />
-        ) : (
-          <Image
-            alt={place}
+            alt={placeName}
             width="2048"
             height="2048"
             src={imageUrl}
@@ -79,10 +69,11 @@ const PlaceCard = ({
           bottom="-8"
           left="0.5"
           columnGap="2"
+          whiteSpace="nowrap"
         >
           Photo reference:
-          <Link href={referenceLink ?? ""} target="_blank">
-            {referenceName}
+          <Link href={image_reference_link ?? ""} target="_blank">
+            {image_reference_name}
           </Link>
         </Flex>
       </Box>
@@ -95,7 +86,7 @@ const PlaceCard = ({
         position="relative"
       >
         <Heading as="h4" textAlign="center">
-          {place}
+          {placeName}
         </Heading>
         <Heading as="h5">{title}</Heading>
         <Text

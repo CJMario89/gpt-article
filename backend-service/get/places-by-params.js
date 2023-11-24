@@ -1,37 +1,45 @@
-import { prisma } from "backend-service/prisma";
+import { articleInstance } from "backend-service/common";
 
 export const getPlacesByParams = async (params = {}) => {
-  const { type, country, city, status } = params;
-  let places = [];
-  if (type === "spot") {
-    places = await prisma.spotArticle.findMany({
-      where: { country, city, ...(status ? { status } : {}) },
-      select: {
-        country: true,
-        city: true,
-        spot: true,
-        title: true,
-        description: true,
-        status: true,
-      },
-    });
-  } else {
-    places = await prisma.cityArticle.findMany({
-      where: { country },
-      select: {
-        country: true,
-        city: true,
-        title: true,
-        description: true,
-        status: true,
-      },
-    });
-  }
-
-  const sortPlaces = places.sort((a, b) => {
-    if (Number(a.status) > Number(b.status)) return 1;
-    else if (Number(a.status) < Number(b.status)) return -1;
-    else return 0;
+  const { type, country, city, region, status, page, limit } = params;
+  console.log(params);
+  const isSpot = type === "spot";
+  const places = await articleInstance({ type }).findMany({
+    where: {
+      country,
+      ...(region ? { region } : {}),
+      ...(isSpot ? { city } : {}),
+      ...(status ? { status } : {}),
+    },
+    skip: (page - 1) * limit,
+    take: Number(limit),
+    select: {
+      country: true,
+      city: true,
+      ...(isSpot ? { spot: true } : {}),
+      title: true,
+      description: true,
+      content: true,
+      // image: true,
+      preview_image: true,
+      image_reference_link: true,
+      image_reference_name: true,
+      status: true,
+    },
   });
-  return sortPlaces;
+
+  const total = await articleInstance({ type }).count({
+    where: {
+      country,
+      ...(region ? { region } : {}),
+      ...(isSpot ? { city } : {}),
+      ...(status ? { status } : {}),
+    },
+  });
+  const totalPage = Math.ceil(total / limit);
+
+  return {
+    places,
+    totalPage,
+  };
 };

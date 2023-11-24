@@ -17,8 +17,14 @@ export const getCitiesPromptText = ({ country, cities = [] }) => {
 };
 
 export const getArticlePromptText = ({ place }) => {
-  return `Please produce a popular traveling article about '${place}' with following rules:
+  return `Please produce a popular and useful traveling article about '${place}' with following rules:
 1. return in markdown form which can be parsed by markdown.js
 2. without image
 3. without gpt hint commentary`;
+};
+
+export const getRegionalPromptText = ({ place }) => {
+  return `Can you put ${place} in the regional category: [Hokkaido,Tohoku,Kanto,Chubu,Kansai,Chugoku,Shikoku,Kyushu,Okinawa]
+  and in following json format and without any other text:
+  {"region": "",  city: "${place}"}`;
 };
