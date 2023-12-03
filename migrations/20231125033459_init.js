@@ -7,6 +7,7 @@ exports.up = async function (knex) {
     table.increments("id").primary();
     table.string("country", 255);
     table.string("city", 255).unique().index();
+    table.string("city_japanese", 255);
     table.string("title", 255);
     table.string("description", 255);
     table.string("content", 255);
@@ -16,6 +17,7 @@ exports.up = async function (knex) {
     table.string("area", 255);
     table.string("density", 255);
     table.string("founded", 255);
+    table.string("website", 255);
     table.string("location", 255);
     table.binary("image");
     table.binary("preview_image");
@@ -33,7 +35,6 @@ exports.up = async function (knex) {
     table.string("country", 255);
     table.string("city", 255).references("city").inTable("CityArticle");
     table.string("spot", 255).unique().index();
-    table.string("prefecture", 255);
     table.string("title", 255);
     table.string("description", 255);
     table.string("content", 255);
@@ -42,8 +43,6 @@ exports.up = async function (knex) {
     table.binary("preview_image");
     table.string("image_reference_link", 255);
     table.string("image_reference_name", 255);
-    table.string("google_rating", 255);
-    table.string("google_rating_count", 255);
     table.string("google_website", 255);
     table.string("google_map_url", 255);
     table.timestamps(true, true);

@@ -20,7 +20,7 @@ export const batchGenerateRegion = async () => {
     })
   );
 };
-
+//prefecture
 export async function generateRegion(city) {
   const response = await requestGpt({
     text: getRegionalPromptText({ place: city }),

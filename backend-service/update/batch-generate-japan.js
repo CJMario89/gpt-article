@@ -1,4 +1,8 @@
-import { requestGpt, requestStoreGooglePhoto } from "backend-service/generate";
+import {
+  getGoogleInfo,
+  requestGpt,
+  requestStoreGooglePhoto,
+} from "backend-service/generate";
 import { getAllPlaces, getSimplePlacesByParams } from "backend-service/get";
 import {
   getArticlePromptText,
@@ -8,16 +12,15 @@ import { processArticle } from "utils/article";
 import { updateArticle } from "./article";
 import { JSDOM } from "jsdom";
 import { japanCities } from "../../japan-cities";
-import { generateRegion } from "./batch-generate-region";
 
 const country = "Japan";
-const requestCitiesNumber = 50;
+const requestCitiesNumber = 1;
 export const batchGenerateJapan = async () => {
   const existedCities = (await getAllPlaces({ type: "city" })).map(
     (place) => place.city
   );
   const absentCities = japanCities.filter(
-    (city) => !existedCities.includes(city)
+    (place) => !existedCities.includes(place.city)
   );
 
   const requestCities =
@@ -25,19 +28,8 @@ export const batchGenerateJapan = async () => {
       ? absentCities.slice(0, requestCitiesNumber)
       : absentCities;
   const cities = await Promise.all(
-    requestCities.map(async (city) => {
-      const [, generatedSpots] = await Promise.all([
-        await generateCityArticle(city),
-        await generateSpots(city),
-        await generateRegion(city),
-      ]);
-      console.log(generateSpots);
-      await Promise.all(
-        generatedSpots.map(async (spot) => {
-          await generateSpotArticle(city, spot);
-        })
-      );
-      return city;
+    requestCities.map(async (place) => {
+      await getGoogleInfo({ place });
     })
   );
   return cities;
