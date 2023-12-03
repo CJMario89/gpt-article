@@ -17,10 +17,11 @@ import ArticlePanel from "./article-panel";
 
 const PlacesAccordionItem = ({ type, country, city }) => {
   const isSpot = type === "spot";
-  const { data: places = [], refetch: refetchPlaces } = useGetPlacesByParams(
+  const { data, refetch: refetchPlaces } = useGetPlacesByParams(
     { type, country, city },
     { enabled: !!country }
   );
+  const places = data?.pages[0]?.places ?? [];
   const { mutate: postPlaces } = usePostPlaces(
     { type },
     {

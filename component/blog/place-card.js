@@ -37,18 +37,27 @@ const PlaceCard = ({ place, ...restProps }) => {
       _before={{
         content: '""',
         position: "absolute",
-        bottom: "0px",
+        bottom: "1px",
         left: "24px",
         width: "calc(100% - 48px)",
         height: "0.5px",
         backgroundColor: "#aaaaaa",
       }}
+      flexDirection={{ base: "column", md: "row" }}
+      alignItems={{ base: "center", md: "flex-start" }}
+      rowGap="12"
       onClick={() => {
         router.push(`/blog/${country}/${city}${isSpot ? `/${spot}` : ""}`);
       }}
       {...restProps}
     >
-      <Box position="relative" w="200px" h="200px" mt="6px" flexShrink="0">
+      <Box
+        position="relative"
+        w={{ base: "250px", md: "200px" }}
+        h={{ base: "250px", md: "200px" }}
+        mt="6px"
+        flexShrink="0"
+      >
         {imageUrl && (
           <Image
             alt={placeName}
@@ -57,16 +66,16 @@ const PlaceCard = ({ place, ...restProps }) => {
             src={imageUrl}
             style={{
               objectFit: "cover",
-              width: "200px",
-              height: "200px",
+              width: "inherit",
+              height: "inherit",
             }}
           />
         )}
         <Flex
           position="absolute"
-          fontSize="12px"
+          fontSize="10px"
           color="gray.700"
-          bottom="-8"
+          bottom="-4"
           left="0.5"
           columnGap="2"
           whiteSpace="nowrap"
@@ -80,8 +89,8 @@ const PlaceCard = ({ place, ...restProps }) => {
       <Flex
         flexDirection="column"
         alignItems="flex-start"
-        w="full"
-        ml="12"
+        w={{ base: "250px", md: "full" }}
+        ml={{ base: "0", md: "12" }}
         rowGap="2"
         position="relative"
       >
@@ -100,19 +109,18 @@ const PlaceCard = ({ place, ...restProps }) => {
         >
           {description}
         </Text>
+        <Text
+          fontSize="12px"
+          color="gray.600"
+          textAlign="center"
+          justifySelf="flex-end"
+          _hover={{
+            color: "gray.400",
+          }}
+        >
+          Read more...
+        </Text>
       </Flex>
-      <Text
-        position="absolute"
-        fontSize="12px"
-        color="gray.600"
-        right="6"
-        bottom="4"
-        _hover={{
-          color: "gray.400",
-        }}
-      >
-        Read more...
-      </Text>
     </Flex>
   );
 };

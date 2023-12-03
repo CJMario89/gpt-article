@@ -11,7 +11,7 @@ import { japanCities } from "../../japan-cities";
 import { generateRegion } from "./batch-generate-region";
 
 const country = "Japan";
-const requestCitiesNumber = 30;
+const requestCitiesNumber = 50;
 export const batchGenerateJapan = async () => {
   const existedCities = (await getAllPlaces({ type: "city" })).map(
     (place) => place.city

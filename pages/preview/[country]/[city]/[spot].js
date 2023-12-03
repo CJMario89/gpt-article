@@ -21,7 +21,6 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async ({ params }) => {
   const { country, city, spot } = params;
-  console.log(spot);
   const article = await getArticle({ type: "spot", country, city, spot });
   return {
     props: {

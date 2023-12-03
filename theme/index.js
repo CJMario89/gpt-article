@@ -16,6 +16,12 @@ const theme = extendTheme({
     initialColorMode: "light",
     useSystemColorMode: false,
   },
+  breakpoints: {
+    base: "0px",
+    md: "500px",
+    lg: "768px",
+    xl: "1100px",
+  },
 });
 
 export default theme;

@@ -1,16 +1,12 @@
 import { articleInstance } from "backend-service/common";
-import { prisma } from "backend-service/common";
 import { requestGpt } from "backend-service/generate";
 import { getRegionalPromptText } from "utils/gpt-prompt-text";
 
 const requestCitiesNumber = 100;
 export const batchGenerateRegion = async () => {
-  const emptyRegionCities = await prisma.cityArticle.findMany({
-    where: { region: "" },
-    select: {
-      city: true,
-    },
-  });
+  const emptyRegionCities = await articleInstance({ type: "city" })
+    .where({ region: null })
+    .select("city");
 
   const requestCities =
     emptyRegionCities.length > requestCitiesNumber
@@ -32,12 +28,7 @@ export async function generateRegion(city) {
   console.log(response);
   const json = JSON.parse(response);
   const region = json.region;
-  await articleInstance({ type: "city" }).update({
-    where: {
-      city,
-    },
-    data: {
-      region,
-    },
+  await articleInstance({ type: "city" }).where({ city }).update({
+    region,
   });
 }

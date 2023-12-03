@@ -1,2 +1,1 @@
-export * from "./article-instance";
-export * from "./prisma";
+export * from "./instance";

@@ -18,7 +18,6 @@ export const updatePlaces = async ({ type, country, cities, spots }) => {
       });
     });
   }
-  console.log(data);
 
-  await articleInstance({ type }).createMany({ data });
+  await articleInstance({ type }).insert(data);
 };

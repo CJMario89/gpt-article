@@ -1,38 +1,36 @@
 import { articleInstance } from "backend-service/common";
 
 export const getPlacesByParams = async (params = {}) => {
-  const { type, country, city, region, page, limit } = params;
-  console.log(params);
+  const { type, country, city, region, page, limit = 4 } = params;
   const isSpot = type === "spot";
-  const places = await articleInstance({ type }).findMany({
-    where: {
+  const places = await articleInstance({ type })
+    .where({
       country,
       ...(region ? { region } : {}),
       ...(isSpot ? { city } : {}),
-    },
-    skip: (page - 1) * limit,
-    take: Number(limit),
-    select: {
-      country: true,
-      city: true,
-      ...(isSpot ? { spot: true } : {}),
-      title: true,
-      description: true,
-      content: true,
-      // image: true,
-      preview_image: true,
-      image_reference_link: true,
-      image_reference_name: true,
-    },
-  });
+    })
+    .limit(Number(limit))
+    .offset((page - 1) * limit)
+    .select([
+      "country",
+      "city",
+      ...(isSpot ? ["spot"] : []),
+      "title",
+      "description",
+      "preview_image",
+      "image_reference_link",
+      "image_reference_name",
+    ]);
+  const total = (
+    await articleInstance({ type })
+      .where({
+        country,
+        ...(region ? { region } : {}),
+        ...(isSpot ? { city } : {}),
+      })
+      .count(`${type} AS count`)
+  )[0].count;
 
-  const total = await articleInstance({ type }).count({
-    where: {
-      country,
-      ...(region ? { region } : {}),
-      ...(isSpot ? { city } : {}),
-    },
-  });
   const totalPage = Math.ceil(total / limit);
 
   return {

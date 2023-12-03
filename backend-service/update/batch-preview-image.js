@@ -1,16 +1,17 @@
-import { prisma } from "backend-service/common";
+import { articleInstance, instance } from "backend-service/common";
 import Jimp from "jimp";
 
 export const batchPreviewImage = async () => {
-  const buffers = await prisma.cityArticle.findMany({
-    // where: {
-    //   preview_image: null,
-    // },
-    select: {
-      city: true,
-      image: true,
-    },
-  });
+  batchSpotImage();
+  batchCityImage();
+};
+
+const batchCityImage = async () => {
+  const buffers = await articleInstance({ type: "city" }).select(
+    "city",
+    "image"
+  );
+
   const newBuffers = await Promise.all(
     buffers.map(async (buffer, i) => {
       console.log(i);
@@ -20,14 +21,43 @@ export const batchPreviewImage = async () => {
     })
   );
   console.log(newBuffers);
-  const sqlQuery = newBuffers.map((newBuffer) =>
-    prisma.cityArticle.update({
-      where: { city: newBuffer.city },
-      data: { preview_image: newBuffer.buffer },
+  await instance.transaction(async (trx) => {
+    await Promise.all(
+      newBuffers.map((newBuffer) =>
+        articleInstance({ type: "city" })
+          .where({ city: newBuffer.city })
+          .update({ preview_image: newBuffer.buffer })
+          .transacting(trx)
+      )
+    );
+  });
+};
+
+const batchSpotImage = async () => {
+  const buffers = await articleInstance({ type: "spot" }).select(
+    "spot",
+    "image"
+  );
+
+  const newBuffers = await Promise.all(
+    buffers.map(async (buffer, i) => {
+      console.log(i);
+      const newBuffer = await resizeImage(buffer.image);
+      // console.log(newBuffer);
+      return { buffer: newBuffer, spot: buffer.spot };
     })
   );
-  console.log(sqlQuery);
-  await prisma.$transaction(sqlQuery);
+  console.log(newBuffers);
+  await instance.transaction(async (trx) => {
+    await Promise.all(
+      newBuffers.map((newBuffer) =>
+        articleInstance({ type: "spot" })
+          .where({ spot: newBuffer.spot })
+          .update({ preview_image: newBuffer.buffer })
+          .transacting(trx)
+      )
+    );
+  });
 };
 
 async function resizeImage(buffer) {
@@ -36,6 +66,6 @@ async function resizeImage(buffer) {
   }
   const image = await Jimp.read(buffer);
   return await image
-    .resize(Math.floor(image.getWidth() / 3), Math.floor(image.getHeight() / 3))
+    .resize(Math.floor(image.getWidth() / 4), Math.floor(image.getHeight() / 4))
     .getBufferAsync(Jimp.MIME_JPEG);
 }

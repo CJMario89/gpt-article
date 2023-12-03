@@ -1,18 +1,18 @@
-import { articleInstance } from "backend-service/common";
-
-export const search = async ({ type, region, limit = 10, text }) => {
-  const places = await articleInstance({ type }).findMany({
-    where: {
-      ...(region ? { region } : {}),
-    },
-    orderBy: {
-      _relevance: {
-        fields: [type],
-        search: text,
-        sort: "asc",
-      },
-    },
-    take: limit,
-  });
+import { instance } from "backend-service/common";
+export const search = async ({ type, text }) => {
+  console.log(type);
+  const places =
+    type === "spot"
+      ? [
+          ...(await instance.raw(
+            `SELECT word as spot, SpotArticle.city from SpotArticle_spellfix LEFT OUTER JOIN SpotArticle ON LOWER(SpotArticle_spellfix.word) = LOWER(SpotArticle.spot) WHERE word MATCH '${text}';`
+          )),
+        ]
+      : [
+          ...(await instance.raw(
+            `SELECT word as city FROM CityArticle_spellfix WHERE word MATCH '${text}'`
+          )),
+        ];
+  console.log(places);
   return places;
 };

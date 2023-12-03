@@ -1,7 +1,7 @@
 import { getRequest } from "service/common";
 // import * as fs from "fs";
 import { parseReference } from "backend-service/update";
-import { articleInstance, prisma } from "backend-service/common";
+import { articleInstance, categoryInstance } from "backend-service/common";
 
 const key = process.env.PLACE_APIKEY;
 
@@ -28,15 +28,20 @@ export const requestStoreGooglePhoto = async ({
   const categories = placeDataResult?.types;
 
   if (categories) {
-    const categoryInstance = isSpot ? prisma.spotCategory : prisma.cityCategory;
-
-    const sqlQuery = categories.map((category) =>
-      categoryInstance.create({
-        data: isSpot ? { category, city, spot } : { category, city },
-      })
+    const data = categories.map((category) =>
+      isSpot ? { category, city, spot } : { category, city }
     );
-    await prisma.$transaction(sqlQuery);
+    await categoryInstance({ type }).insert(data);
   }
+
+  const location =
+    placeDataResult.geometry.location.lat +
+    "," +
+    placeDataResult.geometry.location.lng;
+
+  await articleInstance({ type })
+    .where({ country, city, ...(isSpot ? { spot } : {}) })
+    .update({ location });
 
   if (photos) {
     const photo = photos[0];
@@ -53,10 +58,9 @@ export const requestStoreGooglePhoto = async ({
         image: placePhotoBuffer,
         ...parseReference(image_reference_link),
       };
-      await articleInstance({ type }).update({
-        where: { country, city, ...(isSpot ? { spot } : {}) },
-        data,
-      });
+      await articleInstance({ type })
+        .where({ country, city, ...(isSpot ? { spot } : {}) })
+        .update(data);
 
       // fs.writeFileSync(`./public${url}`, placePhotoBuffer, "binary");
       console.log(`Image saved: ${place}`);

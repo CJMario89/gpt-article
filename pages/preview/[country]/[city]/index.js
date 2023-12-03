@@ -44,7 +44,7 @@ const Spots = ({ country, city }) => {
   );
 };
 
-const Index = ({ country, city, article = {}, photo }) => {
+const Index = ({ country, city, article = {} }) => {
   const {
     title,
     description,
@@ -53,7 +53,6 @@ const Index = ({ country, city, article = {}, photo }) => {
     image_reference_link,
     image_reference_name,
   } = article;
-  console.log(photo);
   const { mutate: postArticle, isLoading: isPostCityArticleLoading } =
     usePostArticle(
       { type: "city" },

@@ -1,5 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Header } from "component/blog";
 import { useEffect } from "react";
 import theme from "theme";
 import { Fonts } from "theme/component";
@@ -14,6 +15,7 @@ function MyApp({ Component, pageProps }) {
     <ChakraProvider theme={theme}>
       <Fonts />
       <QueryClientProvider client={queryClient}>
+        <Header />
         <Component {...pageProps} />
       </QueryClientProvider>
     </ChakraProvider>

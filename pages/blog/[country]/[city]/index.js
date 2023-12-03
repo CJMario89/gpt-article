@@ -25,12 +25,17 @@ export const getStaticProps = async ({ params }) => {
   const article = await getArticle({ type: "city", country, city });
   const spots = await Promise.all(
     (
-      await getPlacesByParams({ type: "spot", country, city })
-    ).map((spot) => {
+      await getPlacesByParams({
+        type: "spot",
+        country,
+        city,
+        page: 1,
+        limit: 10,
+      })
+    ).places.map((spot) => {
       return jsonlize(spot);
     })
   );
-  console.log(article);
   return {
     props: { article: jsonlize(article), city, spots },
   };

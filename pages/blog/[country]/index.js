@@ -1,8 +1,6 @@
 import {
   Container,
   Flex,
-  Heading,
-  Input,
   Skeleton,
   SkeletonText,
   Tab,
@@ -10,11 +8,11 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
 } from "@chakra-ui/react";
 import { Pagination, PlaceCard } from "component/blog";
-import { useGetPlacesByParams, useGetSearch } from "hooks/db";
+import { useGetPlacesByParams } from "hooks/db";
 import { useState } from "react";
+// import headerBanner2 from "assets/header-banner2.png";
 
 // export const getStaticPaths = async () => {
 //   const countries = await getCountries();
@@ -52,14 +50,17 @@ const RegionBlock = ({ region }) => {
       region,
       limit: 4,
     });
-  // console.log(data);
   const index =
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
   const places = data?.pages[index]?.places;
   const totalPage = data?.pages[0]?.totalPage;
 
   return (
-    <Flex flexDirection="column" alignItems="center" rowGap="8">
+    <Flex
+      flexDirection="column"
+      alignItems="center"
+      rowGap={{ base: "4", md: "8" }}
+    >
       {places &&
         !isLoading &&
         !isFetchingNextPage &&
@@ -71,16 +72,28 @@ const RegionBlock = ({ region }) => {
       {(isLoading || isFetchingNextPage) &&
         Array.from(Array(4)).map((_, i) => {
           return (
-            <Flex key={i} flexDirection="row" w="full" p="8" pb="12">
+            <Flex
+              key={i}
+              flexDirection={{ base: "column", md: "row" }}
+              alignItems={{ base: "center", md: "flex-start" }}
+              w="full"
+              p="8"
+              pb="12"
+            >
               <Skeleton
-                w="200px"
-                h="200px"
+                w={{ base: "250px", md: "200px" }}
+                h={{ base: "250px", md: "200px" }}
                 color="gray"
                 fadeDuration={1}
-                mr="12"
+                mr={{ base: "0", md: "12" }}
                 flexShrink="0"
               />
-              <Flex flexDirection="column" w="inherit" rowGap="8" mt="4">
+              <Flex
+                flexDirection="column"
+                w={{ base: "250px", md: "inherit" }}
+                rowGap="8"
+                mt="4"
+              >
                 <SkeletonText />
                 <SkeletonText />
               </Flex>
@@ -92,7 +105,7 @@ const RegionBlock = ({ region }) => {
           currentPage={page}
           totalPages={data?.pages[0]?.totalPage}
           onSelect={(p) => {
-            if (data?.pageParams.indexOf(page) < 0) {
+            if (data?.pageParams.indexOf(p) < 0) {
               fetchNextPage({ pageParam: p });
             }
             setPage(p);
@@ -116,44 +129,46 @@ const Index = () => {
     "Kyushu",
     "Okinawa",
   ];
-  const [region, setRegion] = useState(regions[0]);
-  const [searchText, setSearchText] = useState("");
-  const { data } = useGetSearch({ type: "city", text: searchText });
-  console.log(data?.pages[0]);
+
   return (
-    <Container maxW="container.lg" as={Flex} flexDirection="column" rowGap="4">
-      <Heading as="h2">Japan</Heading>
-      <Text>Traveling information in Japan</Text>
-      <Input
-        type="text"
-        onInput={(e) => {
-          setSearchText(e.target.value);
-        }}
-      />
-      <Tabs isFitted variant="enclosed" isLazy>
-        <TabList mb="1em">
-          {regions.map((region) => (
-            <Tab key={region} onChange={(index) => setRegion(regions[index])}>
-              {region}
-            </Tab>
-          ))}
-        </TabList>
-        <TabPanels>
-          {regions.map((region) => (
-            <TabPanel key={region}>
-              <RegionBlock region={region} />
-            </TabPanel>
-          ))}
-        </TabPanels>
-      </Tabs>
-      {/* <Flex flexDirection="column">
+    <Flex w="full" flexDirection="column" mt="12">
+      <Container
+        maxW="container.lg"
+        as={Flex}
+        px={{ base: "2", md: "4" }}
+        flexDirection="column"
+        rowGap="4"
+      >
+        <Tabs isFitted variant="enclosed" isLazy>
+          <TabList mb="1em" overflowX="auto">
+            {regions.map((region) => (
+              <Tab key={region} mb="0">
+                {region}
+              </Tab>
+            ))}
+          </TabList>
+          <TabPanels>
+            {regions.map((region) => (
+              <TabPanel key={region}>
+                <RegionBlock region={region} />
+              </TabPanel>
+            ))}
+          </TabPanels>
+        </Tabs>
+        {/* <Flex flexDirection="column">
         {cities.map((city) => {
           return (
             <PlaceCard key={city.city} place={{ type: "city", ...city }} />
           );
         })}
       </Flex> */}
-    </Container>
+      </Container>
+      {/* <Image
+        style={{ width: "100%", opacity: "0.3" }}
+        src={headerBanner2}
+        alt=""
+      /> */}
+    </Flex>
   );
 };
 

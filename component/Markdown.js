@@ -67,19 +67,21 @@ const components = {
 
   ul: ({ children }) => <List>{children}</List>,
   li: ({ children }) => (
-    <ListItem
-      position="relative"
-      my="2"
-      pl="8"
-      ml="16"
-      _before={{
-        content: '"☛"',
-        position: "absolute",
-        left: "0px",
-      }}
-    >
-      {children}
-    </ListItem>
+    <List>
+      <ListItem
+        position="relative"
+        my="2"
+        pl="8"
+        ml="16"
+        _before={{
+          content: '"☛"',
+          position: "absolute",
+          left: "0px",
+        }}
+      >
+        {children}
+      </ListItem>
+    </List>
   ),
 };
 const Markdown = ({ children, restProps }) => {

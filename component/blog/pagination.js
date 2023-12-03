@@ -54,7 +54,6 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
     return (
       <Button
         onClick={() => {
-          console.log(page);
           onSelect(page);
         }}
         border="none"
@@ -70,9 +69,9 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
       <Button
         border="none"
         variant="unstyled"
+        cursor="pointer"
         isDisabled={Boolean(!prev)}
         onClick={() => {
-          console.log(prev);
           onSelect(prev);
         }}
         as={Flex}
@@ -97,8 +96,8 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
         border="none"
         variant="unstyled"
         isDisabled={Boolean(!next)}
+        cursor="pointer"
         onClick={() => {
-          console.log(prev);
           onSelect(next);
         }}
         as={Flex}
