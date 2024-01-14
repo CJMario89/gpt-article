@@ -16,6 +16,7 @@
     "better-sqlite3": "^9.1.1",
     "framer-motion": "^10.16.4",
     "gpt-tokenizer": "^2.1.2",
+    "isomorphic-dompurify": "^2.0.0",
     "jimp": "^0.22.10",
     "jsdom": "^22.1.0",
     "knex": "^3.0.1",

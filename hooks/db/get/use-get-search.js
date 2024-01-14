@@ -1,13 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { getSearch } from "service/backend-query";
 
-const useGetSearch = ({ type, text }, options) => {
-  return useQuery({
-    queryKey: ["get-search", type, text],
-    queryFn: async () => {
+const useGetSearch = (
+  { type, text, region, prefecture, city, limit = 10 },
+  options
+) => {
+  return useInfiniteQuery({
+    queryKey: ["search", type, region, prefecture, city, text],
+    queryFn: async ({ pageParam }) => {
       const result = await getSearch({
         type,
-        text,
+        ...(region ? { region } : {}),
+        ...(prefecture ? { prefecture } : {}),
+        ...(city ? { city } : {}),
+        ...(text ? { text } : {}),
+        page: pageParam ?? 1,
+        limit,
       });
       return result.json();
     },

@@ -1,69 +1,39 @@
-import { getRequest } from "service/common";
-// import * as fs from "fs";
-import { parseReference } from "backend-service/update";
-import { articleInstance, categoryInstance } from "backend-service/common";
+import Jimp from "jimp";
 
-const key = process.env.PLACE_APIKEY;
-
-export const requestStoreGooglePhoto = async ({
-  type,
-  country,
-  city,
-  spot,
+export const getGooglePhoto = async ({
+  name,
+  location1,
+  location2,
+  num,
+  folder,
 }) => {
-  const isSpot = type === "spot";
-  const response1 = await getRequest(
-    "https://maps.googleapis.com/maps/api/place/textsearch/json",
-    {
-      query: `${country} ${city}${isSpot ? ` ${spot}` : ""}`,
-      location: "40,120",
-      key,
-    }
+  const rawResponse = await fetch(
+    `https://places.googleapis.com/v1/${name}/media?key=${process.env.PLACE_APIKEY}&maxWidthPx=1600&maxHeightPx=900`
   );
-  const place = isSpot ? spot : city;
-  const placeData = await response1.json();
-  console.log(placeData.results);
-  const placeDataResult = placeData.results[0];
-  const photos = placeDataResult?.photos;
-  const categories = placeDataResult?.types;
+  console.log(rawResponse);
+  const arrayBuffer = await rawResponse.arrayBuffer();
+  console.log(arrayBuffer);
+  const buffer = Buffer.from(arrayBuffer);
+  console.log(buffer);
 
-  if (categories) {
-    const data = categories.map((category) =>
-      isSpot ? { category, city, spot } : { category, city }
-    );
-    await categoryInstance({ type }).insert(data);
-  }
-
-  const location =
-    placeDataResult.geometry.location.lat +
-    "," +
-    placeDataResult.geometry.location.lng;
-
-  await articleInstance({ type })
-    .where({ country, city, ...(isSpot ? { spot } : {}) })
-    .update({ location });
-
-  if (photos) {
-    const photo = photos[0];
-    const image_reference_link = photo?.html_attributions;
-    const photoReference = photo?.photo_reference;
-    if (photoReference) {
-      const response2 = await getRequest(
-        "https://maps.googleapis.com/maps/api/place/photo",
-        { maxwidth: 1024, photoreference: photoReference, key }
-      );
-      const placePhotoArrayBuffer = await response2.arrayBuffer();
-      const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
-      const data = {
-        image: placePhotoBuffer,
-        ...parseReference(image_reference_link),
-      };
-      await articleInstance({ type })
-        .where({ country, city, ...(isSpot ? { spot } : {}) })
-        .update(data);
-
-      // fs.writeFileSync(`./public${url}`, placePhotoBuffer, "binary");
-      console.log(`Image saved: ${place}`);
+  Jimp.read(buffer, async (err, image) => {
+    if (err) {
+      console.error(err);
+      return;
     }
-  }
+
+    image
+      .quality(100)
+      .write(
+        `./public/image/${folder}/${location1}_${location2}_${num}.webp`,
+        (writeErr) => {
+          if (writeErr) {
+            console.error(writeErr);
+            // Handle write error
+          } else {
+            console.log("Image saved as WebP successfully!");
+          }
+        }
+      );
+  });
 };

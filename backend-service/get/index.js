@@ -4,3 +4,7 @@ export * from "./countries";
 export * from "./all-places";
 export * from "./article";
 export * from "./search";
+export * from "./cities";
+export * from "./spots";
+export * from "./prefectures";
+export * from "./get-near-places";

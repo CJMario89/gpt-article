@@ -1,9 +1,9 @@
-import { articleInstance } from "backend-service/common";
+import { infoInstance } from "backend-service/common";
 
 export const getSimplePlacesByParams = async (params = {}) => {
   const { type, country, city, region } = params;
   const isSpot = type === "spot";
-  const places = await articleInstance({ type })
+  const places = await infoInstance({ type })
     .where({
       country,
       ...(region ? { region } : {}),

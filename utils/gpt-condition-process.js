@@ -3,7 +3,7 @@ import { encode } from "gpt-tokenizer";
 export function produceLogitBias({
   tokensIncrease,
   tokensDecrease,
-  amount = 100,
+  amount = 10,
 }) {
   const logitBias = {};
   if (Array.isArray(tokensIncrease) && tokensIncrease.length > 0) {

@@ -24,6 +24,7 @@ const getHeadingSize = (as) => {
 const Heading = {
   baseStyle: {
     fontWeight: "bold",
+    color: "neutral.900",
   },
   sizes: {
     auto: ({ as }) => getHeadingSize(as),

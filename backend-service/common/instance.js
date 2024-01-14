@@ -11,10 +11,10 @@ export const instance = knex({
         conn.loadExtension("./sqlite3/spellfix.so");
 
         // const selectCity = await conn.prepare(
-        //   "SELECT word as city FROM CityArticle_spellfix WHERE word MATCH 'a' LIMIT 10 OFFSET 1;"
+        //   "SELECT word as city FROM CityInfo_spellfix WHERE word MATCH 'a' LIMIT 10 OFFSET 1;"
         // );
         // const selectSpot = await conn.prepare(
-        //   "SELECT word as spot FROM SpotArticle_spellfix WHERE word MATCH 'a' LIMIT 10 OFFSET 1;"
+        //   "SELECT word as spot FROM SpotInfo_spellfix WHERE word MATCH 'a' LIMIT 10 OFFSET 1;"
         // );
         // await selectCity.run();
         // await selectSpot.run();
@@ -27,12 +27,16 @@ export const instance = knex({
   },
 });
 
-export const articleInstance = ({ type }) => {
-  const isSpot = type === "spot";
-  return isSpot ? instance("SpotArticle") : instance("CityArticle");
+export const infoInstance = ({ type }) => {
+  const isSpot = type === "spot" || type === "restuarant";
+  return isSpot ? instance("SpotInfo") : instance("CityInfo");
 };
 
-export const categoryInstance = ({ type }) => {
+export const categoryInstance = () => {
+  return instance("SpotCategory");
+};
+
+export const imageInstance = ({ type }) => {
   const isSpot = type === "spot";
-  return isSpot ? instance("SpotCategory") : instance("CityCategory");
+  return isSpot ? instance("SpotImage") : instance("CityImage");
 };

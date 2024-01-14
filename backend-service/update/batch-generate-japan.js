@@ -14,7 +14,7 @@ import { JSDOM } from "jsdom";
 import { japanCities } from "../../japan-cities";
 
 const country = "Japan";
-const requestCitiesNumber = 1;
+const requestCitiesNumber = 1000;
 export const batchGenerateJapan = async () => {
   const existedCities = (await getAllPlaces({ type: "city" })).map(
     (place) => place.city
@@ -22,24 +22,36 @@ export const batchGenerateJapan = async () => {
   const absentCities = japanCities.filter(
     (place) => !existedCities.includes(place.city)
   );
-
   const requestCities =
     absentCities.length > requestCitiesNumber
       ? absentCities.slice(0, requestCitiesNumber)
       : absentCities;
-  const cities = await Promise.all(
-    requestCities.map(async (place) => {
-      await getGoogleInfo({ place });
-    })
-  );
-  return cities;
+  for (let i = 0; i < requestCities.length; i++) {
+    // await waitFor429(1000);
+    console.log(`Request ${i}th: ${requestCities[i].cityJapanese}`);
+    try {
+      await getGoogleInfo({ place: requestCities[i] });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return;
 };
 
-async function generateCityArticle(city) {
+export async function waitFor429(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+}
+
+async function generateCityInfo(city) {
+  //use spots to generate description for seo
   const type = "city";
-  const cityArticleText = getArticlePromptText({ place: city });
+  const CityInfoText = getArticlePromptText({ place: city });
   console.log("requestGpt article", city);
-  const articleRaw = await requestGpt({ text: cityArticleText });
+  const articleRaw = await requestGpt({ text: CityInfoText });
   const article = processArticle(articleRaw);
   await updateArticle({ type, country, city, article });
   await requestStoreGooglePhoto({
@@ -49,51 +61,11 @@ async function generateCityArticle(city) {
   });
 }
 
-async function generateSpots(city) {
-  console.log(await getSimplePlacesByParams({ type: "spot", country, city }));
-  const existSpots = (
-    await getSimplePlacesByParams({ type: "spot", country, city })
-  ).map(({ spot }) => spot);
-
-  const { text, tokensDecrease, tokensIncrease } = getSpotsPromptText({
-    city,
-    spots: existSpots,
-  });
-  console.log("requestGpt spots", city);
-  const generateSpotsRaw = await requestGpt({
-    text,
-    tokensDecrease,
-    tokensIncrease,
-  });
-  return JSON.parse(generateSpotsRaw.trim()).map((place) => {
-    return place.replace(/ /g, "-");
-  });
-}
-
-async function generateSpotArticle(city, spot) {
-  const type = "spot";
-  const spotArticleText = getArticlePromptText({
-    place: spot,
-  });
-  console.log("requestGpt article", spot);
-  const articleRaw = await requestGpt({
-    text: spotArticleText,
-  });
-  const article = processArticle(articleRaw);
-  await updateArticle({ type, country, city, article, spot });
-  await requestStoreGooglePhoto({
-    type,
-    country,
-    city,
-    spot,
-  });
-}
-
 export function parseReference(link) {
   const dom = new JSDOM(link);
   const node = dom.window.document.querySelector("a");
   return {
-    image_reference_link: node.href,
-    image_reference_name: node.innerHTML,
+    reference_link: node.href,
+    reference_name: node.innerHTML,
   };
 }

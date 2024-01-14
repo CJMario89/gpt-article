@@ -30,9 +30,9 @@ export const batchGenerate = async ({ country }) => {
 
   generateCities.forEach(async (city) => {
     const type = "city";
-    const cityArticleText = getArticlePromptText({ place: city });
+    const CityInfoText = getArticlePromptText({ place: city });
     console.log("requestGpt article", city);
-    const articleRaw = await requestGpt({ text: cityArticleText });
+    const articleRaw = await requestGpt({ text: CityInfoText });
     const article = processArticle(articleRaw);
     await updateArticle({ type, country, city, article });
     await requestStoreGooglePhoto({
@@ -60,12 +60,12 @@ export const batchGenerate = async ({ country }) => {
     });
     generateSpots.map(async (spot) => {
       const type = "spot";
-      const spotArticleText = getArticlePromptText({
+      const SpotInfoText = getArticlePromptText({
         place: spot,
       });
       console.log("requestGpt article", spot);
       const articleRaw = await requestGpt({
-        text: spotArticleText,
+        text: SpotInfoText,
       });
       const article = processArticle(articleRaw);
       await updateArticle({ type, country, city, article, spot });

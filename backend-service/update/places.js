@@ -1,4 +1,4 @@
-import { articleInstance } from "backend-service/common";
+import { infoInstance } from "backend-service/common";
 
 export const updatePlaces = async ({ type, country, cities, spots }) => {
   const data = [];
@@ -19,5 +19,5 @@ export const updatePlaces = async ({ type, country, cities, spots }) => {
     });
   }
 
-  await articleInstance({ type }).insert(data);
+  await infoInstance({ type }).insert(data);
 };

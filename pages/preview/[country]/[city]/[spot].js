@@ -42,7 +42,7 @@ const Index = ({ article = {}, country, city, spot }) => {
     image_reference_name,
   } = article;
 
-  const { mutate: postArticle, isLoading: isPostCityArticleLoading } =
+  const { mutate: postArticle, isLoading: isPostCityInfoLoading } =
     usePostArticle(
       { type: "spot" },
       {
@@ -98,8 +98,8 @@ const Index = ({ article = {}, country, city, spot }) => {
           />
           <Flex columnGap="4">
             <Button
-              isLoading={isPostCityArticleLoading}
-              isDisabled={isPostCityArticleLoading}
+              isLoading={isPostCityInfoLoading}
+              isDisabled={isPostCityInfoLoading}
               type="submit"
             >
               Confirm

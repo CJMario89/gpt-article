@@ -7,7 +7,7 @@ export function processArticle(article) {
   const regex = /\*(.*?)\*/g;
   const _article = removeGPTHint(parseArticle);
   return {
-    content: _article.replace(regex, "").trim().replaceAll("'", "''"),
+    content: _article.replace(regex, "").trim(),
     title,
     description,
   };
@@ -16,7 +16,10 @@ export function processArticle(article) {
 function shiftTillContentExist(parseArticle) {
   //too many space between description and title
   const description = parseArticle.shift();
-  if (description !== "") {
+  if (
+    description !== "" &&
+    description?.replace(/#/g, "")?.trim() !== "Introduction"
+  ) {
     return description;
   }
   return shiftTillContentExist(parseArticle);
@@ -30,5 +33,5 @@ function removeGPTHint(parseArticle) {
 }
 
 export function processArticleInBlog(article = "") {
-  return article.split("\n");
+  return article?.split("\n");
 }

@@ -1,34 +1,30 @@
-import { articleInstance } from "backend-service/common";
+import { infoInstance } from "backend-service/common";
 import { requestGpt } from "backend-service/generate";
 import { getRegionalPromptText } from "utils/gpt-prompt-text";
 
-const requestCitiesNumber = 100;
 export const batchGenerateRegion = async () => {
-  const emptyRegionCities = await articleInstance({ type: "city" })
-    .where({ region: null })
-    .select("city");
+  let requestPrefecture;
 
-  const requestCities =
-    emptyRegionCities.length > requestCitiesNumber
-      ? emptyRegionCities.slice(0, requestCitiesNumber)
-      : emptyRegionCities;
-
-  await Promise.all(
-    requestCities.map(async ({ city }) => {
-      await generateRegion(city);
-      return;
-    })
-  );
+  while (
+    (requestPrefecture = await infoInstance({ type: "city" })
+      .where({ region: null })
+      .select("prefecture")
+      .first())
+  ) {
+    const prefecture = requestPrefecture.prefecture;
+    console.log(prefecture);
+    await generateRegion(prefecture);
+  }
 };
 //prefecture
-export async function generateRegion(city) {
+export async function generateRegion(prefecture) {
   const response = await requestGpt({
-    text: getRegionalPromptText({ place: city }),
+    text: getRegionalPromptText({ place: prefecture }),
   });
   console.log(response);
   const json = JSON.parse(response);
   const region = json.region;
-  await articleInstance({ type: "city" }).where({ city }).update({
+  await infoInstance({ type: "city" }).where({ prefecture }).update({
     region,
   });
 }

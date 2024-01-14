@@ -1,71 +1,81 @@
-import { articleInstance, instance } from "backend-service/common";
+import { imageInstance } from "backend-service/common";
 import Jimp from "jimp";
 
 export const batchPreviewImage = async () => {
-  batchSpotImage();
-  batchCityImage();
+  // await batchPreviewCityImage();
+  await batchPreviewSpotImage();
 };
 
-const batchCityImage = async () => {
-  const buffers = await articleInstance({ type: "city" }).select(
-    "city",
-    "image"
-  );
+const batchPreviewCityImage = async () => {
+  const locations = await imageInstance({ type: "city" })
+    .whereNot({ fetched: null })
+    .select("prefecture", "city", "fetched");
+  locations.slice(0, 1000).map(({ fetched, prefecture, city }) => {
+    Jimp.read(
+      `./public/image/city/${prefecture}_${city}_${fetched}.webp`,
+      async (err, image) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
 
-  const newBuffers = await Promise.all(
-    buffers.map(async (buffer, i) => {
-      console.log(i);
-      const newBuffer = await resizeImage(buffer.image);
-      // console.log(newBuffer);
-      return { buffer: newBuffer, city: buffer.city };
-    })
-  );
-  console.log(newBuffers);
-  await instance.transaction(async (trx) => {
-    await Promise.all(
-      newBuffers.map((newBuffer) =>
-        articleInstance({ type: "city" })
-          .where({ city: newBuffer.city })
-          .update({ preview_image: newBuffer.buffer })
-          .transacting(trx)
-      )
+        image
+          .quality(100)
+          .resize(250, 250)
+          .write(
+            `./public/preview/city/${prefecture}_${city}_${fetched}.webp`,
+            (writeErr) => {
+              if (writeErr) {
+                console.error(writeErr);
+                // Handle write error
+              } else {
+                console.log("Image saved as WebP successfully!");
+              }
+            }
+          );
+      }
     );
   });
 };
 
-const batchSpotImage = async () => {
-  const buffers = await articleInstance({ type: "spot" }).select(
-    "spot",
-    "image"
-  );
+const batchPreviewSpotImage = async () => {
+  const locations = await imageInstance({ type: "spot" })
+    .whereNot({ fetched: null })
+    .select("city", "spot", "fetched");
+  for (let i = 0; i < locations.length; i++) {
+    try {
+      const { fetched, city, spot } = locations[i];
+      await new Promise((resolve) => {
+        Jimp.read(
+          `./public/image/spot/${city}_${spot}_${fetched}.webp`,
+          async (err, image) => {
+            if (err) {
+              console.error(err);
+              resolve("");
+              return;
+            }
+            image
+              .quality(100)
+              .resize(250, 250)
+              .write(
+                `./public/preview/spot/${city}_${spot}_${fetched}.webp`,
+                (writeErr) => {
+                  if (writeErr) {
+                    console.error(writeErr);
+                    resolve("");
 
-  const newBuffers = await Promise.all(
-    buffers.map(async (buffer, i) => {
-      console.log(i);
-      const newBuffer = await resizeImage(buffer.image);
-      // console.log(newBuffer);
-      return { buffer: newBuffer, spot: buffer.spot };
-    })
-  );
-  console.log(newBuffers);
-  await instance.transaction(async (trx) => {
-    await Promise.all(
-      newBuffers.map((newBuffer) =>
-        articleInstance({ type: "spot" })
-          .where({ spot: newBuffer.spot })
-          .update({ preview_image: newBuffer.buffer })
-          .transacting(trx)
-      )
-    );
-  });
-};
-
-async function resizeImage(buffer) {
-  if (!buffer) {
-    return null;
+                    // Handle write error
+                  } else {
+                    console.log("Image saved as WebP successfully!");
+                    resolve("");
+                  }
+                }
+              );
+          }
+        );
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
-  const image = await Jimp.read(buffer);
-  return await image
-    .resize(Math.floor(image.getWidth() / 4), Math.floor(image.getHeight() / 4))
-    .getBufferAsync(Jimp.MIME_JPEG);
-}
+};

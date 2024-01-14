@@ -1,27 +1,48 @@
-import { Box, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, useDisclosure } from "@chakra-ui/react";
 import Image from "next/image";
 import headerBanner1 from "assets/header-banner1.png";
-import Search from "./search";
+import { SearchIcon } from "./search";
+import SearchDrawer from "./search-drawer";
 
 const Header = () => {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
   return (
-    <Flex w="full" position="relative" flexDirection="column">
+    <Flex w="full" position="relative" flexDirection="column" zIndex={10}>
       <Flex
-        w="container.lg"
+        w="full"
         margin="0 auto"
-        p="4"
+        p={{ base: "2", md: "4" }}
         columnGap="8"
         alignItems="center"
         justifyContent="space-between"
+        zIndex={10}
+        background="transparent"
       >
-        <Heading as="h3" px="4">
-          CityZenJPN
+        <Heading as="h6" px="4" color="neutral.800">
+          Japan Traveler
         </Heading>
-
-        <Search zIndex={10} />
+        <Flex flexDirection="column" rowGap="4">
+          <Button
+            bg="none"
+            border="none"
+            _hover={{ background: "neutral.100" }}
+            borderRadius="xl"
+            onClick={() => onOpen()}
+          >
+            <SearchIcon
+              position="absolute"
+              left="12px"
+              top="50%"
+              transform="translateY(-50%)"
+              color="neutral.800"
+            />
+          </Button>
+          <SearchDrawer onClose={onClose} isOpen={isOpen} />
+        </Flex>
       </Flex>
 
-      <Flex position="relative">
+      {/* <Flex position="relative">
         <Box w="full" height="300px" position="absolute">
           <Image
             style={{
@@ -36,19 +57,7 @@ const Header = () => {
             alt=""
           />
         </Box>
-        <Flex
-          w="full"
-          height="300px"
-          position="relative"
-          zIndex={1}
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Heading as="h1">CityZenJPN</Heading>
-          <Heading as="h2">Uncover Urban Wonders</Heading>
-        </Flex>
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };

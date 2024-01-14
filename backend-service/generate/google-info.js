@@ -1,9 +1,14 @@
-import { articleInstance, categoryInstance } from "backend-service/common";
+import {
+  infoInstance,
+  categoryInstance,
+  imageInstance,
+} from "backend-service/common";
 
 const headers = new Headers({
   "X-Goog-Api-Key": process.env.PLACE_APIKEY,
-  "X-Goog-FieldMask":
-    "places.types,places.displayName,places.rating,places.userRatingCount,places.googleMapsUri,places.googleMapsUri,places.websiteUri,places.location,places.photos",
+  // "X-Goog-FieldMask":
+  //   "places.types,places.displayName,places.rating,places.userRatingCount,places.googleMapsUri,places.googleMapsUri,places.websiteUri,places.location,places.photos",
+  "X-Goog-FieldMask": "*",
 });
 
 export const getGoogleInfo = async ({ place }) => {
@@ -13,13 +18,12 @@ export const getGoogleInfo = async ({ place }) => {
       method: "POST",
       headers,
       body: JSON.stringify({
-        textQuery: `${place.prefecture} ${place.city}`,
+        textQuery: `Japan ${place.prefecture} ${place.city}`,
         languageCode: "en",
       }),
     }
   );
   const response = await rawResponse.json();
-  console.log(response);
   const googlePlace = response.places[0];
   await insertCity(googlePlace, place, "", "city");
   const rawSpots = await fetch(
@@ -29,7 +33,7 @@ export const getGoogleInfo = async ({ place }) => {
       headers,
       body: JSON.stringify({
         languageCode: "en",
-        maxResultCount: 10,
+        maxResultCount: 20,
         rankPreference: "POPULARITY",
         includedTypes: [
           "national_park",
@@ -37,12 +41,18 @@ export const getGoogleInfo = async ({ place }) => {
           "park",
           "museum",
           "shopping_mall",
-          "restaurant",
           "spa",
           "aquarium",
+          "amusement_center",
+          "amusement_park",
+          "hiking_area",
+          "marina",
+          "zoo",
         ],
         excludedTypes: [
           "car_dealer",
+          "fitness_center",
+          "restaurant",
           "car_rental",
           "car_repair",
           "car_wash",
@@ -57,49 +67,81 @@ export const getGoogleInfo = async ({ place }) => {
           "local_government_office",
           "event_venue",
           "transit_station",
+          "sports_complex",
+          "gym",
           "coffee_shop",
         ],
         locationRestriction: {
           circle: {
             center: {
-              latitude: googlePlace?.location?.latitude,
-              longitude: googlePlace?.location?.longitude,
+              latitude:
+                (googlePlace?.viewport?.high?.latitude +
+                  googlePlace?.viewport?.low?.latitude) /
+                2,
+              longitude:
+                (googlePlace?.viewport?.high?.longitude +
+                  googlePlace?.viewport?.low?.longitude) /
+                2,
+              // latitude: googlePlace?.location?.latitude,
+              // longitude: googlePlace?.location?.longitude,
             },
-            radius: 5000.0,
+            // radius: 50000,
+            radius:
+              Math.ceil(
+                Math.sqrt(Number(place.area.replace(/,/g, ""))) * 1000
+              ) ?? 5000,
           },
         },
       }),
     }
   );
   const spotsInfo = await rawSpots.json();
-  spotsInfo.filter((spotInfo) => Number(spotInfo.userRatingCount) > 1000);
+  const spots = spotsInfo.places ?? [];
+  const allSpots = (await infoInstance({ type: "spot" }).select("spot")).map(
+    ({ spot }) => spot
+  );
+  await Promise.all(
+    spots
+      ?.filter((spot) => Number(spot?.userRatingCount) > 100)
+      .map(async (data) => {
+        const name = data?.displayName?.text?.replace(/ /g, "-");
+        const reviews = data.reviews;
+        if (reviews && name) {
+          try {
+            await insertSpot(data, place, allSpots.includes(name));
+          } catch (e) {
+            console.log("catched");
+            console.log(e);
+          }
+        }
+        return;
+      })
+  );
 };
 
 async function insertCity(googlePlace, place) {
   const location = `${googlePlace?.location?.latitude},${googlePlace?.location?.longitude}`;
-  const google_rating = googlePlace?.rating;
-  const google_rating_count = googlePlace?.userRatingCount;
-  const google_website = googlePlace?.websiteUri;
-  const google_map_url = googlePlace?.googleMapsUri;
+  const viewport = `${googlePlace?.viewport?.low?.latitude},${googlePlace?.viewport?.low?.longitude}
+&${googlePlace?.viewport?.high?.latitude},${googlePlace?.viewport?.high?.longitude}`;
+  const googleWebsite = googlePlace?.websiteUri;
+  const googleMapUrl = googlePlace?.googleMapsUri;
   const prefecture = place.prefecture;
-  const city_japanese = place.cityJapanese;
+  const cityJapanese = place.cityJapanese;
   const population = place.population;
   const area = place.area;
   const density = place.density;
   const founded = place.founded;
   const website = place.cityLink;
 
-  await articleInstance({ type: "city" }).insert({
-    country: "Japan",
+  await infoInstance({ type: "city" }).insert({
     city: place.city,
     location,
-    google_map_url,
-    google_rating,
-    google_rating_count,
-    google_website,
+    viewport,
+    googleMapUrl,
+    googleWebsite,
     prefecture,
     population,
-    city_japanese,
+    cityJapanese,
     area,
     density,
     founded,
@@ -107,37 +149,136 @@ async function insertCity(googlePlace, place) {
   });
 
   if (Array.isArray(googlePlace.photos) && googlePlace.photos.length > 0) {
-    const photoInfo = googlePlace.photos[0];
-    console.log(googlePlace.photos);
-    const photo = await fetchPhoto(photoInfo.name);
-    console.log(photo);
-    await articleInstance({ type: "city" })
-      .where({ city: place.city })
-      .update({
-        image: photo,
-        image_reference_link: photoInfo.authorAttributions[0].uri.replace(
-          "//",
-          "https://"
-        ),
-        image_reference_name: photoInfo.authorAttributions[0].displayName,
-      });
-  }
-
-  const categories = googlePlace?.types;
-
-  if (categories) {
-    const data = categories.map((category) => ({ category, city: place.city }));
-    await categoryInstance({ type: "city" }).insert(data);
+    const photoInfos = googlePlace.photos.map((photoInfo) => ({
+      prefecture,
+      city: place.city,
+      image: photoInfo.name,
+      referenceLink: photoInfo.authorAttributions[0].uri.replace(
+        "//",
+        "https://"
+      ),
+      referenceName: photoInfo?.authorAttributions?.[0]?.displayName,
+    }));
+    //const photo = await fetchPhoto(photoInfo.name);
+    await imageInstance({ type: "city" }).insert(photoInfos);
   }
 }
 
+async function insertSpot(googlePlace, place, isUpdate) {
+  const name = googlePlace?.displayName?.text
+    ?.replace(/ /g, "-")
+    .replace(/\//g, "-");
+  const spotData = {
+    prefecture: place.prefecture,
+    city: place.city,
+    spot: name,
+    location: `${googlePlace?.location?.latitude},${googlePlace?.location?.longitude}`,
+    viewport: `${googlePlace?.viewport?.low?.latitude},${googlePlace?.viewport?.low?.longitude}
+&${googlePlace?.viewport?.high?.latitude},${googlePlace?.viewport?.high?.longitude}`,
+    googleMapUrl: googlePlace.googleMapsUri,
+    googleRating: googlePlace.rating,
+    googleRatingCount: googlePlace.userRatingCount,
+    googleWebsite: googlePlace.websiteUri,
+    editorialSummary: googlePlace?.editorialSummary?.text,
+    primaryType:
+      googlePlace?.primaryTypeDisplayName?.text ?? googlePlace?.primaryType,
+    internationalPhoneNumber: googlePlace.internationalPhoneNumber,
+    adrFormatAddress: googlePlace.adrFormatAddress,
+    weekdayDescriptions:
+      googlePlace?.regularOpeningHours?.weekdayDescriptions?.join("&"),
+    reviews: googlePlace.reviews.map((review) => review?.text?.text).join("&"),
+    goodForChildren: googlePlace.goodForChildren ?? false,
+    goodForGroups: googlePlace.goodForGroups ?? false,
+    allowsDogs: googlePlace.allowsDogs ?? false,
+    restroom: googlePlace.restroom ?? false,
+    wheelchairAccessibleEntrance:
+      googlePlace?.accessibilityOptions?.wheelchairAccessibleEntrance ?? false,
+    parkingLot: googlePlace?.parkingOptions ? true : false,
+    reservable: googlePlace?.reservable ?? false,
+    servesBreakfast: googlePlace?.servesBreakfast ?? false,
+    servesBrunch: googlePlace?.servesBrunch ?? false,
+    servesLunch: googlePlace?.servesLunch ?? false,
+    servesDinner: googlePlace?.servesDinner ?? false,
+    servesBeer: googlePlace?.servesBeer ?? false,
+    priceLevel: googlePlace?.priceLevel,
+    payment: `${googlePlace?.paymentOptions?.acceptsCreditCards ? 1 : 0},${
+      googlePlace?.paymentOptions?.acceptsNfc ? 1 : 0
+    }`,
+    takeout: googlePlace?.takeout ?? false,
+    delivery: googlePlace?.delivery ?? false,
+    dineIn: googlePlace?.dineIn ?? false,
+    servesVegetarianFood: googlePlace?.servesVegetarianFood ?? false,
+  };
+  const imageData = googlePlace?.photos?.map((photoInfo) => {
+    const photo = photoInfo ? photoInfo.name : null;
+    return {
+      prefecture: place.prefecture,
+      city: place.city,
+      spot: name,
+      image: photo,
+      referenceLink: photo
+        ? photoInfo.authorAttributions?.[0]?.uri?.replace("//", "https://")
+        : null,
+      referenceName: photo
+        ? photoInfo?.authorAttributions?.[0]?.displayName
+        : null,
+    };
+  });
+  try {
+    //test:  two near places and use big radius to update
+    if (isUpdate) {
+      await infoInstance({ type: "spot" })
+        .where({ spot: name })
+        .update(spotData);
+
+      //delete all spot in image data
+      await imageInstance({ type: "spot" }).where({ spot: name }).delete();
+
+      await imageInstance({ type: "spot" }).insert(imageData);
+    } else {
+      await infoInstance({ type: "spot" }).insert(spotData);
+      await imageInstance({ type: "spot" }).insert(imageData);
+    }
+
+    const categories = googlePlace?.types;
+    if (categories) {
+      const data = categories.map((category) => ({
+        category,
+        prefecture: place.prefecture,
+        city: place.city,
+        spot: name,
+      }));
+      if (isUpdate) {
+        await Promise.all(
+          data.map(async (data) => {
+            await categoryInstance()
+              .where({ spot: name, category: data.category })
+              .update(data);
+          })
+        );
+      } else {
+        await categoryInstance().insert(data);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+}
+
+//await fetchPhoto(photoInfo.name)
 async function fetchPhoto(name) {
-  const response = await fetch(
-    `https://places.googleapis.com/v1/${name}/media?maxHeightPx=4800&maxWidthPx=4800&key=${process.env.PLACE_APIKEY}`
-  );
-  const placePhotoArrayBuffer = await response.arrayBuffer();
-  const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
-  return placePhotoBuffer;
+  try {
+    const response = await fetch(
+      `https://places.googleapis.com/v1/${name}/media?maxHeightPx=4800&maxWidthPx=4800&key=${process.env.PLACE_APIKEY}`
+    );
+    const placePhotoArrayBuffer = await response.arrayBuffer();
+    const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
+    return placePhotoBuffer;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
 }
 
 export const example = [

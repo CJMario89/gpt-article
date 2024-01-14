@@ -1,7 +1,7 @@
-import { articleInstance } from "backend-service/common";
+import { infoInstance } from "backend-service/common";
 
 export const getCountries = async () => {
-  const countries = await articleInstance({ type: "city" })
+  const countries = await infoInstance({ type: "city" })
     .groupBy("country")
     .select("country");
   return countries;
