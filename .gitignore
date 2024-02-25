@@ -39,4 +39,5 @@ next-env.d.ts
 public/photo/*
 sqlite3/*
 sqlite3/dev.sqlite3
+dev.sqlite3
 *.tar
