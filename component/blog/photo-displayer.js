@@ -1,35 +1,65 @@
-import { Flex, Link } from "@chakra-ui/react";
+import { Box, Flex, Link } from "@chakra-ui/react";
 import ExternalLinkSvg from "assets/external-link-svg";
+import useComposeImageUrl from "hooks/use-compose-image-url";
 import Image from "next/image";
 import NextLink from "next/link";
-import { useEffect, useRef } from "react";
 
-const PhotoDisplayer = ({ photo = {}, name, setPhotoFloat, ...restProps }) => {
-  const { image, referenceLink, referenceName } = photo;
-  const photoRef = useRef(null);
-  useEffect(() => {
-    const width = photoRef.current?.clientWidth;
-    const height = photoRef.current?.clientHeight;
-    if (width / height < 1) {
-      setPhotoFloat(true);
-    }
-  }, [setPhotoFloat]);
+const PhotoDisplayer = ({
+  image,
+  name,
+  region,
+  prefecture,
+  city,
+  spot,
+  // setPhotoFloat,
+  ...restProps
+}) => {
+  const { imageUrl, referenceLink, referenceName } = useComposeImageUrl({
+    region,
+    prefecture,
+    city,
+    spot,
+    image,
+  });
+
+  // const photoRef = useRef(null);
+  // useEffect(() => {
+  //   const width = photoRef.current?.clientWidth;
+  //   const height = photoRef.current?.clientHeight;
+  //   if (width / height < 1) {
+  //     setPhotoFloat(true);
+  //   }
+  // }, [setPhotoFloat]);
   return (
     <Flex
       flexDirection="column"
       w="full"
       position="relative"
       rowGap="1"
+      alignItems="center"
       {...restProps}
     >
       {image && (
-        <Image
-          alt={referenceName}
-          width="960"
-          height="480"
-          ref={photoRef}
-          src={image}
-        />
+        <Box position="relative" w="full" pt="50%">
+          <Image
+            alt={referenceName}
+            width="960"
+            height="480"
+            // ref={photoRef}
+            style={{
+              top: "0",
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              objectFit: "cover",
+              _hover: {
+                objectFit: "none",
+              },
+            }}
+            objectFit="cover"
+            src={imageUrl}
+          />
+        </Box>
       )}
       <Flex
         fontSize="xs"

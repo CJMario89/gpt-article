@@ -29,12 +29,12 @@ export const updateArticle = async ({
     );
   } else {
     await instance.raw(
-      `INSERT INTO CityInfo(country, city, title, description, content) VALUES (${data
+      `INSERT INTO CityInfo(prefecture, city, title, description, content) VALUES (${data
         // eslint-disable-next-line no-unused-vars
         ?.map((_) => "?")
         .join(
           ","
-        )}) ON CONFLICT(city) DO UPDATE SET title = excluded.title, description = excluded.description, content = excluded.content`,
+        )}) ON CONFLICT(prefecture, city) DO UPDATE SET content = excluded.content`,
       data
     );
   }

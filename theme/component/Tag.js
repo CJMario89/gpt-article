@@ -1,7 +1,7 @@
 const Tag = {
   baseStyle: {
     container: {
-      background: "neutral.100",
+      background: "primary.100",
       color: "neutral.800",
       px: "3",
       py: "1",

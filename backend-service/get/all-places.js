@@ -1,13 +1,15 @@
 import { instance } from "backend-service/common";
 
+const query = {
+  spot: `SELECT CityInfo.region, SpotInfo.prefecture, SpotInfo.city, SpotInfo.spot from SpotInfo
+  INNER JOIN CityInfo on CityInfo.city = SpotInfo.city AND CityInfo.prefecture = SpotInfo.prefecture
+  ;`,
+  city: `SELECT region, prefecture, city from CityInfo;`,
+  prefecture: `SELECT region, prefecture from PrefectureInfo`,
+};
+
 export const getAllPlaces = async (params = {}) => {
   const { type } = params;
-  const places =
-    type === "spot"
-      ? await instance.raw(`SELECT CityInfo.region, SpotInfo.prefecture, SpotInfo.city, SpotInfo.spot from SpotInfo
-  INNER JOIN CityInfo on CityInfo.city = SpotInfo.city AND CityInfo.prefecture = SpotInfo.prefecture
-  ;`)
-      : await instance.raw(`SELECT region, prefecture, city from CityInfo;`);
-
+  const places = await instance.raw(query[type]);
   return places;
 };

@@ -16,7 +16,6 @@ const Index = () => {
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
   const places = data?.pages[index]?.places;
   const totalPage = data?.pages[0]?.totalPage;
-  console.log(data);
   return (
     <Container
       as={Flex}

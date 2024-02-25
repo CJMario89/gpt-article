@@ -1,9 +1,7 @@
 const Button = {
   baseStyle: {
     // ...define your base styles
-    fontWeight: "bold",
-    border: "1px solid #333333",
-    color: "#333333",
+    borderRadius: "xl",
   },
   sizes: {
     md: {
@@ -22,8 +20,37 @@ const Button = {
       px: "32px",
     },
   },
+  variants: {
+    outline: {
+      border: "1px solid",
+      borderColor: "primary.300",
+      color: "neutral.700",
+    },
+    solid: {
+      bgColor: "primary.300",
+      color: "neutral.50",
+      _hover: {
+        bgColor: "primary.600",
+        _disabled: {
+          bgColor: "primary.200",
+          color: "neutral.100",
+        },
+      },
+    },
+
+    ghost: {
+      color: "neutral.800",
+      _hover: {
+        bgColor: "primary.50",
+      },
+      _active: {
+        bgColor: "primary.50",
+      },
+    },
+  },
   defaultProps: {
     sizes: "lg",
+    variant: "ghost",
   },
 };
 

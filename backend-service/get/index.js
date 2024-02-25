@@ -8,3 +8,4 @@ export * from "./cities";
 export * from "./spots";
 export * from "./prefectures";
 export * from "./get-near-places";
+export * from "./prefecture-info";

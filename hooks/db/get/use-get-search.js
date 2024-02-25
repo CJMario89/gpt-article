@@ -8,16 +8,18 @@ const useGetSearch = (
   return useInfiniteQuery({
     queryKey: ["search", type, region, prefecture, city, text],
     queryFn: async ({ pageParam }) => {
-      const result = await getSearch({
+      const response = await getSearch({
         type,
-        ...(region ? { region } : {}),
+        ...(region && region !== "All" ? { region } : {}),
         ...(prefecture ? { prefecture } : {}),
         ...(city ? { city } : {}),
         ...(text ? { text } : {}),
         page: pageParam ?? 1,
         limit,
       });
-      return result.json();
+
+      const result = await response.json();
+      return result;
     },
     ...options,
     refetchOnWindowFocus: false,

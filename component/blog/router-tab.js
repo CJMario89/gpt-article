@@ -1,38 +1,49 @@
 import { Flex, Link, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 
+const RouterLink = ({ href, place, ...restProps }) => {
+  return (
+    <Link
+      as={NextLink}
+      fontSize="sm"
+      color="neutral.600"
+      href={href}
+      {...restProps}
+    >
+      {place}
+    </Link>
+  );
+};
+
 const RouterTab = ({ region, prefecture, city, spot }) => {
   return (
     <Flex columnGap="2">
-      <Link as={NextLink} color="neutral.400" href={`/${region}/All`}>
-        {region}
-      </Link>
-      <Text color="neutral.400">{`>`}</Text>
-      <Link as={NextLink} color="neutral.400" href={`/${region}/${prefecture}`}>
-        {prefecture}
-      </Link>
+      <RouterLink href={`/explore/${region}/All`} place={region} />
+      <Text color="neutral.600">{`>`}</Text>
+      <RouterLink
+        href={`/explore/${region}/${prefecture}`}
+        place={prefecture}
+      />
       {!!city && (
         <>
-          <Text color="neutral.400">{`>`}</Text>
-          <Link
-            as={NextLink}
-            color="neutral.400"
-            href={`/${region}/${prefecture}/${city}`}
-          >
-            {city}
-          </Link>
+          <Text color="neutral.600">{`>`}</Text>
+          <RouterLink
+            href={`/explore/${region}/${prefecture}/${city}`}
+            place={city}
+            color={spot ? "neutral.600" : "neutral.900"}
+            fontWeight={spot ? "normal" : "semibold"}
+          />
         </>
       )}
       {!!spot && (
         <>
-          <Text color="neutral.400">{`>`}</Text>
-          <Link
-            as={NextLink}
-            color="neutral.800"
-            href={`/${region}/${prefecture}/${city}/${spot}`}
-          >
-            {spot}
-          </Link>
+          <Text color="neutral.600">{`>`}</Text>
+          <RouterLink
+            href={`/explore/${region}/${prefecture}/${city}/${spot}`}
+            place={spot}
+            color="neutral.900"
+            fontWeight="semibold"
+          />
         </>
       )}
     </Flex>

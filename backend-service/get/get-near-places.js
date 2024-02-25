@@ -9,18 +9,18 @@ export const getNearPlaces = async ({
   page,
 }) => {
   const isSpot = type === "spot";
-  const isCity = type === "city";
+  // const isCity = type === "city";
   const isRestuarant = type === "restuarant";
-  const info = await infoInstance({ type })
-    .where(isSpot || isRestuarant ? { city, spot } : { prefecture, city })
-    .first();
+  const whereArgs = {
+    spot: { city, spot },
+    restuarant: { city, spot },
+    city: { prefecture, city },
+    prefecture: { prefecture },
+  };
+  const info = await infoInstance({ type }).where(whereArgs[type]).first();
   if (!info?.location) {
     return [];
   }
-  console.log(isCity ? "------------" : false);
-  console.log(type);
-  console.log(isCity ? info : false);
-  console.log(isCity ? "------------" : false);
   const location = info?.location.split(",");
   const latitude = location[0];
   const longitude = location[1];
@@ -44,6 +44,12 @@ export const getNearPlaces = async ({
       (page - 1) * limit + 1
     }) AS CityInfo
     JOIN CityImage ON CityImage.id = (SELECT MIN(id) FROM CityImage WHERE CityImage.city = CityInfo.city AND CityImage.prefecture = CityInfo.prefecture)`,
+    prefecture: `SELECT * FROM (SELECT prefecture, title, description,  
+      POWER(${latitude} - substr(location, 0, instr(location, ',')), 2) + POWER(${longitude} - substr(location, instr(location, ',') + 1), 2) AS distance 
+      FROM PrefectureInfo WHERE prefecture != 'All' ORDER BY distance LIMIT ${limit} OFFSET ${
+      (page - 1) * limit + 1
+    }) AS PrefectureInfo
+      JOIN PrefectureImage ON PrefectureImage.id = (SELECT MIN(id) FROM PrefectureImage WHERE PrefectureImage.prefecture = PrefectureInfo.prefecture)`,
   };
   const places = await instance.raw(query[type]);
   return places;

@@ -5,7 +5,7 @@ const Fonts = () => (
     styles={`
       @font-face {
         font-family: 'Montserrat';
-        src: url('/fonts/Montserrat-VariableFont_wght.ttf');
+        src: url('/fonts/PTSerif-Regular.ttf');
       }
       `}
   />

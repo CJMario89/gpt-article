@@ -36,7 +36,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-public/image/*
-public/preview/*
+public/photo/*
 sqlite3/*
+sqlite3/dev.sqlite3
 *.tar

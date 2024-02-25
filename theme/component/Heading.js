@@ -1,9 +1,9 @@
 const headingSizeMap = {
-  "3xl": { fontSize: ["4xl", null, "5xl"] },
-  "2xl": { fontSize: ["3xl", null, "4xl"] },
-  xl: { fontSize: ["2xl", null, "3xl"] },
-  lg: { fontSize: ["1xl", null, "2xl"] },
-  md: { fontSize: ["lg", null, "xl"] },
+  "3xl": { fontSize: ["3xl", null, "4xl"] },
+  "2xl": { fontSize: ["2xl", null, "3xl"] },
+  xl: { fontSize: ["xl", null, "2xl"] },
+  lg: { fontSize: ["lg", null, "xl"] },
+  md: { fontSize: ["md", null, "lg"] },
 };
 const getHeadingSize = (as) => {
   switch (as) {

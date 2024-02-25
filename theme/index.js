@@ -1,5 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
-import { Button, Heading, Tag } from "./component";
+import { Button, Heading, Tag, Tabs, Input, Link, Tooltip } from "./component";
 import { styles } from "./styles";
 
 const theme = extendTheme({
@@ -7,6 +7,10 @@ const theme = extendTheme({
     Button,
     Heading,
     Tag,
+    Tabs,
+    Input,
+    Link,
+    Tooltip,
   },
   styles,
   fonts: {
@@ -49,16 +53,16 @@ const theme = extendTheme({
       900: "#161116",
     },
     primary: {
-      50: "#FFEBEE",
-      100: "#FFCDD2",
-      200: "#EF9A9A",
+      50: "#FFFCFC",
+      100: "#F5D5DD",
+      200: "#EFAAAA",
       300: "#E57373",
       400: "#EF5350",
       500: "#F44336",
-      600: "#E53935",
+      600: "#DD302D",
       700: "#D32F2F",
       800: "#C62828",
-      900: "#B71C1C",
+      900: "#A70C0C",
     },
   },
 });

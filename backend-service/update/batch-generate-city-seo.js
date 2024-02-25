@@ -16,11 +16,11 @@ export const batchGenerateCitySeo = async () => {
           city: city.city,
         })
         .select(["spot"]);
-      return spots.length === 0;
-      // await generateCitySeo({
-      //   city: city.city,
-      //   spots: spots.map(({ spot }) => spot),
-      // });
+      // return spots.length === 0;
+      await generateCitySeo({
+        city: city.city,
+        spots: spots.map(({ spot }) => spot),
+      });
       return;
     })
   );

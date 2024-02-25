@@ -28,8 +28,17 @@ export const instance = knex({
 });
 
 export const infoInstance = ({ type }) => {
-  const isSpot = type === "spot" || type === "restuarant";
-  return isSpot ? instance("SpotInfo") : instance("CityInfo");
+  switch (type) {
+    case "spot":
+    case "restuarant":
+      return instance("SpotInfo");
+    case "prefecture":
+      return instance("PrefectureInfo");
+    case "city":
+      return instance("CityInfo");
+    default:
+      return instance("CityInfo");
+  }
 };
 
 export const categoryInstance = () => {
@@ -37,6 +46,12 @@ export const categoryInstance = () => {
 };
 
 export const imageInstance = ({ type }) => {
-  const isSpot = type === "spot";
-  return isSpot ? instance("SpotImage") : instance("CityImage");
+  switch (type) {
+    case "spot":
+      return instance("SpotImage");
+    case "prefecture":
+      return instance("PrefectureImage");
+    default:
+      return instance("CityImage");
+  }
 };

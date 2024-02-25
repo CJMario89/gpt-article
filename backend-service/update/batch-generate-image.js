@@ -1,17 +1,23 @@
 import { instance } from "backend-service/common";
 import { getGooglePhoto } from "backend-service/generate";
 
-const requestNumber = 10000;
+// const requestNumber = 10000;
+const requestNumber = 1;
+const version = 2;
 export const batchGenerateImage = async () => {
   // await batchCityImage();
   // await batchSpotImage();
-  await batchRestuarantImage();
+  // await batchRestuarantImage();
+  // await batchPrefectureImage();
 };
 
 export const batchCityImage = async () => {
   const existedCities =
-    await instance.raw(`SELECT CityInfo.prefecture, CityInfo.city, image from CityInfo 
-  INNER JOIN CityImage ON CityImage.id = (SELECT MIN(id) FROM CityImage WHERE CityImage.city = CityInfo.city AND CityImage.prefecture = CityInfo.prefecture) Where fetched is null`);
+    await instance.raw(`SELECT CityInfo.prefecture, CityInfo.city, image, fetched from CityInfo
+    INNER JOIN CityImage ON CityImage.id = 
+      (SELECT DISTINCT id FROM 
+        (SELECT id, row_number() OVER () AS rownum 
+        FROM CityImage WHERE CityImage.city = CityInfo.city AND CityImage.prefecture = CityInfo.prefecture) AS x WHERE x.rownum = ${version});`);
 
   const requestCities =
     existedCities.length > requestNumber
@@ -28,14 +34,14 @@ export const batchCityImage = async () => {
         name: requestCities[i]?.image,
         location1: prefecture,
         location2: city,
-        num: 1,
+        num: version,
         folder: "city",
       });
-      await instance.raw(`UPDATE CityImage SET fetched = true
-        WHERE ID = (SELECT MIN(id) FROM CityImage WHERE prefecture = '${prefecture}' AND city = '${city.replace(
+      await instance.raw(`UPDATE CityImage SET fetched = '${version}'
+        WHERE id = (SELECT DISTINCT id FROM (SELECT id, row_number() over () AS rownum FROM CityImage WHERE prefecture = '${prefecture}' AND city = '${city.replace(
         /'/g,
         "''"
-      )}' ORDER BY ID LIMIT 1) `);
+      )}') AS x WHERE x.rownum = ${version})`);
     } catch (e) {
       console.log(e);
     }
@@ -45,8 +51,11 @@ export const batchCityImage = async () => {
 
 export const batchSpotImage = async () => {
   const existedSpots =
-    await instance.raw(`SELECT SpotInfo.city, SpotInfo.spot, image from SpotInfo 
-  INNER JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.city = SpotInfo.city AND SpotImage.spot = SpotInfo.spot) Where fetched is null AND SpotInfo.articleType = 'spot'`);
+    await instance.raw(`SELECT SpotInfo.city, SpotInfo.spot, image FROM SpotInfo 
+    INNER JOIN SpotImage ON SpotImage.id = 
+    (SELECT DISTINCT id FROM 
+      (SELECT id, row_number() OVER () AS rownum 
+      FROM SpotImage WHERE SpotImage.city = SpotInfo.city AND SpotImage.spot = SpotInfo.spot AND SpotInfo.articleType = 'spot') AS x WHERE x.rownum = ${version});`);
 
   const requestSpots =
     existedSpots.length > requestNumber
@@ -63,14 +72,17 @@ export const batchSpotImage = async () => {
         name: requestSpots[i]?.image,
         location1: city,
         location2: spot,
-        num: 1,
+        num: version,
         folder: "spot",
       });
-      await instance.raw(`UPDATE SpotImage SET fetched = true
-        WHERE ID = (SELECT MIN(id) FROM SpotImage WHERE spot = '${spot.replace(
+      await instance.raw(`UPDATE SpotImage SET fetched = '${version}'
+        WHERE id = (SELECT DISTINCT id FROM (SELECT id, row_number() OVER () AS rownum FROM SpotImage WHERE spot = '${spot.replace(
           /'/g,
           "''"
-        )}' AND city = '${city.replace(/'/g, "''")}' ORDER BY ID LIMIT 1) `);
+        )}' AND city = '${city.replace(
+        /'/g,
+        "''"
+      )}') AS x WHERE x.rownum = ${version}) `);
     } catch (e) {
       console.log(e);
     }
@@ -81,8 +93,11 @@ export const batchSpotImage = async () => {
 export const batchRestuarantImage = async () => {
   console.log("Restuarant image batched");
   const existedSpots =
-    await instance.raw(`SELECT SpotInfo.city, SpotInfo.spot, image from SpotInfo 
-  INNER JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.city = SpotInfo.city AND SpotImage.spot = SpotInfo.spot) Where fetched is null AND SpotInfo.articleType = 'restuarant'`);
+    await instance.raw(`SELECT SpotInfo.city, SpotInfo.spot, image FROM SpotInfo 
+    INNER JOIN SpotImage ON SpotImage.id = 
+    (SELECT DISTINCT id FROM 
+      (SELECT id, row_number() OVER () AS rownum 
+      FROM SpotImage WHERE SpotImage.city = SpotInfo.city AND SpotImage.spot = SpotInfo.spot AND SpotInfo.articleType = 'restuarant') AS x WHERE x.rownum = ${version});`);
 
   const requestSpots =
     existedSpots.length > requestNumber
@@ -92,24 +107,67 @@ export const batchRestuarantImage = async () => {
   for (let i = 0; i < requestSpots.length; i++) {
     console.log(`Request ${i}th: ${requestSpots[i].spot}`);
     try {
-      console.log(requestSpots[i]);
+      // console.log(requestSpots[i]);
       const city = requestSpots[i]?.city;
       const spot = requestSpots[i]?.spot;
       await getGooglePhoto({
         name: requestSpots[i]?.image,
         location1: city,
         location2: spot,
-        num: 1,
+        num: version,
         folder: "spot",
       });
-      await instance.raw(`UPDATE SpotImage SET fetched = true
-        WHERE ID = (SELECT MIN(id) FROM SpotImage WHERE spot = '${spot.replace(
+      await instance.raw(`UPDATE SpotImage SET fetched = '${version}'
+        WHERE id = (SELECT DISTINCT id FROM (SELECT id, row_number() OVER () AS rownum FROM SpotImage WHERE spot = '${spot.replace(
           /'/g,
           "''"
-        )}' AND city = '${city.replace(/'/g, "''")}' ORDER BY ID LIMIT 1) `);
+        )}' AND city = '${city.replace(
+        /'/g,
+        "''"
+      )}') AS x WHERE x.rownum = ${version}) `);
     } catch (e) {
       console.log(e);
     }
   }
   return existedSpots;
+};
+
+export const batchPrefectureImage = async () => {
+  console.log("Prefecture image batched");
+  const existedPrefectures =
+    await instance.raw(`SELECT PrefectureInfo.region, PrefectureInfo.prefecture, image from PrefectureInfo 
+  INNER JOIN PrefectureImage ON PrefectureImage.id = (SELECT MIN(id) FROM PrefectureImage WHERE PrefectureImage.region = PrefectureInfo.region AND PrefectureImage.prefecture = PrefectureInfo.prefecture) Where fetched is null`);
+
+  const requestPrefectures =
+    existedPrefectures.length > requestNumber
+      ? existedPrefectures.slice(0, requestNumber)
+      : existedPrefectures;
+  console.log(requestPrefectures.length);
+  for (let i = 0; i < requestPrefectures.length; i++) {
+    console.log(
+      `Request ${i}th: ${requestPrefectures[i].region} ${requestPrefectures[i].prefecture}`
+    );
+    try {
+      const region = requestPrefectures[i]?.region;
+      const prefecture = requestPrefectures[i]?.prefecture;
+      await getGooglePhoto({
+        name: requestPrefectures[i]?.image,
+        location1: region,
+        location2: prefecture,
+        num: 1,
+        folder: "prefecture",
+      });
+      await instance.raw(`UPDATE PrefectureImage SET fetched = true
+        WHERE ID = (SELECT MIN(id) FROM PrefectureImage WHERE prefecture = '${prefecture.replace(
+          /'/g,
+          "''"
+        )}' AND region = '${region.replace(
+        /'/g,
+        "''"
+      )}' AND fetched is null ORDER BY ID LIMIT 1) `);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return existedPrefectures;
 };

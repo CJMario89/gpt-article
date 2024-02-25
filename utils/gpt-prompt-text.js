@@ -14,6 +14,29 @@ spots:
 ${spots.join("\n")}`;
 };
 
+export const getCityArticlePromptText = ({ city, spots = [] }) => {
+  return `Generate a traveling article on ${city}, The article should be around 800 words.
+Please organize it with a clear introduction, well-structured body, and a conclusion summarizing the key points and user sentiments.
+Avoid explicitly mentioning the generation process or exposing the artificial nature of the content. 
+Follows the rules.
+rules:
+1. must return content in markdown format which can be parsed by markdown.js, ex. 'h1 as #, h2 as ##'
+2. without image
+3. without gpt hint commentary refer some famous spots.
+spots:
+${spots.join("\n")}`;
+};
+
+export const getPrefectureSeoPromptText = ({ prefecture }) => {
+  return `Generate a SEO title and description on ${prefecture} prefecture in Japan about travling, with the spots provided
+  Return in json format: {title: '...', description:'...'}`;
+};
+
+export const getRegionSeoPromptText = ({ region }) => {
+  return `Generate a SEO title and description on ${region} region in Japan about travling, with the spots provided
+  Return in json format: {title: '...', description:'...'}`;
+};
+
 export const getArticlePromptText = ({
   place,
   type,
@@ -53,6 +76,17 @@ rules:
 3. without gpt hint commentary
 reviews:
 ${reviews}`;
+};
+
+export const getPrefecturePromptText = ({ prefecture }) => {
+  return `Generate a traveling article on ${prefecture}, The article should be around 800 words.
+Please organize it with a clear introduction, well-structured body, and a conclusion summarizing the key points and user sentiments.
+Avoid explicitly mentioning the generation process or exposing the artificial nature of the content. 
+Follows the rules.
+rules:
+1. must return content in markdown format which can be parsed by markdown.js, ex. 'h1 as #, h2 as ##'
+2. without image
+3. without gpt hint commentary`;
 };
 
 export const getRegionalPromptText = ({ place }) => {

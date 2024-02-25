@@ -14,7 +14,6 @@ const useNewPlaces = ({ type }, options) => {
           await getPlacesByParams({ type: "spot", country, city })
         ).json();
         const spots = data.map(({ spot }) => spot).join(",");
-        console.log(data);
         const result = getSpotsPromptText({ city, spots });
         tokensDecrease = result.tokensDecrease;
         tokensIncrease = result.tokensIncrease;
@@ -32,10 +31,8 @@ const useNewPlaces = ({ type }, options) => {
 
       const result = await gptQuery({ text, tokensIncrease, tokensDecrease });
       const rawData = (await result.json()).trim();
-      console.log(rawData);
       const places = JSON.parse(rawData);
       return places.map((place) => {
-        console.log(place);
         return place.replace(/ /g, "-");
       });
     },

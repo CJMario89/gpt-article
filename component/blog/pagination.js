@@ -59,13 +59,14 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
         border="none"
         variant="ghost"
         fontWeight={currentPage === page ? "bold" : "normal"}
+        color={currentPage === page ? "primary.700" : "neutral.800"}
         {...restProps}
       />
     );
   };
 
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" alignSelf="center">
       <Button
         border="none"
         variant="unstyled"

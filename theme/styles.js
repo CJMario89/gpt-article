@@ -12,5 +12,14 @@ export const styles = {
         textDecoration: "underline",
       },
     },
+    "::-webkit-scrollbar": {
+      w: "1",
+      h: "1",
+      borderRadius: "xl",
+      bgColor: "neutral.50",
+    },
+    "::-webkit-scrollbar-thumb": {
+      bgColor: "neutral.400",
+    },
   },
 };

@@ -1,14 +1,15 @@
 import {
   Drawer,
   DrawerBody,
+  DrawerCloseButton,
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
   Flex,
   Heading,
 } from "@chakra-ui/react";
-import SearchFilterMenu from "./search-menu-filter";
 import Search from "./search";
+import RegionalSearch from "./regional-search";
 
 const SearchDrawer = ({ onClose, isOpen }) => {
   return (
@@ -16,12 +17,15 @@ const SearchDrawer = ({ onClose, isOpen }) => {
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader borderBottomWidth="1px">
-          <Heading as="h3">Search</Heading>
+          <Heading as="h2">Search</Heading>
+          <DrawerCloseButton mt="1" />
         </DrawerHeader>
         <DrawerBody>
           <Flex flexDirection="column" rowGap="4">
-            <SearchFilterMenu zIndex={1} />
-            <Search />
+            <Heading as="h3">Regional Search</Heading>
+            <RegionalSearch onSearch={onClose} zIndex={1} />
+            <Heading as="h3">Text Search</Heading>
+            <Search onSearch={onClose} />
           </Flex>
         </DrawerBody>
       </DrawerContent>

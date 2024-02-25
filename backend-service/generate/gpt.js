@@ -11,7 +11,8 @@ export const requestGpt = async ({ text, tokensIncrease, tokensDecrease }) => {
     model: "gpt-3.5-turbo",
     // model: "gpt-4",
     // logit_bias: produceLogitBias({ tokensIncreas, tokensDecrease }),
-    logit_bias: produceLogitBias({ tokensIncrease: ["#", "##"] }),
+    logit_bias: produceLogitBias({}),
+    // logit_bias: produceLogitBias({ tokensIncrease: ["#", "##"] }),
     temperature: 0.1,
   });
   const data = completion.choices[0].message.content;

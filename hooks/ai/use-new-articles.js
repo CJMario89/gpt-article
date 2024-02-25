@@ -20,7 +20,6 @@ const useNewArticles = ({ type }, options) => {
             tokensDecrease,
           });
           const article = await result.json();
-          console.log(article);
 
           return processArticle(Array.isArray(article) ? article[0] : article);
         })

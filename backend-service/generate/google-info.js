@@ -266,20 +266,20 @@ async function insertSpot(googlePlace, place, isUpdate) {
   }
 }
 
-//await fetchPhoto(photoInfo.name)
-async function fetchPhoto(name) {
-  try {
-    const response = await fetch(
-      `https://places.googleapis.com/v1/${name}/media?maxHeightPx=4800&maxWidthPx=4800&key=${process.env.PLACE_APIKEY}`
-    );
-    const placePhotoArrayBuffer = await response.arrayBuffer();
-    const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
-    return placePhotoBuffer;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
+// //await fetchPhoto(photoInfo.name)
+// async function fetchPhoto(name) {
+//   try {
+//     const response = await fetch(
+//       `https://places.googleapis.com/v1/${name}/media?maxHeightPx=4800&maxWidthPx=4800&key=${process.env.PLACE_APIKEY}`
+//     );
+//     const placePhotoArrayBuffer = await response.arrayBuffer();
+//     const placePhotoBuffer = Buffer.from(placePhotoArrayBuffer);
+//     return placePhotoBuffer;
+//   } catch (e) {
+//     console.log(e);
+//     return null;
+//   }
+// }
 
 export const example = [
   {

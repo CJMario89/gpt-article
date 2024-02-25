@@ -6,13 +6,21 @@ const nextConfig = {
     PLACE_APIKEY: process.env.PLACE_APIKEY,
   },
   images: {
-    formats: ["image/avif", "image/webp"],
+    formats: ["image/webp"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "jp-travel.s3.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
     domains: ["localhost"],
   },
-  experimental: {
-    //largePageDataBytes: 128 * 1000, // 128KB by default
-    largePageDataBytes: 128 * 100000,
-  },
+  // experimental: {
+  //   //largePageDataBytes: 128 * 1000, // 128KB by default
+  //   largePageDataBytes: 128 * 100000,
+  // },
 };
 
 module.exports = nextConfig;

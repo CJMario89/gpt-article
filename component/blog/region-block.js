@@ -1,22 +1,25 @@
-import { Flex, Input, Skeleton, SkeletonText } from "@chakra-ui/react";
+import { Flex, Input, useMediaQuery } from "@chakra-ui/react";
 import { useGetSearch } from "hooks/db";
 import { useState } from "react";
 import PlaceCard from "./place-card";
 import Pagination from "./pagination";
-import { SearchIcon } from "./search";
 import PlaceCardSkeleton from "./place-card-skeleton";
+import SearchIcon from "assets/search.svg";
 
 const RegionBlock = ({ type, region, prefecture }) => {
   const [page, setPage] = useState(1);
   const [text, setText] = useState("");
-
-  const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
+  const query = useGetSearch({
     type: "city",
     region,
     prefecture,
     text,
     limit: 4,
   });
+
+  const { fetchNextPage, data, isLoading, isFetchingNextPage } = query;
+
   const index =
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
   const places = data?.pages[index]?.places;
@@ -27,26 +30,23 @@ const RegionBlock = ({ type, region, prefecture }) => {
       w="full"
       flexDirection="column"
       alignItems="center"
-      rowGap={{ base: "4", md: "8" }}
+      rowGap={{ base: "4", md: "6" }}
     >
       <Flex position="relative" w="full">
         <Input
           type="text"
-          pl="8"
-          pr="6"
           placeholder="Search City"
-          background="rgba(245, 245, 245, 0.2)"
-          border="2px solid #eeeeee"
           onInput={(e) => {
+            setPage(1);
             setText(e.target.value);
           }}
         />
         <SearchIcon
           position="absolute"
-          left="12px"
+          left="4"
           top="50%"
           transform="translateY(-50%)"
-          color="#neutral.800"
+          color="neutral.800"
         />
       </Flex>
       {places &&
@@ -54,7 +54,11 @@ const RegionBlock = ({ type, region, prefecture }) => {
         !isFetchingNextPage &&
         places.map((place) => {
           return (
-            <PlaceCard key={place.city} place={{ type, region, ...place }} />
+            <PlaceCard
+              key={place.city}
+              isHorizontal={isDesktop ? false : true}
+              place={{ type, region, ...place }}
+            />
           );
         })}
       <PlaceCardSkeleton isLoading={isLoading || isFetchingNextPage} />
