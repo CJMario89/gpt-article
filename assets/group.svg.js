@@ -1,8 +1,10 @@
-import { Icon } from "@chakra-ui/react";
+import { createIcon } from "@chakra-ui/react";
 
-const GroupSvg = ({ ...restProps }) => {
-  return (
-    <Icon viewBox="0 0 512 512" w="6" h="6" {...restProps}>
+const GroupSvg = createIcon({
+  displayName: "GroupSvg",
+  viewBox: "0 0 512 512",
+  path: (
+    <>
       <g id="XMLID_12_">
         <path
           id="XMLID_29_"
@@ -111,8 +113,8 @@ const GroupSvg = ({ ...restProps }) => {
 		c2.007,0,4.045-0.42,5.984-1.309c7.255-3.309,10.449-11.873,7.138-19.12L333.665,203.828z"
         />
       </g>
-    </Icon>
-  );
-};
+    </>
+  ),
+});
 
 export default GroupSvg;

@@ -1,8 +1,10 @@
-import { Icon } from "@chakra-ui/react";
+import { createIcon } from "@chakra-ui/react";
 
-const KidSvg = ({ ...restProps }) => {
-  return (
-    <Icon viewBox="0 0 512 512" w="6" h="6" {...restProps}>
+const KidSvg = createIcon({
+  displayName: "KidSvg",
+  viewBox: "0 0 512 512",
+  path: (
+    <>
       <g>
         <g>
           <path
@@ -54,8 +56,8 @@ const KidSvg = ({ ...restProps }) => {
           <circle cx="217.01" cy="206.344" r="31.327" />
         </g>
       </g>
-    </Icon>
-  );
-};
+    </>
+  ),
+});
 
 export default KidSvg;
