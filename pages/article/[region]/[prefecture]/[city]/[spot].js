@@ -2,9 +2,9 @@ import { getAllPlaces, getArticle, getNearPlaces } from "backend-service/get";
 import { Blog } from "component/blog";
 
 export const getStaticPaths = async () => {
-  const cities = await getAllPlaces({ type: "spot" });
+  const spots = await getAllPlaces({ type: "spot" });
   return {
-    paths: cities.map(({ region, prefecture, city, spot }) => ({
+    paths: spots.map(({ region, prefecture, city, spot }) => ({
       params: {
         region,
         prefecture,
@@ -22,21 +22,21 @@ export const getStaticProps = async ({ params }) => {
     type: "city",
     prefecture,
     city,
-    limit: 4,
+    limit: 8,
     page: 1,
   });
   const nearSpots = await getNearPlaces({
     type: "spot",
     city,
     spot,
-    limit: 4,
+    limit: 8,
     page: 1,
   });
   const nearRestuarants = await getNearPlaces({
     type: "restuarant",
     city,
     spot,
-    limit: 4,
+    limit: 8,
     page: 1,
   });
   const info = await getArticle({

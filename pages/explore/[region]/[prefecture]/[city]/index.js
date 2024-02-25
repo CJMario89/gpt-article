@@ -1,15 +1,15 @@
-import { Container, Flex, Heading, Input } from "@chakra-ui/react";
 import {
-  Pagination,
-  PlaceCard,
-  PlaceCardSkeleton,
-  RegionBlock,
-} from "component/blog";
+  Container,
+  Flex,
+  Heading,
+  Input,
+  useMediaQuery,
+} from "@chakra-ui/react";
+import SearchIcon from "assets/search.svg";
+import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import RouterTab from "component/blog/router-tab";
-import { SearchIcon } from "component/blog/search";
 import { useGetSearch } from "hooks/db";
 import { useState } from "react";
-import { jsonlize } from "utils/jsonlize";
 
 // export const getStaticPaths = async () => {
 //   const cities = await getAllPlaces({ type: "city" });
@@ -41,6 +41,7 @@ export const getServerSideProps = async ({ params }) => {
 const Index = ({ region, prefecture, city }) => {
   const [page, setPage] = useState(1);
   const [text, setText] = useState("");
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
     type: "spot",
     region,
@@ -57,7 +58,7 @@ const Index = ({ region, prefecture, city }) => {
   return (
     <Container
       as={Flex}
-      maxW="container.xl"
+      maxW="container.lg"
       p="8"
       flexDirection="column"
       alignItems="flex-start"
@@ -76,6 +77,7 @@ const Index = ({ region, prefecture, city }) => {
           background="rgba(245, 245, 245, 0.2)"
           border="2px solid #eeeeee"
           onInput={(e) => {
+            setPage(1);
             setText(e.target.value);
           }}
         />
@@ -94,6 +96,7 @@ const Index = ({ region, prefecture, city }) => {
           return (
             <PlaceCard
               key={place?.spot}
+              isHorizontal={isDesktop ? false : true}
               place={{ type: "spot", region, ...place }}
             />
           );

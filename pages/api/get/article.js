@@ -3,7 +3,6 @@ import { getArticle } from "backend-service/get";
 const GetArticle = async (req, res) => {
   try {
     const article = await getArticle(req.query);
-    console.log(article);
     res.status(200).json(article);
   } catch (error) {
     console.log(error);
