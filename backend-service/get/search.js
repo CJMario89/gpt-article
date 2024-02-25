@@ -18,7 +18,7 @@ export const search = async ({
       WHERE word MATCH '*${text}*' AND TOP=10000${
         region ? ` AND CityInfo.region = '${region}'` : ""
       }${prefecture ? ` AND SpotInfo.prefecture = '${prefecture}'` : ""}${
-        city ? ` AND SpotInfo.city = '${city}'` : ""
+        city ? ` AND SpotInfo.city = '${city?.replace("'", "''")}'` : ""
       }`,
       city: `SELECT DISTINCT word as city, CityInfo.prefecture, CityInfo.title, CityInfo.description, CityImage.referenceLink, CityImage.referenceName FROM CityInfo_spellfix 
   LEFT OUTER JOIN CityInfo ON CityInfo_spellfix.word = CityInfo.city ${
@@ -43,7 +43,10 @@ WHERE word MATCH '*${text}*' AND TOP=10000${
       spot: `SELECT CityInfo.region, SpotInfo.city, SpotInfo.prefecture, SpotInfo.spot, SpotInfo.title, SpotInfo.description, SpotImage.referenceLink, SpotImage.referenceName FROM SpotInfo 
       INNER JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.spot = SpotInfo.spot)
       INNER JOIN CityInfo ON CityInfo.city = SpotInfo.city AND CityInfo.prefecture = SpotInfo.prefecture 
-    WHERE CityInfo.region = '${region}' AND SpotInfo.prefecture = '${prefecture}' AND SpotInfo.city = '${city}'`,
+    WHERE CityInfo.region = '${region}' AND SpotInfo.prefecture = '${prefecture}' AND SpotInfo.city = '${city?.replace(
+        "'",
+        "''"
+      )}'`,
       city: `SELECT CityInfo.region, CityInfo.city, CityInfo.prefecture, CityInfo.title, CityInfo.description, CityImage.referenceLink, CityImage.referenceName FROM CityInfo 
     INNER JOIN CityImage ON CityImage.id = (SELECT MIN(id) FROM CityImage WHERE CityImage.city = CityInfo.city AND CityImage.prefecture = CityInfo.prefecture)
   WHERE CityInfo.region = '${region}'${

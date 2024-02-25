@@ -24,7 +24,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
     // referenceLink,
     // referenceName,
   } = place;
-  const isSpot = type === "spot";
+  // const isSpot = type === "spot";
   const router = useRouter();
   const imageUrl = {
     prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_${prefecture}_1.webp`,

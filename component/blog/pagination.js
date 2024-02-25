@@ -55,6 +55,10 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
       <Button
         onClick={() => {
           onSelect(page);
+          document.querySelector("#container").scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         }}
         border="none"
         variant="ghost"
@@ -78,6 +82,10 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
             return;
           }
           onSelect(prev);
+          document.querySelector("#container").scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         }}
         as={Flex}
         display="flex"
@@ -108,6 +116,10 @@ const Pagination = ({ currentPage, totalPages, onSelect }) => {
             return;
           }
           onSelect(next);
+          document.querySelector("#container").scrollTo({
+            top: 0,
+            behavior: "smooth",
+          });
         }}
         as={Flex}
         display="flex"
