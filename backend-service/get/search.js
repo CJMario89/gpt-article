@@ -59,9 +59,7 @@ WHERE word MATCH '*${text}*' AND TOP=10000${
   }`,
     };
   }
-  console.log(
-    `${query[type]}${` LIMIT ${limit} OFFSET ${(page - 1) * limit};`}`
-  );
+
   const places = await instance.raw(
     `${query[type]}${` LIMIT ${limit} OFFSET ${(page - 1) * limit};`}`
   );

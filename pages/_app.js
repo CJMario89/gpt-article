@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import theme from "theme";
 import { Fonts } from "theme/component";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ function MyApp({ Component, pageProps }) {
     <ChakraProvider theme={theme}>
       <Fonts />
       <QueryClientProvider client={queryClient}>
+        <GoogleAnalytics gaId="G-M69F1K65XF" />
         <Header />
         <Box
           position="relative"

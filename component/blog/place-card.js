@@ -78,7 +78,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
       }
       flexDirection={isHorizontal ? "column" : "row"}
       alignItems={isHorizontal ? "center" : "flex-start"}
-      rowGap="12"
+      rowGap="8"
       onClick={() => {
         router.push(placeLink?.[type] ?? `/article/${region}/${prefecture}`);
         if (typeof onClick === "function") {
