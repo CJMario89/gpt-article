@@ -91,6 +91,7 @@ const Regions = () => {
               as={NextLink}
               key={region}
               href={`/article/${region}`}
+              prefetch="false"
               {...linkStyle}
             >
               {region}
@@ -122,6 +123,7 @@ const Prefectures = () => {
               as={NextLink}
               key={region}
               href={`/article/${region}/${prefecture}`}
+              prefetch="false"
               {...linkStyle}
             >
               {prefecture}

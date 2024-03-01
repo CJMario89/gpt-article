@@ -97,6 +97,7 @@ const Header = () => {
                   key={index}
                   as={NextLink}
                   href={link.href}
+                  prefetch="false"
                   onClick={link.onClick}
                 >
                   <Flex alignItems="center" flexDirection="column" rowGap="0.5">

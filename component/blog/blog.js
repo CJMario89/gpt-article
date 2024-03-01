@@ -357,6 +357,7 @@ const Blog = ({
                             as={NextLink}
                             color="neutral.800"
                             href={googleMapUrl}
+                            prefetch="false"
                           >
                             <Button
                               size="lg"
