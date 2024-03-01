@@ -9,7 +9,6 @@ export const search = async ({
   page,
 }) => {
   let query;
-  console.log(type, "type");
   if (text) {
     query = {
       spot: `SELECT DISTINCT word as spot, CityInfo.region, SpotInfo.prefecture, SpotInfo.city, SpotInfo.title, SpotInfo.description from SpotInfo_spellfix 
@@ -40,13 +39,20 @@ WHERE word MATCH '*${text}*' AND TOP=10000${
     };
   } else {
     query = {
-      spot: `SELECT CityInfo.region, SpotInfo.city, SpotInfo.prefecture, SpotInfo.spot, SpotInfo.title, SpotInfo.description, SpotImage.referenceLink, SpotImage.referenceName FROM SpotInfo 
-      INNER JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.spot = SpotInfo.spot)
+      // spotZ: `SELECT * FROM (SELECT SpotInfo.prefecture, SpotInfo.city, SpotInfo.spot, SpotInfo.title, SpotInfo.description, CityInfo.region FROM SpotInfo JOIN CityInfo ON CityInfo.city = SpotInfo.city WHERE SpotInfo.prefecture = '${prefecture}' AND SpotInfo.city = '${city?.replace(
+      //   "'",
+      //   "''"
+      // )}' AND CityInfo.region = '${region}') AS SpotInfo JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.spot = SpotInfo.spot)`,
+      // spotX: `SELECT * FROM (SELECT SpotInfo.prefecture, SpotInfo.city, SpotInfo.spot, SpotInfo.title, SpotInfo.description, CityInfo.region FROM (SELECT prefecture, city, spot, title, description FROM SpotInfo WHERE prefecture = '${prefecture}' AND city = '${city?.replace(
+      //   "'",
+      //   "''"
+      // )}') AS SpotInfo JOIN CityInfo ON CityInfo.city = SpotInfo.city WHERE CityInfo.region = '${region}') AS SpotInfo JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.spot = SpotInfo.spot)`,
+      spot: `SELECT * FROM (SELECT CityInfo.region AS region, SpotInfo.city AS city, SpotInfo.prefecture AS prefecture, SpotInfo.spot AS spot, SpotInfo.title as title, SpotInfo.description AS description FROM SpotInfo 
       INNER JOIN CityInfo ON CityInfo.city = SpotInfo.city AND CityInfo.prefecture = SpotInfo.prefecture 
     WHERE CityInfo.region = '${region}' AND SpotInfo.prefecture = '${prefecture}' AND SpotInfo.city = '${city?.replace(
         "'",
         "''"
-      )}'`,
+      )}') AS SpotInfo JOIN SpotImage ON SpotImage.id = (SELECT MIN(id) FROM SpotImage WHERE SpotImage.spot = SpotInfo.spot)`,
       city: `SELECT CityInfo.region, CityInfo.city, CityInfo.prefecture, CityInfo.title, CityInfo.description, CityImage.referenceLink, CityImage.referenceName FROM CityInfo 
     INNER JOIN CityImage ON CityImage.id = (SELECT MIN(id) FROM CityImage WHERE CityImage.city = CityInfo.city AND CityImage.prefecture = CityInfo.prefecture)
   WHERE CityInfo.region = '${region}'${
@@ -59,14 +65,12 @@ WHERE word MATCH '*${text}*' AND TOP=10000${
   }`,
     };
   }
-
   const places = await instance.raw(
     `${query[type]}${` LIMIT ${limit} OFFSET ${(page - 1) * limit};`}`
   );
   const countQuery = getCountQuery(query[type], text, type);
   const total = (await instance.raw(countQuery))?.[0]?.total;
   const totalPage = Math.ceil(total / limit);
-  console.log(places);
   return {
     places,
     totalPage,

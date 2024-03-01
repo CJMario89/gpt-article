@@ -2,10 +2,11 @@ import { Container, Flex, Heading, Input } from "@chakra-ui/react";
 import SearchIcon from "assets/search.svg";
 import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import { useGetSearch } from "hooks/db";
+import usePage from "hooks/use-page";
 import { useState } from "react";
 
 const Index = () => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = usePage();
   const [text, setText] = useState("");
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
     type: "prefecture",

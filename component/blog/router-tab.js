@@ -8,7 +8,7 @@ const RouterLink = ({ href, place, ...restProps }) => {
       fontSize="sm"
       color="neutral.600"
       href={href}
-      prefetch="false"
+      prefetch={false}
       {...restProps}
     >
       {place}

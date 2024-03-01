@@ -87,7 +87,7 @@ const Favorite = () => {
                       p="4"
                       as={Link}
                       href={exploreLink[option]}
-                      prefetch="false"
+                      prefetch={false}
                     >
                       Explore
                     </Button>

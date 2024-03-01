@@ -87,15 +87,16 @@ const Regions = () => {
       <Flex gap="2" flexWrap="wrap">
         {regions.map((region) => {
           return (
-            <Link
-              as={NextLink}
-              key={region}
-              href={`/article/${region}`}
-              prefetch="false"
-              {...linkStyle}
-            >
-              {region}
-            </Link>
+            <></>
+            // <Link
+            //   // as={NextLink}
+            //   key={region}
+            //   href={`/article/${region}`}
+            //   // prefetch={false}
+            //   {...linkStyle}
+            // >
+            //   {region}
+            // </Link>
           );
         })}
       </Flex>
@@ -119,15 +120,15 @@ const Prefectures = () => {
       <Flex gap="2" flexWrap="wrap">
         {prefectures.map(({ prefecture, region }) => {
           return (
-            <Link
-              as={NextLink}
-              key={region}
-              href={`/article/${region}/${prefecture}`}
-              prefetch="false"
-              {...linkStyle}
-            >
-              {prefecture}
-            </Link>
+            <></>
+            // <Link
+            //   key={region}
+            //   href={`/article/${region}/${prefecture}`}
+            //   // prefetch={false}
+            //   {...linkStyle}
+            // >
+            //   {prefecture}
+            // </Link>
           );
         })}
       </Flex>

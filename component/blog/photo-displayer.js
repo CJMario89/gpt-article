@@ -71,7 +71,7 @@ const PhotoDisplayer = ({
         <Link
           as={NextLink}
           href={referenceLink ?? ""}
-          prefetch="false"
+          prefetch={false}
           display="flex"
           alignItems="center"
           columnGap="1"

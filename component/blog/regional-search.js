@@ -182,6 +182,9 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
                 </MenuButton>
                 <MenuList
                   display={isOpen ? "block" : "none"}
+                  maxH="80vh"
+                  overflowY="scroll"
+                  overflowX="hidden"
                   {...menuListStyleProps}
                   {...textStlyeProps}
                 >

@@ -9,6 +9,7 @@ import SearchIcon from "assets/search.svg";
 import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import RouterTab from "component/blog/router-tab";
 import { useGetSearch } from "hooks/db";
+import usePage from "hooks/use-page";
 import { useState } from "react";
 
 // export const getStaticPaths = async () => {
@@ -39,7 +40,7 @@ export const getServerSideProps = async ({ params }) => {
 //SEO, share, other function
 
 const Index = ({ region, prefecture, city }) => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = usePage();
   const [text, setText] = useState("");
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({

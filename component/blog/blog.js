@@ -310,7 +310,7 @@ const Blog = ({
                 </Box>
                 {contents.map((content, i) => {
                   return i === 11 && images?.[1] ? (
-                    <Flex flexDirection="column" mt="8">
+                    <Flex key={i} flexDirection="column" mt="8">
                       <PhotoDisplayer
                         image={images?.[1]}
                         name={spot}
@@ -357,7 +357,7 @@ const Blog = ({
                             as={NextLink}
                             color="neutral.800"
                             href={googleMapUrl}
-                            prefetch="false"
+                            prefetch={false}
                           >
                             <Button
                               size="lg"
