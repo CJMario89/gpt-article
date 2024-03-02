@@ -11,13 +11,7 @@ const NextLink = forwardRef(function NextLink(props, ref) {
   const target = _target || isInternal ? "_self" : "_blank";
 
   return (
-    <ChakraLink
-      ref={ref}
-      // as={Link}
-      href={href}
-      target={target}
-      {...rest}
-    >
+    <ChakraLink ref={ref} as={Link} href={href} target={target} {...rest}>
       {children}
     </ChakraLink>
   );

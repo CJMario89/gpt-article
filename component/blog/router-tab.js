@@ -1,10 +1,9 @@
-import { Flex, Link, Text } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Flex, Text } from "@chakra-ui/react";
+import Link from "component/NextLink";
 
 const RouterLink = ({ href, place, ...restProps }) => {
   return (
     <Link
-      as={NextLink}
       fontSize="sm"
       color="neutral.600"
       href={href}

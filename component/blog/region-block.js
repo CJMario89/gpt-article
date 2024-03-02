@@ -5,15 +5,12 @@ import PlaceCard from "./place-card";
 import Pagination from "./pagination";
 import PlaceCardSkeleton from "./place-card-skeleton";
 import SearchIcon from "assets/search.svg";
-import { useRouter } from "next/router";
 import usePage from "hooks/use-page";
 
 const RegionBlock = ({ type, region, prefecture }) => {
   const [page, setPage] = usePage();
   const [text, setText] = useState("");
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
-  const { asPath, pathname } = useRouter();
-  console.log(asPath, pathname);
   const query = useGetSearch({
     type: "city",
     region,

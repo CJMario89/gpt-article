@@ -1,8 +1,8 @@
-import { Box, Flex, Link } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import ExternalLinkSvg from "assets/external-link-svg";
 import useComposeImageUrl from "hooks/use-compose-image-url";
 import Image from "next/image";
-import NextLink from "next/link";
+import Link from "component/NextLink";
 
 const PhotoDisplayer = ({
   image,
@@ -56,7 +56,6 @@ const PhotoDisplayer = ({
                 objectFit: "none",
               },
             }}
-            objectFit="cover"
             src={imageUrl}
           />
         </Box>
@@ -69,7 +68,6 @@ const PhotoDisplayer = ({
         justifyContent="flex-end"
       >
         <Link
-          as={NextLink}
           href={referenceLink ?? ""}
           prefetch={false}
           display="flex"

@@ -4,7 +4,6 @@ import {
   Container,
   Flex,
   Heading,
-  Link,
   Tag,
   Text,
   Tooltip,
@@ -12,13 +11,13 @@ import {
 import Markdown from "component/Markdown";
 import { processArticleInBlog } from "utils/article";
 import Loading from "component/Loading";
+import Link from "component/NextLink";
 import { useMemo, useRef } from "react";
 import PhotoDisplayer from "./photo-displayer";
 import WheelchairSvg from "assets/wheelchair.svg";
 import GroupSvg from "assets/group.svg";
 import PetsSvg from "assets/pets.svg";
 import KidSvg from "assets/kid.svg";
-import NextLink from "next/link";
 import DOMPurify from "isomorphic-dompurify";
 import RouterTab from "./router-tab";
 import PlaceCard from "./place-card";
@@ -31,19 +30,21 @@ import HeartFillSVG from "assets/heart-fill.svg";
 
 const OtherPlaces = ({ region, type, places, title }) => {
   return (
-    <Flex key={title} flexDirection="column" mt="8" alignItems="center">
+    <Flex flexDirection="column" mt="8" alignItems="center">
       <Heading as="h1" color="primary.800" alignSelf="self-start">
         {title}
       </Heading>
       <Box overflowX="auto" w="full" pb="1">
         <Flex flexDirection={{ base: "column", md: "row" }} w="max-content">
-          {places?.map((place) => (
-            <PlaceCard
-              key={place?.name}
-              isHorizontal
-              place={{ type, region, ...place }}
-            />
-          ))}
+          {places?.map((place) => {
+            return (
+              <PlaceCard
+                key={place?.spot ?? place?.city ?? place?.prefecture}
+                isHorizontal
+                place={{ type, region, ...place }}
+              />
+            );
+          })}
         </Flex>
       </Box>
       {/* <Link
@@ -353,12 +354,7 @@ const Blog = ({
                           <Heading as="h2" color="primary.300">
                             Google Map
                           </Heading>
-                          <Link
-                            as={NextLink}
-                            color="neutral.800"
-                            href={googleMapUrl}
-                            prefetch={false}
-                          >
+                          <Link color="neutral.800" href={googleMapUrl}>
                             <Button
                               size="lg"
                               variant="solid"

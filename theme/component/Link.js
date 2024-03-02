@@ -1,7 +1,7 @@
 const Link = {
   baseStyle: {
     _hover: {
-      "text-decoration": "none",
+      textDecoration: "none",
       filter: "brightness(1.1)",
     },
   },

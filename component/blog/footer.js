@@ -1,7 +1,7 @@
-import { Container, Flex, Heading, Link, Text } from "@chakra-ui/react";
+import { Container, Flex, Heading, Text } from "@chakra-ui/react";
 import LogoSvg from "assets/logo.svg";
 import MailSvg from "assets/mail.svg";
-import NextLink from "next/link";
+import Link from "component/NextLink";
 import RegionalSearch from "./regional-search";
 
 const linkStyle = {
@@ -87,16 +87,15 @@ const Regions = () => {
       <Flex gap="2" flexWrap="wrap">
         {regions.map((region) => {
           return (
-            <></>
-            // <Link
-            //   // as={NextLink}
-            //   key={region}
-            //   href={`/article/${region}`}
-            //   // prefetch={false}
-            //   {...linkStyle}
-            // >
-            //   {region}
-            // </Link>
+            <Link
+              // as={NextLink}
+              key={region}
+              href={`/article/${region}`}
+              // prefetch={false}
+              {...linkStyle}
+            >
+              {region}
+            </Link>
           );
         })}
       </Flex>
@@ -120,15 +119,14 @@ const Prefectures = () => {
       <Flex gap="2" flexWrap="wrap">
         {prefectures.map(({ prefecture, region }) => {
           return (
-            <></>
-            // <Link
-            //   key={region}
-            //   href={`/article/${region}/${prefecture}`}
-            //   // prefetch={false}
-            //   {...linkStyle}
-            // >
-            //   {prefecture}
-            // </Link>
+            <Link
+              key={region}
+              href={`/article/${region}/${prefecture}`}
+              // prefetch={false}
+              {...linkStyle}
+            >
+              {prefecture}
+            </Link>
           );
         })}
       </Flex>
@@ -140,15 +138,10 @@ const Claims = () => {
   return (
     <Flex gap="6" alignItems="center" mt="auto">
       <LogoSvg color="neutral.50" w="22" h="12" />
-      <Link
-        as={NextLink}
-        href="/privacy-policy"
-        {...linkStyle}
-        color="neutral.50"
-      >
+      <Link href="/privacy-policy" {...linkStyle} color="neutral.50">
         Privacy Policy
       </Link>
-      <Link as={NextLink} href="/term-of-use" {...linkStyle} color="neutral.50">
+      <Link href="/term-of-use" {...linkStyle} color="neutral.50">
         Terms of use
       </Link>
     </Flex>
@@ -162,7 +155,6 @@ const Contact = () => {
         Contact
       </Heading>
       <Link
-        as={NextLink}
         href="mailto:japantoursite@gmail.com"
         {...linkStyle}
         color="neutral.50"

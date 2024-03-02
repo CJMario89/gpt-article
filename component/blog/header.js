@@ -1,6 +1,6 @@
-import { Flex, Link, Text, useDisclosure } from "@chakra-ui/react";
+import { Flex, Text, useDisclosure } from "@chakra-ui/react";
 import SearchDrawer from "./search-drawer";
-import NextLink from "next/link";
+import Link from "component/NextLink";
 import LogoSvg from "assets/logo.svg";
 import Explore from "assets/explore.svg";
 import HeartFill from "assets/heart-fill.svg";
@@ -20,8 +20,8 @@ const navbarTextProps = {
 };
 
 const Header = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const router = useRouter();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const navbarLinks = [
     {
       name: "Explore",
@@ -37,8 +37,7 @@ const Header = () => {
     },
     {
       name: "Search",
-      // href: `/${router.asPath}/#search`,
-      href: `/${router.asPath}`,
+      href: `${router.asPath}`,
       icon: <SearchIcon {...navbarIconProps} />,
       onClick: () => {
         onOpen();
@@ -70,7 +69,7 @@ const Header = () => {
         background="transparent"
         maxW="container.lg"
       >
-        <Link as={NextLink} href="/">
+        <Link href="/">
           <LogoSvg color="primary.700" w="22" h="12" ml="4" />
         </Link>
         <Flex
@@ -93,13 +92,7 @@ const Header = () => {
           >
             {navbarLinks.map((link, index) => {
               return (
-                <Link
-                  key={index}
-                  as={NextLink}
-                  href={link.href}
-                  prefetch={false}
-                  onClick={link.onClick}
-                >
+                <Link key={index} href={link.href} onClick={link.onClick}>
                   <Flex alignItems="center" flexDirection="column" rowGap="0.5">
                     {link.icon}
                     <Text {...navbarTextProps}>{link.name}</Text>

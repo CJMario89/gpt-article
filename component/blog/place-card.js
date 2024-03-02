@@ -1,14 +1,7 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  // Link,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Box, Flex, Heading, Text, Tooltip } from "@chakra-ui/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-// import NextLink from "next/link";
+//import Link from "components/NextLink";
 // import ExternalLinkSvg from "assets/external-link-svg";
 
 const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
@@ -20,7 +13,6 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
     spot,
     title,
     description,
-    name,
     // referenceLink,
     // referenceName,
   } = place;
@@ -43,7 +35,6 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
   };
   return (
     <Flex
-      key={name}
       w="100%"
       flex="1"
       position="relative"
@@ -115,7 +106,6 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
           mt="1"
         >
           <Link
-            as={NextLink}
             href={referenceLink ?? ""}
             display="flex"
             alignItems="center"
@@ -156,9 +146,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
             {placeName?.[type]}
           </Heading>
         </Tooltip>
-        {isHorizontal ? (
-          <></>
-        ) : (
+        {isHorizontal && (
           <Tooltip label={title}>
             <Heading
               as="h4"
