@@ -1,4 +1,4 @@
-name: Deploy to Server
+name: SSH Deploy
 
 on:
   push:
@@ -8,22 +8,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: relauch website
+      - name: SSH and deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SSH_HOST }}
-          username: root
-          key: ${{ secrets.SSH_KEY_MAIN }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          command_timeout: 200m
+          key: ${{ secrets.SERVER_KEY }}
           script: |
             cd gpt-article
-            git pull
-            docker compose down -v
-            docker compose build
-            echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-            docker compose push
-            docker compose up
+            git pull origin main
+            npm install
+            npm run build
+            pm2 restart all
