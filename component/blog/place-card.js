@@ -5,18 +5,7 @@ import { useRouter } from "next/router";
 // import ExternalLinkSvg from "assets/external-link-svg";
 
 const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
-  const {
-    type,
-    region,
-    prefecture,
-    city,
-    spot,
-    title,
-    description,
-    // referenceLink,
-    // referenceName,
-  } = place;
-  // const isSpot = type === "spot";
+  const { type, region, prefecture, city, spot, title, description } = place;
   const router = useRouter();
   const imageUrl = {
     prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_${prefecture}_1.webp`,
@@ -69,7 +58,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
       }
       flexDirection={isHorizontal ? "column" : "row"}
       alignItems={isHorizontal ? "center" : "flex-start"}
-      rowGap="8"
+      rowGap="4"
       onClick={() => {
         router.push(placeLink?.[type] ?? `/article/${region}/${prefecture}`);
         if (typeof onClick === "function") {

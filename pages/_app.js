@@ -27,8 +27,8 @@ function MyApp({ Component, pageProps }) {
         <Box
           position="relative"
           w="full"
-          h={{ base: "calc(100vh - 64px)", lg: "calc(100vh - 84px)" }}
-          mt={{ base: "64px", lg: "84px" }}
+          h="100vh"
+          pt={{ base: "64px", lg: "84px" }}
           overflow="auto"
           id="container"
         >

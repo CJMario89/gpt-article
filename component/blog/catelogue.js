@@ -3,20 +3,32 @@ import BackToTopSvg from "assets/back-to-top.svg";
 import { useEffect, useRef, useState } from "react";
 let debounceTimeout = null;
 
-const BackToTop = ({ onClick }) => {
+const BackToTop = ({ onClick, catelogueMobileRef }) => {
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const ref = useRef(null);
+  const timeoutRef = useRef();
   useEffect(() => {
     const hideBackToTop = () => {
-      setTimeout(() => {
-        if (ref?.current) {
-          ref.current.style.opacity = "0";
+      if (ref?.current) {
+        ref.current.style.opacity = "0";
+        if (!isDesktop && catelogueMobileRef) {
+          catelogueMobileRef.current.style.opacity = "0";
         }
-      }, 4000);
+      }
+    };
+    const hideBackToTopTimeout = () => {
+      timeoutRef.current = setTimeout(hideBackToTop, 3000);
     };
     hideBackToTop();
     const showBackToTop = () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
       ref.current.style.opacity = "1";
-      hideBackToTop();
+      if (!isDesktop && catelogueMobileRef) {
+        catelogueMobileRef.current.style.opacity = "1";
+      }
+      hideBackToTopTimeout();
     };
     document
       .querySelector("#container")
@@ -30,13 +42,17 @@ const BackToTop = ({ onClick }) => {
   return (
     <Flex
       ref={ref}
-      position="fixed"
-      bottom={{ base: "2", lg: "12" }}
-      bgColor="neutral.600"
+      borderRadius="xl"
+      position={{ base: "relative", lg: "fixed" }}
+      bottom={{ lg: "12" }}
       color="neutral.50"
-      right="0"
+      right={{ lg: "12" }}
       w="10"
       h="10"
+      bgColor="white"
+      borderColor="primary.700"
+      borderWidth="1px"
+      boxShadow="0 0 10px 0 rgba(0,0,0,0.1)"
       fontSize="sm"
       textAlign="center"
       justifyContent="center"
@@ -44,19 +60,20 @@ const BackToTop = ({ onClick }) => {
       flexDirection="column"
       cursor="pointer"
       zIndex="111"
-      transition={"opacity 1s"}
+      transition={"opacity 0.3s"}
       onClick={() => {
         document.querySelector("#container").scrollTo({ top: 0 });
         onClick();
       }}
     >
-      <BackToTopSvg color="neutral.100" w="6" h="6" />
+      <BackToTopSvg color="primary.700" w="6" h="6" />
     </Flex>
   );
 };
 
 const Catelogue = ({ contents, place, isSpot }) => {
   const ref = useRef(null);
+  const catelogueMobileRef = useRef(null);
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const [showMask, setShowMask] = useState(false);
   useEffect(() => {
@@ -73,29 +90,42 @@ const Catelogue = ({ contents, place, isSpot }) => {
     <>
       {!isDesktop && (
         <>
-          <Box
+          <Flex
             position="fixed"
-            borderRadius="full"
-            bgColor="white"
-            borderColor="primary.700"
-            borderWidth="1px"
-            boxShadow="0 0 10px 0 rgba(0,0,0,0.1)"
             right="0"
-            bottom="80px"
+            bottom="70px"
             overflow="hidden"
             zIndex={101}
+            columnGap="1"
           >
-            <Button
-              fontSize="sm"
-              color="primary.700"
+            <BackToTop
+              catelogueMobileRef={catelogueMobileRef}
               onClick={() => {
-                ref.current.style.display = "flex";
-                setShowMask(true);
+                observerContent(ref, isDesktop);
               }}
+            />
+            <Box
+              borderRadius="xl"
+              bgColor="white"
+              borderColor="primary.700"
+              borderWidth="1px"
+              boxShadow="0 0 10px 0 rgba(0,0,0,0.1)"
+              ref={catelogueMobileRef}
+              transition={"opacity 0.3s"}
             >
-              Catelogue
-            </Button>
-          </Box>
+              <Button
+                fontSize="sm"
+                color="primary.700"
+                onClick={() => {
+                  ref.current.style.display = "flex";
+                  setShowMask(true);
+                }}
+              >
+                Catelogue
+              </Button>
+            </Box>
+          </Flex>
+
           {showMask && (
             <Box
               w="100vw"
@@ -228,11 +258,13 @@ const Catelogue = ({ contents, place, isSpot }) => {
           )}
         </Flex>
       </Flex>
-      <BackToTop
-        onClick={() => {
-          observerContent(ref, isDesktop);
-        }}
-      />
+      {isDesktop && (
+        <BackToTop
+          onClick={() => {
+            observerContent(ref, isDesktop);
+          }}
+        />
+      )}
     </>
   );
 };

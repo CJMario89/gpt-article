@@ -52,11 +52,9 @@ const Header = () => {
       left="0"
       w="full"
       flexDirection="column"
-      // borderBottom="2px solid"
-      // borderColor="primary.700"
-      zIndex={10}
+      boxShadow="0 0 10px 0 rgba(100, 100, 100, 0.5), 0 0 5px 0 rgba(100, 100, 100, 0.5)"
+      zIndex={1000}
       bgColor="white"
-      boxShadow="0 0 10px 0 #EDECED, 0 0 5px 0 #A6A4A6"
     >
       <Flex
         w="full"
@@ -65,7 +63,7 @@ const Header = () => {
         columnGap="16"
         alignItems="center"
         justifyContent="space-between"
-        zIndex={10}
+        zIndex={1000}
         background="transparent"
         maxW="container.lg"
       >
@@ -73,21 +71,24 @@ const Header = () => {
           <LogoSvg color="primary.700" w="22" h="12" ml="4" />
         </Link>
         <Flex
-          flexDirection={{ base: "column", lg: "row" }}
           position={{ base: "fixed", lg: "relative" }}
           bgColor={{ base: "white", lg: "transparent" }}
           bottom="0"
           left="0"
-          columnGap="8"
           w="full"
-          pr="8"
-          justifyContent={{ base: "flex-start", lg: "flex-end" }}
+          pr={{ base: "0", lg: "24" }}
+          py={{ base: "1", lg: "0" }}
+          justifyContent={{ base: "center", lg: "flex-end" }}
+          boxShadow={{
+            base: "0 0 10px 0 rgba(100, 100, 100, 0.5), 0 0 5px 0 rgba(100, 100, 100, 0.5)",
+            lg: "none",
+          }}
         >
           <Flex
-            columnGap={{ base: "8", lg: "8" }}
             w="full"
+            maxW={{ base: "300px", lg: "72" }}
             p={{ base: "2", lg: "0" }}
-            justifyContent={{ base: "flex-start", lg: "flex-end" }}
+            justifyContent={{ base: "space-between", lg: "space-between" }}
             alignItems={{ base: "flex-start", lg: "center" }}
           >
             {navbarLinks.map((link, index) => {

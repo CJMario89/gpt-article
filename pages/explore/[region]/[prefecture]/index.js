@@ -84,14 +84,14 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
               borderColor="primary.100"
             >
               {regions.map((region) => (
-                <Tab key={region} mb="0" px="5">
+                <Tab key={`${region}-t`} mb="0" px="5">
                   {region}
                 </Tab>
               ))}
             </TabList>
             <TabPanels>
               {regions.map((region) => (
-                <TabPanel key={region} p="0">
+                <TabPanel key={`${region}-tp`} p="0">
                   <Tabs
                     index={prefectures.indexOf(prefecture)}
                     onChange={(index) => {
@@ -107,14 +107,14 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
                       borderColor="primary.100"
                     >
                       {prefectures.map((prefecture) => (
-                        <Tab key={prefecture} mb="0">
+                        <Tab key={`${prefecture}-t`} mb="0">
                           {prefecture}
                         </Tab>
                       ))}
                     </TabList>
                     <TabPanels>
                       {prefectures.map((prefecture) => (
-                        <TabPanel key={prefecture} p="0">
+                        <TabPanel key={`${prefecture}-tp`} p="0">
                           <RegionBlock
                             type="city"
                             region={region}

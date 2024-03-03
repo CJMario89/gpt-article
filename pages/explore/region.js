@@ -1,4 +1,10 @@
-import { Container, Flex, Heading, Input } from "@chakra-ui/react";
+import {
+  Container,
+  Flex,
+  Heading,
+  Input,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import SearchIcon from "assets/search.svg";
 import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import { useGetSearch } from "hooks/db";
@@ -7,6 +13,7 @@ import { useState } from "react";
 
 const Index = () => {
   const [page, setPage] = usePage();
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const [text, setText] = useState("");
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
     type: "prefecture",
@@ -49,17 +56,21 @@ const Index = () => {
           color="neutral.800"
         />
       </Flex>
-      {places &&
-        !isLoading &&
-        !isFetchingNextPage &&
-        places.map((place) => {
-          return (
-            <PlaceCard
-              key={place?.spot}
-              place={{ type: "prefecture", ...place }}
-            />
-          );
-        })}
+      <Flex flexDirection="column" alignItems="center" w="full">
+        {places &&
+          !isLoading &&
+          !isFetchingNextPage &&
+          places.map((place) => {
+            return (
+              <PlaceCard
+                key={place?.spot}
+                isHorizontal={isDesktop ? false : true}
+                place={{ type: "prefecture", ...place }}
+              />
+            );
+          })}
+      </Flex>
+
       <PlaceCardSkeleton isLoading={isLoading || isFetchingNextPage} />
       {totalPage > 0 && (
         <Pagination

@@ -35,7 +35,11 @@ const OtherPlaces = ({ region, type, places, title }) => {
         {title}
       </Heading>
       <Box overflowX="auto" w="full" pb="1">
-        <Flex flexDirection={{ base: "column", md: "row" }} w="max-content">
+        <Flex
+          flexDirection={{ base: "column", md: "row" }}
+          w="max-content"
+          m="0 auto"
+        >
           {places?.map((place) => {
             return (
               <PlaceCard
