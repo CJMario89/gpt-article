@@ -45,6 +45,7 @@ export const getStaticProps = async ({ params }) => {
   });
   return {
     props: { info, nearPrefectures, citiesIn },
+    revalidate: 30000000,
   };
 };
 

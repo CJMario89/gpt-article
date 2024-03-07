@@ -30,13 +30,10 @@ const BackToTop = ({ onClick, catelogueMobileRef }) => {
       }
       hideBackToTopTimeout();
     };
-    document
-      .querySelector("#container")
-      .addEventListener("wheel", showBackToTop);
+
+    addEventListener("wheel", showBackToTop);
     return () => {
-      document
-        .querySelector("#container")
-        .removeEventListener("wheel", showBackToTop);
+      removeEventListener("wheel", showBackToTop);
     };
   }, []);
   return (
@@ -62,7 +59,8 @@ const BackToTop = ({ onClick, catelogueMobileRef }) => {
       zIndex="111"
       transition={"opacity 0.3s"}
       onClick={() => {
-        document.querySelector("#container").scrollTo({ top: 0 });
+        window.scrollTo({ top: 0 });
+        document.querySelector("#header").style.top = "0px";
         onClick();
       }}
     >
@@ -147,7 +145,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
         ref={ref}
         display={{ base: "none", lg: "flex" }}
         position={{ base: "fixed", lg: "sticky" }}
-        top={{ base: "84", lg: "0px" }}
+        top={{ base: "84", lg: "84px" }}
         border="1px solid"
         borderColor="primary.300"
         borderRadius="lg"
@@ -176,7 +174,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
             userSelect="none"
             key={place}
             onClick={() => {
-              document.querySelector("#container").scrollTo({
+              window.scrollTo({
                 top: document.querySelector("#description").offsetTop - 200,
                 behavior: "smooth",
               });
@@ -207,8 +205,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
                   _hover={{ opacity: 0.9 }}
                   userSelect="none"
                   onClick={() => {
-                    const container = document.querySelector("#container");
-                    container.scrollTo({
+                    window.scrollTo({
                       top: document.querySelector(`#M${i}`).offsetTop - 200,
                       behavior: "smooth",
                     });
@@ -239,8 +236,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
               w="280px"
               userSelect="none"
               onClick={() => {
-                const container = document.querySelector("#container");
-                container.scrollTo({
+                window.scrollTo({
                   top: document.querySelector("#detail").offsetTop - 200,
                   behavior: "smooth",
                 });
@@ -365,10 +361,10 @@ function observerContent(ref, isDesktop) {
         ? `${-(containerHeight / 2) * halfContainerTH}px`
         : `${-((containerHeight / 2) * halfContainerTH) + 84}px`;
     } else {
-      ref.current.style.top = isDesktop ? "0px" : "84px";
+      ref.current.style.top = isDesktop ? "94px" : "84px";
     }
     if (isInit) {
-      ref.current.style.top = isDesktop ? "0px" : "84px";
+      ref.current.style.top = isDesktop ? "94px" : "84px";
     }
   }, 500);
 }

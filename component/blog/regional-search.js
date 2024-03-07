@@ -161,9 +161,9 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
     return `${region}/${prefecture}/${city}`;
   }, [region, prefecture, city]);
   return (
-    <Flex gap="6" flexWrap="wrap" {...restProps}>
+    <Flex gap="4" flexWrap="wrap" {...restProps}>
       {placesMenu.map((placeMenu) => (
-        <Flex key={placeMenu.name} alignItems="center" columnGap="4">
+        <Flex key={placeMenu.name} alignItems="center" columnGap="2">
           <Text {...textStlyeProps} opacity={placeMenu.disable ? "0.5" : "1"}>
             {placeMenu.name}:{" "}
           </Text>

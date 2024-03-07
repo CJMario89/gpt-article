@@ -22,7 +22,7 @@ export const getGooglePhoto = async ({
     image
       .quality(100)
       .write(
-        `./public/photo/2/${folder}/${location1}_${location2}_${num}.webp`,
+        `./public/photo/${num}/blog/${folder}/${location1}_${location2}_${num}.webp`,
         (writeErr) => {
           if (writeErr) {
             console.error(writeErr);

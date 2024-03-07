@@ -12,6 +12,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { useGetSearch } from "hooks/db";
 import { useState } from "react";
@@ -35,9 +36,10 @@ const Search = ({ onSearch, ...restProps }) => {
     return placeText.charAt(0).toUpperCase() + placeText.slice(1);
   };
   const places = data?.pages[0]?.places ?? [];
+  const [isDesktop] = useMediaQuery("(min-width: 768px)");
   return (
     <Flex flexDirection="column" alignItems="flex-start" rowGap="4">
-      <Flex columnGap="4" alignItems="center">
+      <Flex columnGap="2" alignItems="center">
         <Text>Region: </Text>
         <Menu>
           {({ isOpen }) => (
@@ -126,6 +128,7 @@ const Search = ({ onSearch, ...restProps }) => {
                           onClick={() => {
                             onSearch();
                           }}
+                          isHorizontal={!isDesktop}
                           key={place?.title}
                           place={{ type, ...place }}
                         />

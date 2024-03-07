@@ -48,6 +48,7 @@ export const getStaticProps = async ({ params }) => {
   });
   return {
     props: { info, nearCities, spotsIn },
+    revalidate: 30000000,
   };
 };
 

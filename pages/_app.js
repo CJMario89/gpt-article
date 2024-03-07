@@ -16,7 +16,8 @@ function MyApp({ Component, pageProps }) {
     localStorage.setItem("chakra-ui-color-mode", "light");
   }, []);
   useEffect(() => {
-    document.querySelector("#container").scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
+    document.querySelector("#header").style.top = "0px";
   }, [asPath]);
   return (
     <ChakraProvider theme={theme}>
@@ -24,17 +25,18 @@ function MyApp({ Component, pageProps }) {
       <QueryClientProvider client={queryClient}>
         <GoogleAnalytics gaId="G-M69F1K65XF" />
         <Header />
-        <Box
+        {/* <Box
           position="relative"
           w="full"
           h="100vh"
+          zIndex={1}
           pt={{ base: "64px", lg: "84px" }}
-          overflow="auto"
           id="container"
-        >
-          <Component {...pageProps} />
-          <Footer />
-        </Box>
+          style={{ WebkitOverflowScrolling: "touch" }}
+        > */}
+        <Component {...pageProps} />
+        <Footer />
+        {/* </Box> */}
       </QueryClientProvider>
     </ChakraProvider>
   );

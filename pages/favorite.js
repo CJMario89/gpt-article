@@ -40,7 +40,7 @@ const Favorite = () => {
       px={{ base: "2", md: "4" }}
       flexDirection="column"
       rowGap="4"
-      minH="full"
+      minH="50vh"
     >
       <Tabs defaultValue={defaultIndex} isLazy>
         <TabList

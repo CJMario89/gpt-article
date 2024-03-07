@@ -7,11 +7,11 @@ const useComposeImageUrl = ({ image = {}, region, prefecture, city, spot }) => {
   const imageUrl = useMemo(() => {
     const baseUrl = "https://jp-travel.s3.amazonaws.com";
     if (isSpot) {
-      return `${baseUrl}/${fetched}/image/spot/${city}_${spot}_${fetched}.webp`;
+      return `${baseUrl}/${fetched}/blog/spot/${city}_${spot}_${fetched}.webp`;
     } else if (isCity) {
-      return `${baseUrl}/${fetched}/image/city/${prefecture}_${city}_${fetched}.webp`;
+      return `${baseUrl}/${fetched}/blog/city/${prefecture}_${city}_${fetched}.webp`;
     } else {
-      return `${baseUrl}/${fetched}/image/prefecture/${region}_${prefecture}_${fetched}.webp`;
+      return `${baseUrl}/${fetched}/blog/prefecture/${region}_${prefecture}_${fetched}.webp`;
     }
   }, [fetched, isCity, isSpot, region, prefecture, city, spot]);
   return {

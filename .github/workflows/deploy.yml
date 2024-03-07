@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           host: ${{ secrets.SERVER_HOST }}
           port: ${{ secrets.SERVER_PORT }}
-          command_timeout: 200m
+          command_timeout: 600m
           key: ${{ secrets.SERVER_KEY }}
           script: |
             cd gpt-article

@@ -1,4 +1,5 @@
 import {
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -24,6 +25,7 @@ const SearchDrawer = ({ onClose, isOpen }) => {
           <Flex flexDirection="column" rowGap="4">
             <Heading as="h3">Regional Search</Heading>
             <RegionalSearch onSearch={onClose} zIndex={1} />
+            <Divider />
             <Heading as="h3">Text Search</Heading>
             <Search onSearch={onClose} />
           </Flex>

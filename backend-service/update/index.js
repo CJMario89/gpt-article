@@ -4,6 +4,7 @@ export * from "./batch-generate";
 export * from "./batch-generate-japan";
 export * from "./batch-generate-region";
 export * from "./batch-preview-image";
+export * from "./batch-blog-image";
 export * from "./batch-generate-image";
 export * from "./batch-generate-article";
 export * from "./batch-generate-city-seo";

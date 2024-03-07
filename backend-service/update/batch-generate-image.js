@@ -2,8 +2,8 @@ import { instance } from "backend-service/common";
 import { getGooglePhoto } from "backend-service/generate";
 
 // const requestNumber = 10000;
-const requestNumber = 1;
-const version = 2;
+const requestNumber = 10000;
+const version = "3";
 export const batchGenerateImage = async () => {
   // await batchCityImage();
   // await batchSpotImage();
@@ -135,8 +135,11 @@ export const batchRestuarantImage = async () => {
 export const batchPrefectureImage = async () => {
   console.log("Prefecture image batched");
   const existedPrefectures =
-    await instance.raw(`SELECT PrefectureInfo.region, PrefectureInfo.prefecture, image from PrefectureInfo 
-  INNER JOIN PrefectureImage ON PrefectureImage.id = (SELECT MIN(id) FROM PrefectureImage WHERE PrefectureImage.region = PrefectureInfo.region AND PrefectureImage.prefecture = PrefectureInfo.prefecture) Where fetched is null`);
+    await instance.raw(`SELECT PrefectureInfo.prefecture, PrefectureInfo.region, image FROM PrefectureInfo 
+  INNER JOIN PrefectureImage ON PrefectureImage.id = 
+  (SELECT DISTINCT id FROM 
+    (SELECT id, row_number() OVER () AS rownum 
+    FROM PrefectureImage WHERE PrefectureImage.region = PrefectureInfo.region AND PrefectureImage.prefecture = PrefectureInfo.prefecture) AS x WHERE x.rownum = ${version});`);
 
   const requestPrefectures =
     existedPrefectures.length > requestNumber
@@ -154,17 +157,11 @@ export const batchPrefectureImage = async () => {
         name: requestPrefectures[i]?.image,
         location1: region,
         location2: prefecture,
-        num: 1,
+        num: version,
         folder: "prefecture",
       });
-      await instance.raw(`UPDATE PrefectureImage SET fetched = true
-        WHERE ID = (SELECT MIN(id) FROM PrefectureImage WHERE prefecture = '${prefecture.replace(
-          /'/g,
-          "''"
-        )}' AND region = '${region.replace(
-        /'/g,
-        "''"
-      )}' AND fetched is null ORDER BY ID LIMIT 1) `);
+      await instance.raw(`UPDATE PrefectureImage SET fetched = '${version}'
+        WHERE id = (SELECT DISTINCT id FROM (SELECT id, row_number() OVER () AS rownum FROM PrefectureImage WHERE region = '${region}' AND Prefecture = '${prefecture}') AS x WHERE x.rownum = ${version}) `);
     } catch (e) {
       console.log(e);
     }

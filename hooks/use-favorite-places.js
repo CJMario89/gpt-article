@@ -27,6 +27,7 @@ const useFavoritePlaces = (place) => {
     if (isFavorited) return;
     setFavoritePlace((favoritePlace) => {
       const newPlace = favoritePlace?.[type] ? favoritePlace : initValue;
+      if (newPlace[type]?.some((place) => place.name === name)) return newPlace;
       newPlace[type].push({ name, type, ...info });
       return newPlace;
     });

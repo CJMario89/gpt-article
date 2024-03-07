@@ -43,6 +43,7 @@ export const getStaticProps = async ({ params }) => {
   });
   return {
     props: { info, prefecturesIn },
+    revalidate: 30000000,
   };
 };
 
