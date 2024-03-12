@@ -21,10 +21,12 @@ import { ChevronDown } from "./regional-search";
 import SearchIcon from "assets/search.svg";
 import PlaceCard from "./place-card";
 import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 
 const Search = ({ onSearch, ...restProps }) => {
   const types = ["prefecture", "city", "spot"];
   const t = useTranslations();
+  const { locale } = useRouter();
 
   const placesText = {
     prefecture: t("Prefecture"),
@@ -37,7 +39,7 @@ const Search = ({ onSearch, ...restProps }) => {
   const [searchText, setSearchText] = useState();
   const [type, setType] = useState("city");
   const { data } = useGetSearch(
-    { type, text: searchText, region },
+    { type, text: searchText, region, locale },
     { enabled: Boolean(searchText) }
   );
   const places = data?.pages[0]?.places ?? [];
