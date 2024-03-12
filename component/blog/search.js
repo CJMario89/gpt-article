@@ -20,9 +20,17 @@ import { regions } from "utils/constant";
 import { ChevronDown } from "./regional-search";
 import SearchIcon from "assets/search.svg";
 import PlaceCard from "./place-card";
+import { useTranslations } from "next-intl";
 
 const Search = ({ onSearch, ...restProps }) => {
-  const placesText = ["prefecture", "city", "spot"];
+  const types = ["prefecture", "city", "spot"];
+  const t = useTranslations();
+
+  const placesText = {
+    prefecture: t("Prefecture"),
+    city: t("City"),
+    spot: t("Spot"),
+  };
   const [region, setRegion] = useState("All");
 
   const [searchOpen, setSearchOpen] = useState(false);
@@ -32,15 +40,12 @@ const Search = ({ onSearch, ...restProps }) => {
     { type, text: searchText, region },
     { enabled: Boolean(searchText) }
   );
-  const captilize = (placeText = "") => {
-    return placeText.charAt(0).toUpperCase() + placeText.slice(1);
-  };
   const places = data?.pages[0]?.places ?? [];
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   return (
     <Flex flexDirection="column" alignItems="flex-start" rowGap="4">
       <Flex columnGap="2" alignItems="center">
-        <Text>Region: </Text>
+        <Text flexShrink="0">{t("Region")}: </Text>
         <Menu>
           {({ isOpen }) => (
             <>
@@ -50,7 +55,7 @@ const Search = ({ onSearch, ...restProps }) => {
                 variant="outline"
                 rightIcon={<ChevronDown />}
               >
-                {region}
+                {region === "All" ? t("All") : region}
               </MenuButton>
               <MenuList display={isOpen ? "block" : "none"}>
                 {regions.map((place) => (
@@ -77,7 +82,7 @@ const Search = ({ onSearch, ...restProps }) => {
           <Input
             w="full"
             type="text"
-            placeholder="Search City or Spot"
+            placeholder={t("Search Place")}
             onInput={(e) => {
               setSearchText(e.target.value);
             }}
@@ -98,9 +103,9 @@ const Search = ({ onSearch, ...restProps }) => {
         <>
           <Tabs
             onChange={(index) => {
-              setType(placesText[index]);
+              setType(types[index]);
             }}
-            index={placesText.indexOf(type) || 0}
+            index={types.indexOf(type) || 0}
             background="#ffffff"
             borderRadius="2xl"
             w="full"
@@ -108,19 +113,13 @@ const Search = ({ onSearch, ...restProps }) => {
             {...restProps}
           >
             <TabList>
-              {placesText.map((placeText) => (
-                <Tab key={placeText}>{captilize(placeText)}</Tab>
+              {types.map((type) => (
+                <Tab key={type}>{t(placesText[type])}</Tab>
               ))}
             </TabList>
             <TabPanels>
-              {placesText.map((placeText) => (
-                <TabPanel
-                  key={placeText}
-                  px="0"
-                  py="0"
-                  h="70vh"
-                  overflow="auto"
-                >
+              {types.map((type) => (
+                <TabPanel key={type} px="0" py="0" h="70vh" overflow="auto">
                   <Flex flexDirection="column">
                     {Array.isArray(places) &&
                       places.map((place) => (

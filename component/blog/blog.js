@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import Markdown from "component/Markdown";
 import { processArticleInBlog } from "utils/article";
-import Loading from "component/Loading";
 import Link from "component/NextLink";
 import { useMemo, useRef } from "react";
 import PhotoDisplayer from "./photo-displayer";
@@ -22,11 +21,12 @@ import DOMPurify from "isomorphic-dompurify";
 import RouterTab from "./router-tab";
 import PlaceCard from "./place-card";
 import Seo from "./seo";
-import useComposeImageUrl from "hooks/use-compose-image-url";
 import Catelogue from "./catelogue";
 import useFavoritePlaces from "hooks/use-favorite-places";
 import HeartSVG from "assets/heart.svg";
 import HeartFillSVG from "assets/heart-fill.svg";
+import { useTranslations } from "next-intl";
+import LoadingSvg from "assets/loading.svg";
 
 const OtherPlaces = ({ region, type, places, title }) => {
   return (
@@ -35,11 +35,7 @@ const OtherPlaces = ({ region, type, places, title }) => {
         {title}
       </Heading>
       <Box overflowX="auto" w="full" pb="1">
-        <Flex
-          flexDirection={{ base: "column", md: "row" }}
-          w="max-content"
-          m="0 auto"
-        >
+        <Flex flexDirection={{ base: "column", md: "row" }} w="max-content">
           {places?.map((place) => {
             return (
               <PlaceCard
@@ -88,7 +84,7 @@ const Blog = ({
     content,
     adrFormatAddress,
     googleMapUrl,
-    weekdayDescriptions,
+    openTime,
     goodForChildren,
     goodForGroups,
     allowsDogs,
@@ -110,39 +106,36 @@ const Blog = ({
       };
     }
   }, [city, isCity, isSpot, prefecture, region, spot]);
+  const t = useTranslations();
   const { isFavorited, addFavoritePlace, removeFavoritePlace } =
     useFavoritePlaces({ type: place.type, name: place.name, ...info });
   const contents = processArticleInBlog(content) ?? [];
   const photoRef = useRef(null);
-  const { imageUrl } = useComposeImageUrl({
-    region,
-    prefecture,
-    city,
-    spot,
-    image: images?.[0],
-  });
+  const imageUrl = images?.[0]?.imageUrl;
+
+  console.log(imageUrl);
 
   const friendlyList = goodForChildren
     ? [
         {
           Svg: KidSvg,
           value: goodForChildren,
-          description: "Children friendly",
+          description: t("Child friendly"),
         },
         {
           Svg: GroupSvg,
           value: goodForGroups,
-          description: "Group friendly",
+          description: t("Group friendly"),
         },
         {
           Svg: PetsSvg,
           value: allowsDogs,
-          description: "Allow pets",
+          description: t("Allow pets"),
         },
         {
           Svg: WheelchairSvg,
           value: wheelchairAccessibleEntrance,
-          description: "Wheelchair entrance",
+          description: t("Wheelchair accessible"),
         },
       ]
     : [];
@@ -150,7 +143,7 @@ const Blog = ({
     ...(prefecturesIn
       ? [
           {
-            title: `Prefectures in ${region}`,
+            title: t(`Prefectures in {region}`, { region }),
             type: "prefecture",
             places: prefecturesIn,
           },
@@ -159,7 +152,7 @@ const Blog = ({
     ...(citiesIn
       ? [
           {
-            title: `Cities in ${prefecture}`,
+            title: t(`Cities in {prefecture}`, { prefecture }),
             type: "city",
             places: citiesIn,
           },
@@ -168,7 +161,7 @@ const Blog = ({
     ...(spotsIn
       ? [
           {
-            title: `Spots in ${city}`,
+            title: t(`Spots in {city}`, { city }),
             type: "spot",
             places: spotsIn,
           },
@@ -177,7 +170,7 @@ const Blog = ({
     ...(nearSpots
       ? [
           {
-            title: `Spots nearby ${spot}`,
+            title: t(`Spots nearby {spot}`, { spot }),
             type: "spot",
             places: nearSpots,
             link: ``,
@@ -188,7 +181,7 @@ const Blog = ({
     ...(nearCities
       ? [
           {
-            title: `Cities nearby ${city}`,
+            title: t(`Cities nearby {city}`, { city }),
             type: "city",
             places: nearCities,
           },
@@ -197,7 +190,7 @@ const Blog = ({
     ...(nearPrefectures
       ? [
           {
-            title: `Prefectures nearby ${prefecture}`,
+            title: t(`Prefectures nearby {prefecture}`, { prefecture }),
             type: "prefecture",
             places: nearPrefectures,
           },
@@ -206,7 +199,7 @@ const Blog = ({
     ...(nearRestuarants
       ? [
           {
-            title: `Restuarant nearby ${spot}`,
+            title: t(`Restuarants nearby {spot}`, { spot }),
             type: "spot",
             places: nearRestuarants,
           },
@@ -284,7 +277,7 @@ const Blog = ({
               {Array.isArray(categories) &&
                 categories.map(({ category }) => {
                   return (
-                    <Tag key={category}>{category.replace(/_/g, " ")}</Tag>
+                    <Tag key={category}>{t(category.replace(/_/g, " "))}</Tag>
                   );
                 })}
             </Flex>
@@ -342,21 +335,21 @@ const Blog = ({
                     py="8"
                     id="detail"
                   >
-                    <Flex mt="4" flexDirection="column" rowGap="2" flex="1">
-                      <Heading as="h2" color="primary.300">
-                        Opening Time
-                      </Heading>
-                      <Markdown fontSize="md" _before={{ display: "none" }}>
-                        {weekdayDescriptions?.replace(/&/g, "  \n")}
-                        {/* .replace(/: /g, " : ")
-                    .replace(/:/g, " : ")} */}
-                      </Markdown>
-                    </Flex>
+                    {Boolean(openTime) && (
+                      <Flex mt="4" flexDirection="column" rowGap="2" flex="1">
+                        <Heading as="h2" color="primary.300">
+                          {t("Opening Hours")}
+                        </Heading>
+                        <Markdown fontSize="md" _before={{ display: "none" }}>
+                          {openTime?.replace(/&/g, "  \n")}
+                        </Markdown>
+                      </Flex>
+                    )}
                     <Flex mt="4" flexDirection="column" rowGap="4" flex="1">
                       {googleMapUrl && (
                         <Flex flexDirection="column" rowGap="4" flex="1">
                           <Heading as="h2" color="primary.300">
-                            Google Map
+                            {t("Google Maps")}
                           </Heading>
                           <Link color="neutral.800" href={googleMapUrl}>
                             <Button
@@ -365,7 +358,7 @@ const Blog = ({
                               borderRadius="full"
                               bgColor="primary.300"
                             >
-                              View Map
+                              {t("View on Google Maps")}
                             </Button>
                           </Link>
                           <Text
@@ -379,7 +372,7 @@ const Blog = ({
                       {Boolean(goodForChildren) && (
                         <Flex flexDirection="column" flex="1">
                           <Heading as="h2" color="primary.300">
-                            Other Info
+                            {t("Other Info")}
                           </Heading>
                           <Flex columnGap="4" mt="4">
                             {friendlyList.map(({ Svg, value, description }) => {
@@ -409,8 +402,8 @@ const Blog = ({
               />
             </Flex>
             <Box id="other-spots" />
-            {nearPlaces.map(({ type, places, title }) => {
-              return (
+            {nearPlaces.map(({ type, places, title }, i) => {
+              return places?.length > 0 ? (
                 <OtherPlaces
                   key={title}
                   title={title}
@@ -418,11 +411,15 @@ const Blog = ({
                   type={type}
                   places={places}
                 />
+              ) : (
+                <Box key={i} />
               );
             })}
           </Flex>
         ) : (
-          <Loading />
+          <Flex w="100vw" h="100vh" justifyContent="center" alignItems="center">
+            <LoadingSvg w="12" h="12" />
+          </Flex>
         )}
       </Container>
     </>

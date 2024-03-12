@@ -6,17 +6,22 @@ import Pagination from "./pagination";
 import PlaceCardSkeleton from "./place-card-skeleton";
 import SearchIcon from "assets/search.svg";
 import usePage from "hooks/use-page";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 
 const RegionBlock = ({ type, region, prefecture }) => {
   const [page, setPage] = usePage();
   const [text, setText] = useState("");
+  const t = useTranslations();
+  const { locale } = useRouter();
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const query = useGetSearch({
     type: "city",
     region,
     prefecture,
     text,
-    limit: 4,
+    limit: 10,
+    locale,
   });
 
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = query;
@@ -36,7 +41,7 @@ const RegionBlock = ({ type, region, prefecture }) => {
       <Flex position="relative" w="full">
         <Input
           type="text"
-          placeholder="Search City"
+          placeholder={t("Search Place")}
           onInput={(e) => {
             setPage(1);
             setText(e.target.value);

@@ -12,14 +12,26 @@ import {
 } from "@chakra-ui/react";
 import { PlaceCard } from "component/blog";
 import useFavoritePlaces from "hooks/use-favorite-places";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo } from "react";
 
 const options = ["prefecture", "city", "spot"];
 
-const Favorite = () => {
+const Favorites = () => {
   const { favoritePlace } = useFavoritePlaces();
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
+  const t = useTranslations();
+  const placesText = {
+    prefecture: t("Prefecture"),
+    city: t("City"),
+    spot: t("Spot"),
+  };
+  const noPlacesText = {
+    prefecture: t("No prefecture in favorites yet"),
+    city: t("No city in favorites yet"),
+    spot: t("No spot in favorites yet"),
+  };
   const defaultIndex = useMemo(() => {
     if (!favoritePlace) {
       return 0;
@@ -42,7 +54,7 @@ const Favorite = () => {
       rowGap="4"
       minH="50vh"
     >
-      <Tabs defaultValue={defaultIndex} isLazy>
+      <Tabs defaultValue={defaultIndex} isLazy pt="4">
         <TabList
           bgColor="primary.50"
           mb="1em"
@@ -52,7 +64,7 @@ const Favorite = () => {
         >
           {options.map((option) => (
             <Tab key={option} mb="0" px="5">
-              {option}
+              {t(placesText[option])}
             </Tab>
           ))}
         </TabList>
@@ -78,7 +90,7 @@ const Favorite = () => {
                   })
                 ) : (
                   <Flex flexDirection="column" gap="6" mt="12">
-                    <Heading as="h3">No places in {option} yet.</Heading>
+                    <Heading as="h3">{noPlacesText[option]}</Heading>
                     <Button
                       variant="solid"
                       bgColor="primary.300"
@@ -89,7 +101,7 @@ const Favorite = () => {
                       href={exploreLink[option]}
                       prefetch={false}
                     >
-                      Explore
+                      {t("Explore")}
                     </Button>
                   </Flex>
                 )}
@@ -102,4 +114,4 @@ const Favorite = () => {
   );
 };
 
-export default Favorite;
+export default Favorites;

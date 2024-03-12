@@ -7,6 +7,7 @@ import HeartFill from "assets/heart-fill.svg";
 import SearchIcon from "assets/search.svg";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 const navbarIconProps = {
   w: { base: "4", lg: "4" },
@@ -23,22 +24,24 @@ const navbarTextProps = {
 const Header = () => {
   const router = useRouter();
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const lastScrollY = useRef(0);
   const headerRef = useRef(null);
+  const t = useTranslations();
   const navbarLinks = [
     {
-      name: "Explore",
+      name: t("Explore"),
       href: "/explore/Hokkaido/All",
       icon: <Explore {...navbarIconProps} />,
       onClick: () => {},
     },
     {
-      name: "Favorite",
-      href: "/favorite",
+      name: t("Favorites"),
+      href: "/favorites",
       icon: <HeartFill {...navbarIconProps} />,
       onClick: () => {},
     },
     {
-      name: "Search",
+      name: t("Search"),
       href: `${router.asPath}`,
       icon: <SearchIcon {...navbarIconProps} />,
       onClick: () => {
@@ -54,6 +57,20 @@ const Header = () => {
       if (e.deltaY < -10) {
         headerRef.current.style.top = "0px";
       }
+      if (typeof e.deltaY === "undefined") {
+        const currentScrollPosition =
+          window.scrollY || document.documentElement.scrollTop;
+        const delta = currentScrollPosition - lastScrollY.current;
+
+        lastScrollY.current = currentScrollPosition;
+        if (delta > 10) {
+          headerRef.current.style.top = "-84px";
+        }
+        if (delta < -10) {
+          headerRef.current.style.top = "0px";
+        }
+      }
+      if (window.scrollY < 100) headerRef.current.style.top = "0px";
     };
     addEventListener("wheel", toggleHeader);
     addEventListener("scroll", toggleHeader);

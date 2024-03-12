@@ -6,21 +6,24 @@ import {
 } from "backend-service/get";
 import { Blog } from "component/blog";
 
-export const getStaticPaths = async () => {
+export const getStaticPaths = async ({ locales }) => {
   const cities = await getAllPlaces({ type: "city" });
   return {
-    paths: cities.map(({ region, prefecture, city }) => ({
-      params: {
-        region,
-        prefecture,
-        city,
-      },
-    })),
+    paths: cities.flatMap(({ region, prefecture, city }) => {
+      return locales.map((locale) => ({
+        params: {
+          region,
+          prefecture,
+          city,
+        },
+        locale,
+      }));
+    }),
     fallback: true,
   };
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async ({ params, locale }) => {
   const { region, prefecture, city } = params;
   const nearCities = await getNearPlaces({
     type: "city",
@@ -28,8 +31,8 @@ export const getStaticProps = async ({ params }) => {
     city,
     limit: 8,
     page: 1,
+    locale,
   });
-
   const spotsIn = (
     await search({
       type: "spot",
@@ -38,6 +41,7 @@ export const getStaticProps = async ({ params }) => {
       city,
       limit: 8,
       page: 1,
+      locale,
     })
   )?.places;
   const info = await getArticle({
@@ -45,6 +49,7 @@ export const getStaticProps = async ({ params }) => {
     region,
     prefecture,
     city,
+    locale,
   });
   return {
     props: { info, nearCities, spotsIn },

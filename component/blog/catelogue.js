@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import BackToTopSvg from "assets/back-to-top.svg";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 let debounceTimeout = null;
 
@@ -70,6 +71,7 @@ const BackToTop = ({ onClick, catelogueMobileRef }) => {
 };
 
 const Catelogue = ({ contents, place, isSpot }) => {
+  const t = useTranslations();
   const ref = useRef(null);
   const catelogueMobileRef = useRef(null);
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
@@ -119,7 +121,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
                   setShowMask(true);
                 }}
               >
-                Catelogue
+                {t("Catelogue")}
               </Button>
             </Box>
           </Flex>
@@ -187,7 +189,8 @@ const Catelogue = ({ contents, place, isSpot }) => {
               }, 500);
             }}
           >
-            About {`${place}`}
+            {t("About")}
+            {`${place}`}
           </Text>
           {contents.map((content, i) => {
             if (content.startsWith("#")) {
@@ -249,7 +252,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
                 }, 500);
               }}
             >
-              Detail information
+              {t("Detail info")}
             </Text>
           )}
         </Flex>

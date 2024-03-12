@@ -9,6 +9,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useGetCities, useGetPrefectures } from "hooks/db";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { regions } from "utils/constant";
@@ -32,8 +33,18 @@ export const ChevronDown = ({ ...props }) => {
   );
 };
 
-const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
-  const { push } = useRouter();
+const RegionalSearch = ({
+  onSearch,
+  isLight,
+  textStlyeProps,
+  menuItemStyleProps,
+  menuButtonBgStyleProps,
+  menuListStyleProps,
+  buttonBgStyleProps,
+  ...restProps
+}) => {
+  const t = useTranslations();
+  const { push, locale } = useRouter();
   const [region, setRegion] = useState("All");
   const [prefecture, setPrefecture] = useState("All");
   const [city, setCity] = useState("All");
@@ -44,7 +55,7 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
   // const { data: spots = [] } = useGetSpots({ prefecture, city });
   const placesMenu = [
     {
-      name: "Region",
+      name: t("Region"),
       place: region,
       places: regions,
       setPlace: (place) => {
@@ -56,7 +67,7 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
       disable: false,
     },
     {
-      name: "Prefecture",
+      name: t("Prefecture"),
       place: prefecture,
       places: prefectures,
       setPlace: (place) => {
@@ -67,7 +78,7 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
       disable: region === "All",
     },
     {
-      name: "City",
+      name: t("City"),
       place: city,
       places: cities,
       setPlace: (place) => {
@@ -87,72 +98,6 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
     //   onChange: () => {},
     // },
   ];
-
-  const textStlyeProps = {
-    color: isLight ? "neutral.50" : "neutral.700",
-  };
-
-  const menuButtonBgStyleProps = {
-    ...(isLight
-      ? {
-          _hover: {
-            bgColor: "primary.800",
-          },
-          _active: {
-            bgColor: "primary.800",
-          },
-        }
-      : {}),
-  };
-
-  const menuListStyleProps = {
-    ...(isLight
-      ? {
-          bgColor: "primary.900",
-          _hover: {
-            bgColor: "primary.900",
-          },
-          _active: {
-            bgColor: "primary.900",
-          },
-        }
-      : {}),
-  };
-
-  const menuItemStyleProps = {
-    ...(isLight
-      ? {
-          bgColor: "primary.900",
-          _hover: {
-            bgColor: "primary.800",
-          },
-          _active: {
-            bgColor: "primary.800",
-          },
-        }
-      : {}),
-  };
-
-  const buttonBgStyleProps = {
-    ...(isLight
-      ? {
-          variant: "outline",
-          bgColor: "primary.900",
-          border: "0.5px solid",
-          borderColor: "neutral.200",
-          color: "neutral.50",
-          _hover: {
-            bgColor: "primary.700",
-            _disabled: {
-              bgColor: "primary.800",
-            },
-          },
-          _active: {
-            bgColor: "primary.800",
-          },
-        }
-      : {}),
-  };
 
   const currentSearch = useMemo(() => {
     if (region === "All") return;
@@ -178,7 +123,7 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
                   {...textStlyeProps}
                   {...menuButtonBgStyleProps}
                 >
-                  {placeMenu.place}
+                  {placeMenu.place === "All" ? t("All") : placeMenu.place}
                 </MenuButton>
                 <MenuList
                   display={isOpen ? "block" : "none"}
@@ -210,7 +155,9 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
         variant="solid"
         bgColor="primary.300"
         onClick={() => {
-          push(`/explore/${currentSearch}`);
+          push(`/explore/${currentSearch}`, `/explore/${currentSearch}`, {
+            locale,
+          });
           if (typeof onSearch === "function") {
             onSearch();
           }
@@ -218,7 +165,7 @@ const RegionalSearch = ({ onSearch, isLight, ...restProps }) => {
         {...buttonBgStyleProps}
         isDisabled={!currentSearch}
       >
-        Search
+        {t("Search")}
       </Button>
     </Flex>
   );

@@ -1,8 +1,20 @@
-import { Container, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Container,
+  Flex,
+  Heading,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
 import LogoSvg from "assets/logo.svg";
 import MailSvg from "assets/mail.svg";
 import Link from "component/NextLink";
-import RegionalSearch from "./regional-search";
+import RegionalSearch, { ChevronDown } from "./regional-search";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 
 const linkStyle = {
   color: "neutral.50",
@@ -71,88 +83,206 @@ const prefectures = [
   { region: "Kyushu", prefecture: "Nagasaki" },
 ];
 
+const textStlyeProps = {
+  color: "neutral.50",
+};
+
+const menuButtonBgStyleProps = {
+  _hover: {
+    bgColor: "primary.800",
+  },
+  _active: {
+    bgColor: "primary.800",
+  },
+};
+
+const menuListStyleProps = {
+  bgColor: "primary.900",
+  _hover: {
+    bgColor: "primary.900",
+  },
+  _active: {
+    bgColor: "primary.900",
+  },
+};
+
+const menuItemStyleProps = {
+  bgColor: "primary.900",
+  _hover: {
+    bgColor: "primary.800",
+  },
+  _active: {
+    bgColor: "primary.800",
+  },
+};
+
+const buttonBgStyleProps = {
+  variant: "outline",
+  bgColor: "primary.900",
+  border: "0.5px solid",
+  borderColor: "neutral.200",
+  color: "neutral.50",
+  _hover: {
+    bgColor: "primary.700",
+    _disabled: {
+      bgColor: "primary.800",
+    },
+  },
+  _active: {
+    bgColor: "primary.800",
+  },
+};
+
+const languageMaps = [
+  // {"ja-JP": "Japanese"},
+  { "en-US": "English" },
+  { "zh-TW": "Traditional Chinese" },
+];
+
 const Regions = () => {
+  const t = useTranslations();
   return (
     <Flex
       flexDirection="column"
-      gap="3"
+      gap="4"
       borderBottom="1px solid"
       borderColor="neutral.50"
-      pb="4"
+      pb="5"
       w={{ base: "100%", md: "100%" }}
     >
       <Heading w="full" color="neutral.200" as="h3">
-        Region
+        {t("Region")}
       </Heading>
       <Flex gap="2" flexWrap="wrap">
-        {regions.map((region) => {
-          return (
-            <Link
-              // as={NextLink}
-              key={region}
-              href={`/article/${region}`}
-              // prefetch={false}
-              {...linkStyle}
-            >
-              {region}
-            </Link>
-          );
-        })}
+        {Array.isArray(regions) &&
+          regions.map((region) => {
+            return (
+              <Link
+                // as={NextLink}
+                key={region}
+                href={`/article/${region}`}
+                // prefetch={false}
+                {...linkStyle}
+              >
+                {t(region)}
+              </Link>
+            );
+          })}
       </Flex>
     </Flex>
   );
 };
 
 const Prefectures = () => {
+  const t = useTranslations();
   return (
     <Flex
       flexDirection="column"
-      gap="3"
+      gap="4"
       borderBottom="1px solid"
       borderColor="neutral.50"
-      pb="4"
+      pb="5"
       w={{ base: "100%", md: "100%" }}
     >
       <Heading w="full" as="h3" color="neutral.200">
-        Prefecture
+        {t("Prefecture")}
       </Heading>
       <Flex gap="2" flexWrap="wrap">
-        {prefectures.map(({ prefecture, region }) => {
-          return (
-            <Link
-              key={region}
-              href={`/article/${region}/${prefecture}`}
-              // prefetch={false}
-              {...linkStyle}
-            >
-              {prefecture}
-            </Link>
-          );
-        })}
+        {Array.isArray(prefectures) &&
+          prefectures.map(({ prefecture, region }) => {
+            return (
+              <Link
+                key={region}
+                href={`/article/${region}/${prefecture}`}
+                // prefetch={false}
+                {...linkStyle}
+              >
+                {t(prefecture)}
+              </Link>
+            );
+          })}
       </Flex>
     </Flex>
   );
 };
 
 const Claims = () => {
+  const t = useTranslations();
   return (
     <Flex gap="6" alignItems="center" mt="auto">
       <LogoSvg color="neutral.50" w="22" h="12" />
       <Link href="/privacy-policy" {...linkStyle} color="neutral.50">
-        Privacy Policy
+        {t("Privacy Policy")}
       </Link>
-      <Link href="/term-of-use" {...linkStyle} color="neutral.50">
-        Terms of use
+      <Link href="/terms-of-use" {...linkStyle} color="neutral.50">
+        {t("Terms of Use")}
       </Link>
     </Flex>
   );
 };
 
-const Contact = () => {
+const Language = () => {
+  const t = useTranslations();
+  const router = useRouter();
   return (
     <Flex gap="4" flexDirection="column" mt="auto">
       <Heading w="full" as="h3" color="neutral.200">
-        Contact
+        {t("Language")}
+      </Heading>
+      <Menu placement="right">
+        {({ isOpen }) => (
+          <>
+            <MenuButton
+              as={Button}
+              variant="outline"
+              rightIcon={<ChevronDown />}
+              alignSelf="flex-start"
+              {...textStlyeProps}
+              {...menuButtonBgStyleProps}
+            >
+              {t(
+                languageMaps.find((lang) => lang[router.locale])[router.locale]
+              )}
+            </MenuButton>
+            <MenuList
+              display={isOpen ? "block" : "none"}
+              maxH="80vh"
+              overflowY="scroll"
+              overflowX="hidden"
+              {...menuListStyleProps}
+              {...textStlyeProps}
+            >
+              {languageMaps.map((language) => {
+                const [key, value] = Object.entries(language)[0];
+                return (
+                  <MenuItem
+                    key={key}
+                    onClick={() => {
+                      router.push(router.asPath, router.asPath, {
+                        locale: key,
+                      });
+                    }}
+                    {...menuItemStyleProps}
+                    {...textStlyeProps}
+                  >
+                    {t(value)}
+                  </MenuItem>
+                );
+              })}
+            </MenuList>
+          </>
+        )}
+      </Menu>
+    </Flex>
+  );
+};
+
+const Contact = () => {
+  const t = useTranslations();
+  return (
+    <Flex gap="4" flexDirection="column" mt="auto">
+      <Heading w="full" as="h3" color="neutral.200">
+        {t("Contact")}
       </Heading>
       <Link
         href="mailto:japantoursite@gmail.com"
@@ -171,6 +301,7 @@ const Contact = () => {
 };
 
 const Footer = () => {
+  const t = useTranslations();
   return (
     <Flex
       w="full"
@@ -192,7 +323,20 @@ const Footer = () => {
             <Prefectures />
           </Flex>
           <Flex flexDirection="column" gap="8" flex="1" w="full">
-            <RegionalSearch isLight />
+            <Flex flexDirection="column" gap="4">
+              <Heading as="h3" color="neutral.200">
+                {t("Search")}
+              </Heading>
+              <RegionalSearch
+                isLight
+                menuButtonBgStyleProps={menuButtonBgStyleProps}
+                menuItemStyleProps={menuItemStyleProps}
+                menuListStyleProps={menuListStyleProps}
+                buttonBgStyleProps={buttonBgStyleProps}
+                textStlyeProps={textStlyeProps}
+              />
+            </Flex>
+            <Language />
             <Contact />
             <Claims />
           </Flex>

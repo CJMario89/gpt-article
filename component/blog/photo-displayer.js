@@ -1,27 +1,15 @@
 import { Box, Flex } from "@chakra-ui/react";
 import ExternalLinkSvg from "assets/external-link-svg";
-import useComposeImageUrl from "hooks/use-compose-image-url";
 import Image from "next/image";
 import Link from "component/NextLink";
 
 const PhotoDisplayer = ({
   image,
   name,
-  region,
-  prefecture,
-  city,
-  spot,
   // setPhotoFloat,
   ...restProps
 }) => {
-  const { imageUrl, referenceLink, referenceName } = useComposeImageUrl({
-    region,
-    prefecture,
-    city,
-    spot,
-    image,
-  });
-
+  const { imageUrl, referenceLink, referenceName } = image;
   // const photoRef = useRef(null);
   // useEffect(() => {
   //   const width = photoRef.current?.clientWidth;

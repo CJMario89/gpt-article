@@ -1,9 +1,12 @@
 import { instance } from "backend-service/common";
-
+export const localeInfo = {
+  "zh-TW": "PlaceInfoZhTW",
+};
 export const getArticle = async (params = {}) => {
-  const { type, region, prefecture, city, spot } = params;
+  const { type, region, prefecture, city, spot, locale } = params;
+  let article;
   if (type === "spot") {
-    return instance.transaction(async (trx) => {
+    article = await instance.transaction(async (trx) => {
       const [info, categories, images, region] = await Promise.all([
         await trx("SpotInfo").where({ city, spot }).first(),
         await trx("SpotCategory")
@@ -24,7 +27,7 @@ export const getArticle = async (params = {}) => {
       };
     });
   } else if (type === "city") {
-    return instance.transaction(async (trx) => {
+    article = await instance.transaction(async (trx) => {
       const [info, images] = await Promise.all([
         await trx("CityInfo").where({ prefecture, city }).first(),
         await trx("CityImage")
@@ -37,8 +40,8 @@ export const getArticle = async (params = {}) => {
         images,
       };
     });
-  } else if (type === "prefecture") {
-    return instance.transaction(async (trx) => {
+  } else if (type === "prefecture" || type === "region") {
+    article = await instance.transaction(async (trx) => {
       const [info, images] = await Promise.all([
         await trx("PrefectureInfo").where({ prefecture, region }).first(),
         await trx("PrefectureImage")
@@ -51,5 +54,31 @@ export const getArticle = async (params = {}) => {
         images,
       };
     });
+  }
+
+  article = {
+    ...article,
+    images: article.images.map((image) => {
+      const imageUrl = {
+        region: `https://jp-travel.s3.amazonaws.com/${image.fetched}/blog/prefecture/${article.region}_${article.prefecture}_${image.fetched}.webp`,
+        prefecture: `https://jp-travel.s3.amazonaws.com/${image.fetched}/blog/prefecture/${article.region}_${article.prefecture}_${image.fetched}.webp`,
+        city: `https://jp-travel.s3.amazonaws.com/${image.fetched}/blog/city/${article.prefecture}_${article.city}_${image.fetched}.webp`,
+        spot: `https://jp-travel.s3.amazonaws.com/${image.fetched}/blog/spot/${article.city}_${article.spot}_${image.fetched}.webp`,
+      };
+      return { ...image, imageUrl: imageUrl[type] };
+    }),
+  };
+  if (locale === "en-US") {
+    return article;
+  } else {
+    const transInfo = await instance(localeInfo[locale])
+      .where(
+        "placeId",
+        `${article[type]}-${article.id}${
+          type === "prefecture" || type === "region" ? "" : `-${type}`
+        }`
+      )
+      .first();
+    return { ...article, ...transInfo };
   }
 };

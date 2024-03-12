@@ -5,6 +5,10 @@ const nextConfig = {
     POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
     PLACE_APIKEY: process.env.PLACE_APIKEY,
   },
+  i18n: {
+    locales: ["en-US", "zh-TW"],
+    defaultLocale: "en-US",
+  },
   images: {
     formats: ["image/webp"],
     remotePatterns: [

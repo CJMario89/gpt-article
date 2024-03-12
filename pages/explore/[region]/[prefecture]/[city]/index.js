@@ -10,6 +10,8 @@ import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import RouterTab from "component/blog/router-tab";
 import { useGetSearch } from "hooks/db";
 import usePage from "hooks/use-page";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 // export const getStaticPaths = async () => {
@@ -42,6 +44,8 @@ export const getServerSideProps = async ({ params }) => {
 const Index = ({ region, prefecture, city }) => {
   const [page, setPage] = usePage();
   const [text, setText] = useState("");
+  const t = useTranslations();
+  const { locale } = useRouter();
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
     type: "spot",
@@ -50,6 +54,7 @@ const Index = ({ region, prefecture, city }) => {
     city,
     text,
     limit: 4,
+    locale,
   });
   const index =
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
@@ -67,14 +72,14 @@ const Index = ({ region, prefecture, city }) => {
     >
       <RouterTab region={region} prefecture={prefecture} city={city} />
       <Heading as="h2" alignSelf="flex-start">
-        {city}
+        {t(city)}
       </Heading>
       <Flex position="relative" w="full">
         <Input
           type="text"
           pl="8"
           pr="6"
-          placeholder="Search City"
+          placeholder={t("Search Place")}
           background="rgba(245, 245, 245, 0.2)"
           border="2px solid #eeeeee"
           onInput={(e) => {

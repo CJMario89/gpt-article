@@ -1,7 +1,9 @@
 import { Flex, Text } from "@chakra-ui/react";
 import Link from "component/NextLink";
+import { useTranslations } from "next-intl";
 
 const RouterLink = ({ href, place, ...restProps }) => {
+  const t = useTranslations();
   return (
     <Link
       fontSize="sm"
@@ -10,7 +12,7 @@ const RouterLink = ({ href, place, ...restProps }) => {
       prefetch={false}
       {...restProps}
     >
-      {place}
+      {place === "All" ? t("All") : place}
     </Link>
   );
 };

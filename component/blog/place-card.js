@@ -1,27 +1,30 @@
 import { Box, Flex, Heading, Text, Tooltip } from "@chakra-ui/react";
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { useRouter } from "next/router";
 //import Link from "components/NextLink";
 // import ExternalLinkSvg from "assets/external-link-svg";
 
 const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
-  const { type, region, prefecture, city, spot, title, description } = place;
+  const {
+    type,
+    prefecture,
+    city,
+    spot,
+    title,
+    description,
+    imageUrl,
+    articleUrl,
+  } = place;
+  const t = useTranslations();
   const router = useRouter();
-  const imageUrl = {
-    prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_${prefecture}_1.webp`,
-    city: `https://jp-travel.s3.amazonaws.com/1/preview/city/${prefecture}_${city}_1.webp`,
-    spot: `https://jp-travel.s3.amazonaws.com/1/preview/spot/${city}_${spot}_1.webp`,
-  };
+
   const placeName = {
     prefecture: prefecture,
     city: city,
     spot: spot?.replace(/-/g, " ").replace(/_/g, " / "),
   };
-  const placeLink = {
-    city: `/article/${region}/${prefecture}/${city}`,
-    spot: `/article/${region}/${prefecture}/${city}/${spot}`,
-    prefecture: `/article/${region}/${prefecture}`,
-  };
+
   return (
     <Flex
       w="100%"
@@ -60,7 +63,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
       alignItems={isHorizontal ? "center" : "flex-start"}
       rowGap="4"
       onClick={() => {
-        router.push(placeLink?.[type] ?? `/article/${region}/${prefecture}`);
+        router.push(articleUrl, articleUrl, { locale: router.locale });
         if (typeof onClick === "function") {
           onClick();
         }
@@ -73,12 +76,12 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
         h={isHorizontal ? "250px" : "200px"}
         flexShrink="0"
       >
-        {imageUrl?.[type] && (
+        {imageUrl && (
           <Image
             alt={placeName?.[type]}
             width="2048"
             height="2048"
-            src={imageUrl?.[type]}
+            src={imageUrl}
             style={{
               objectFit: "cover",
               width: "inherit",
@@ -175,7 +178,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
               color: "neutral.500",
             }}
           >
-            Read more...
+            {t("Read more")}...
           </Text>
         </Tooltip>
       </Flex>

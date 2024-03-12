@@ -3,7 +3,7 @@ import {
   requestGpt,
   requestStoreGooglePhoto,
 } from "backend-service/generate";
-import { getAllPlaces, getSimplePlacesByParams } from "backend-service/get";
+import { getAllPlaces } from "backend-service/get";
 import {
   getArticlePromptText,
   getSpotsPromptText,

@@ -13,33 +13,36 @@ const regions = [
   "Okinawa",
 ];
 
-export const getStaticPaths = async () => {
+export const getStaticPaths = async ({ locales }) => {
   return {
-    paths: regions.map((region) => ({
-      params: {
-        region,
-      },
-    })),
+    paths: regions.flatMap((region) => {
+      return locales.map((locale) => ({
+        params: {
+          region,
+        },
+        locale,
+      }));
+    }),
     fallback: true,
   };
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async ({ params, locale }) => {
   const { region } = params;
-
   const prefecturesIn = (
     await search({
       type: "prefecture",
       region,
       limit: 12,
       page: 1,
+      locale,
     })
   )?.places;
-
   const info = await getArticle({
-    type: "prefecture",
+    type: "region",
     region,
     prefecture: "All",
+    locale,
   });
   return {
     props: { info, prefecturesIn },

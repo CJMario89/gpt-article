@@ -1,7 +1,7 @@
 import { createIcon } from "@chakra-ui/react";
 
 const PetsSvg = createIcon({
-  displayName: "Heart",
+  displayName: "Pet",
   viewBox: "0 0 20 20",
   path: (
     <g>

@@ -25,4 +25,10 @@ jobs:
             git pull origin main
             npm install
             npm run build
-            pm2 restart all
+            cd ../
+            pm2 stop all
+            pm2 delete all
+            rm -r run
+            cp -r gpt-article/ run/
+            cd run
+            pm2 start "npm run start" --name "gpt-article"

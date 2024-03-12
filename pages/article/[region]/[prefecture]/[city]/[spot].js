@@ -1,22 +1,25 @@
 import { getAllPlaces, getArticle, getNearPlaces } from "backend-service/get";
 import { Blog } from "component/blog";
 
-export const getStaticPaths = async () => {
+export const getStaticPaths = async ({ locales }) => {
   const spots = await getAllPlaces({ type: "spot" });
   return {
-    paths: spots.map(({ region, prefecture, city, spot }) => ({
-      params: {
-        region,
-        prefecture,
-        city,
-        spot,
-      },
-    })),
+    paths: spots.flatMap(({ region, prefecture, city, spot }) => {
+      return locales.map((locale) => ({
+        params: {
+          region,
+          prefecture,
+          city,
+          spot,
+        },
+        locale,
+      }));
+    }),
     fallback: true,
   };
 };
 
-export const getStaticProps = async ({ params }) => {
+export const getStaticProps = async ({ params, locale }) => {
   const { region, prefecture, city, spot } = params;
   const nearCities = await getNearPlaces({
     type: "city",
@@ -24,6 +27,7 @@ export const getStaticProps = async ({ params }) => {
     city,
     limit: 8,
     page: 1,
+    locale,
   });
   const nearSpots = await getNearPlaces({
     type: "spot",
@@ -31,6 +35,7 @@ export const getStaticProps = async ({ params }) => {
     spot,
     limit: 8,
     page: 1,
+    locale,
   });
   const nearRestuarants = await getNearPlaces({
     type: "restuarant",
@@ -38,6 +43,7 @@ export const getStaticProps = async ({ params }) => {
     spot,
     limit: 8,
     page: 1,
+    locale,
   });
   const info = await getArticle({
     type: "spot",
@@ -45,6 +51,7 @@ export const getStaticProps = async ({ params }) => {
     prefecture,
     city,
     spot,
+    locale,
   });
   return {
     props: { info, spot, nearCities, nearSpots, nearRestuarants },

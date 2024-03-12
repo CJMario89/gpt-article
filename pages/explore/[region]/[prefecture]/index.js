@@ -11,6 +11,7 @@ import { getPrefectureInfo, getPrefectures } from "backend-service/get";
 import { Seo } from "component/blog";
 import RegionBlock from "component/blog/region-block";
 import { useGetPrefectures } from "hooks/db";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
@@ -52,7 +53,8 @@ export const getStaticProps = async ({ params }) => {
 };
 
 const Index = ({ region, prefecture, prefectureInfo }) => {
-  const { push } = useRouter();
+  const t = useTranslations();
+  const { push, locale } = useRouter();
   const { data: _prefectures = [] } = useGetPrefectures({ region });
   const prefectures = useMemo(() => ["All", ..._prefectures], [_prefectures]);
   return (
@@ -72,7 +74,11 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
           <Tabs
             index={regions.indexOf(region)}
             onChange={(index) => {
-              push(`/explore/${regions[index]}/All`);
+              push(
+                `/explore/${regions[index]}/All`,
+                `/explore/${regions[index]}/All`,
+                { locale }
+              );
             }}
             isLazy
           >
@@ -85,7 +91,7 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
             >
               {regions.map((region) => (
                 <Tab key={`${region}-t`} mb="0" px="5">
-                  {region}
+                  {t(region)}
                 </Tab>
               ))}
             </TabList>
@@ -95,7 +101,11 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
                   <Tabs
                     index={prefectures.indexOf(prefecture)}
                     onChange={(index) => {
-                      push(`/explore/${region}/${prefectures[index]}`);
+                      push(
+                        `/explore/${region}/${prefectures[index]}`,
+                        `/explore/${region}/${prefectures[index]}`,
+                        { locale }
+                      );
                     }}
                     isLazy
                   >
@@ -108,7 +118,7 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
                     >
                       {prefectures.map((prefecture) => (
                         <Tab key={`${prefecture}-t`} mb="0">
-                          {prefecture}
+                          {prefecture === "All" ? t("All") : t(prefecture)}
                         </Tab>
                       ))}
                     </TabList>

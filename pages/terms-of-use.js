@@ -1,6 +1,6 @@
 import { Container, Flex, Heading } from "@chakra-ui/react";
 
-const TermOfUse = () => {
+const TermsOfUse = () => {
   return (
     <Container
       as={Flex}
@@ -470,4 +470,4 @@ const TermOfUse = () => {
   );
 };
 
-export default TermOfUse;
+export default TermsOfUse;
