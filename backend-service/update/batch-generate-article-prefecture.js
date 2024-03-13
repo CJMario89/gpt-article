@@ -1,8 +1,7 @@
 import { requestGpt } from "backend-service/generate";
 import { processArticle } from "utils/article";
 import { getPrefecturePromptText } from "utils/gpt-prompt-text";
-import { instance } from "backend-service/common";
-import { waitFor429 } from "./batch-generate-japan";
+import { instance, waitFor429 } from "backend-service/common";
 
 export const batchGenerateArticlePrefecture = async () => {
   const locations = await instance("PrefectureInfo").select(

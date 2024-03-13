@@ -62,6 +62,7 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
       <Seo
         title={prefectureInfo?.title}
         description={prefectureInfo?.description}
+        imageUrl={prefectureInfo?.imageUrl}
       />
       <Flex w="full" flexDirection="column" mt="12" position="relative">
         <Container

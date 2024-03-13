@@ -1,6 +1,5 @@
 export * from "./article";
 export * from "./places";
-export * from "./batch-generate-japan";
 export * from "./batch-generate-region";
 export * from "./batch-translate";
 export * from "./batch-preview-image";

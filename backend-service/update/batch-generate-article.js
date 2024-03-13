@@ -2,8 +2,7 @@ import { requestGpt } from "backend-service/generate";
 import { processArticle } from "utils/article";
 import { getArticlePromptText } from "utils/gpt-prompt-text";
 import { updateArticle } from "./article";
-import { infoInstance } from "backend-service/common";
-import { waitFor429 } from "./batch-generate-japan";
+import { infoInstance, waitFor429 } from "backend-service/common";
 
 export const batchGenerateArticle = async () => {
   const spots = await infoInstance({ type: "spot" }).where({ title: null });

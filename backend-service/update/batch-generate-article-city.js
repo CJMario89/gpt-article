@@ -2,8 +2,7 @@ import { requestGpt } from "backend-service/generate";
 import { processArticle } from "utils/article";
 import { getCityArticlePromptText } from "utils/gpt-prompt-text";
 import { updateArticle } from "./article";
-import { infoInstance } from "backend-service/common";
-import { waitFor429 } from "./batch-generate-japan";
+import { infoInstance, waitFor429 } from "backend-service/common";
 import { getSpots } from "backend-service/get";
 
 export const batchGenerateArticleCity = async () => {

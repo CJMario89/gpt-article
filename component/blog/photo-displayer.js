@@ -9,7 +9,6 @@ const PhotoDisplayer = ({
   // setPhotoFloat,
   ...restProps
 }) => {
-  const { imageUrl, referenceLink, referenceName } = image;
   // const photoRef = useRef(null);
   // useEffect(() => {
   //   const width = photoRef.current?.clientWidth;
@@ -30,7 +29,7 @@ const PhotoDisplayer = ({
       {image && (
         <Box position="relative" w="full" pt="50%">
           <Image
-            alt={referenceName}
+            alt={name}
             width="960"
             height="480"
             // ref={photoRef}
@@ -44,7 +43,7 @@ const PhotoDisplayer = ({
                 objectFit: "none",
               },
             }}
-            src={imageUrl}
+            src={image?.imageUrl}
           />
         </Box>
       )}
@@ -56,14 +55,14 @@ const PhotoDisplayer = ({
         justifyContent="flex-end"
       >
         <Link
-          href={referenceLink ?? ""}
+          href={image?.referenceLink ?? ""}
           prefetch={false}
           display="flex"
           alignItems="center"
           columnGap="1"
           target="_blank"
         >
-          {referenceName}. {name}.{" "}
+          {image?.referenceName}. {name}.{" "}
           <ExternalLinkSvg w="3" h="3" color="neutral.600" />
         </Link>
       </Flex>
