@@ -28,7 +28,8 @@ jobs:
             cd ../
             pm2 stop all
             pm2 delete all
-            rm -r run
+            rm -rf run-old
+            mv -r run run-old
             cp -r gpt-article/ run/
             cd run
             pm2 start "npm run start" --name "gpt-article"

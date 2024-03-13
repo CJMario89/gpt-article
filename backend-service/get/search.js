@@ -184,7 +184,6 @@ export const search = async ({
   let total;
   let totalPage;
   let countQuery;
-  console.log(locale, text, type, locale !== "en-US" && text);
   if (locale !== "en-US" && text) {
     //search by placeInfo localeInfo
     const transInfo = await instance(localeInfo)

@@ -113,8 +113,6 @@ const Blog = ({
   const photoRef = useRef(null);
   const imageUrl = images?.[0]?.imageUrl;
 
-  console.log(imageUrl);
-
   const friendlyList = goodForChildren
     ? [
         {
