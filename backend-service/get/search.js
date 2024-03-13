@@ -1,4 +1,4 @@
-import { infoInstance, instance } from "backend-service/common";
+import { instance } from "backend-service/common";
 const localeInfo = {
   "zh-TW": "PlaceInfoZhTW",
 };
@@ -17,8 +17,8 @@ export const search = async ({
     query = {
       spot: `
         SELECT 
-          SpotInfo.id,
           DISTINCT word as spot, 
+          SpotInfo.id,
           CityInfo.region, 
           SpotInfo.prefecture, 
           SpotInfo.city, 
@@ -38,8 +38,8 @@ export const search = async ({
           ${city ? ` AND SpotInfo.city = '${city?.replace("'", "''")}'` : ""}`,
       city: `
         SELECT 
-          CityInfo.id,
           DISTINCT word as city, 
+          CityInfo.id,
           CityInfo.prefecture, 
           CityInfo.title, 
           CityInfo.description, 
@@ -65,8 +65,8 @@ export const search = async ({
           ${region ? ` AND CityInfo.region = '${region}'` : ""}`,
       prefecture: `
         SELECT 
-          PrefectureInfo.id,
           DISTINCT word as prefecture, 
+          PrefectureInfo.id,
           PrefectureInfo.region, 
           PrefectureInfo.prefecture, 
           PrefectureInfo.title, 
@@ -180,117 +180,59 @@ export const search = async ({
     };
   }
 
-  let places;
-  let total;
-  let totalPage;
-  let countQuery;
-  if (locale !== "en-US" && text) {
-    //search by placeInfo localeInfo
-    const transInfo = await instance(localeInfo)
-      .whereLike("placeId", `%${type}%`)
-      .andWhereLike(type, `%${text}%`)
-      .limit(limit)
-      .offset((page - 1) * limit);
-    console.log(transInfo);
-    const total = await instance(localeInfo)
-      .whereLike("placeId", `%${type}%`)
-      .andWhereLike("placeId", `%${text}%`)
-      .count();
-    //imageUrl
-    //articleUrl
-    const params = transInfo.map((place) => {
-      const [placeName, id, type] = place.placeId.split("-");
-      return {
-        placeName,
-        id,
-        type,
-      };
-    });
-    const ids = params.map((param) => Number(param.id));
-    places = await infoInstance({ type }).whereIn("id", ids);
-    places = places.map((place) => {
-      const imageUrl = {
-        region: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_All_1.webp`,
-        prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${place.region}_${place.prefecture}_1.webp`,
-        city: `https://jp-travel.s3.amazonaws.com/1/preview/city/${place.prefecture}_${place.city}_1.webp`,
-        spot: `https://jp-travel.s3.amazonaws.com/1/preview/spot/${place.city}_${place.spot}_1.webp`,
-      };
-      const articleUrl = {
-        region: `/article/${region}/`,
-        prefecture: `/article/${region}/${place.prefecture}/`,
-        city: `/article/${region}/${place.prefecture}/${place.city}/`,
-        spot: `/article/${region}/${place.prefecture}/${place.city}/${place.spot}/`,
-      };
+  let places = await instance.raw(
+    `${query[type]}${` LIMIT ${limit} OFFSET ${(page - 1) * limit};`}`
+  );
 
-      return {
-        ...place,
-        imageUrl: imageUrl[type],
-        articleUrl: articleUrl[type],
-        ...transInfo.find(
-          (info) =>
-            info.placeId ===
-            `${place[type]}-${place.id}${
-              type === "prefecture" || type === "region" ? "" : `-${type}`
-            }`
-        ),
-      };
-    });
-    totalPage = Math.ceil(total / limit);
-  } else {
-    places = await instance.raw(
-      `${query[type]}${` LIMIT ${limit} OFFSET ${(page - 1) * limit};`}`
-    );
+  places = places.map((place) => {
+    const imageUrl = {
+      region: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_All_1.webp`,
+      prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${place.region}_${place.prefecture}_1.webp`,
+      city: `https://jp-travel.s3.amazonaws.com/1/preview/city/${place.prefecture}_${place.city}_1.webp`,
+      spot: `https://jp-travel.s3.amazonaws.com/1/preview/spot/${place.city}_${place.spot}_1.webp`,
+    };
+    return { ...place, imageUrl: imageUrl[type] };
+  });
 
-    places = places.map((place) => {
-      const imageUrl = {
-        region: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_All_1.webp`,
-        prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${place.region}_${place.prefecture}_1.webp`,
-        city: `https://jp-travel.s3.amazonaws.com/1/preview/city/${place.prefecture}_${place.city}_1.webp`,
-        spot: `https://jp-travel.s3.amazonaws.com/1/preview/spot/${place.city}_${place.spot}_1.webp`,
-      };
-      return { ...place, imageUrl: imageUrl[type] };
-    });
+  places = places.map((place) => {
+    const articleUrl = {
+      region: `/article/${region}/`,
+      prefecture: `/article/${region}/${place.prefecture}/`,
+      city: `/article/${region}/${place.prefecture}/${place.city}/`,
+      spot: `/article/${region}/${place.prefecture}/${place.city}/${place.spot}/`,
+    };
+    return { ...place, articleUrl: articleUrl[type] };
+  });
 
-    places = places.map((place) => {
-      const articleUrl = {
-        region: `/article/${region}/`,
-        prefecture: `/article/${region}/${place.prefecture}/`,
-        city: `/article/${region}/${place.prefecture}/${place.city}/`,
-        spot: `/article/${region}/${place.prefecture}/${place.city}/${place.spot}/`,
-      };
-      return { ...place, articleUrl: articleUrl[type] };
-    });
-
-    if (locale !== "en-US") {
-      if (!text) {
-        const placesId = places.map((place) => {
-          return `${place[type]}-${place.infoId}${
-            type === "prefecture" || type === "region" ? "" : `-${type}`
-          }`;
-        });
-        const transInfo = await instance(localeInfo[locale]).whereIn(
-          "placeId",
-          placesId
-        );
-        places = places.map((place) => {
-          return {
-            ...place,
-            ...transInfo.find(
-              (info) =>
-                info.placeId ===
-                `${place[type]}-${place.infoId}${
-                  type === "prefecture" || type === "region" ? "" : `-${type}`
-                }`
-            ),
-          };
-        });
-      }
+  if (locale !== "en-US") {
+    if (!text) {
+      const placesId = places.map((place) => {
+        return `${place[type]}-${place.infoId}${
+          type === "prefecture" || type === "region" ? "" : `-${type}`
+        }`;
+      });
+      const transInfo = await instance(localeInfo[locale]).whereIn(
+        "placeId",
+        placesId
+      );
+      places = places.map((place) => {
+        return {
+          ...place,
+          ...transInfo.find(
+            (info) =>
+              info.placeId ===
+              `${place[type]}-${place.infoId}${
+                type === "prefecture" || type === "region" ? "" : `-${type}`
+              }`
+          ),
+        };
+      });
     }
-
-    countQuery = getCountQuery(query[type], text, type);
-    total = (await instance.raw(countQuery))?.[0]?.total;
-    totalPage = Math.ceil(total / limit);
   }
+
+  const countQuery = getCountQuery(query[type], text, type);
+  const total = (await instance.raw(countQuery))?.[0]?.total;
+  const totalPage = Math.ceil(total / limit);
 
   places = places.map((place) => ({ ...place, place: place[type] }));
   return {

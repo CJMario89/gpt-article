@@ -6,3 +6,4 @@ export * from "./spots";
 export * from "./prefectures";
 export * from "./get-near-places";
 export * from "./prefecture-info";
+export * from "./search-by-locale";
