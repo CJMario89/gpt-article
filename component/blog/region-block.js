@@ -36,7 +36,7 @@ const RegionBlock = ({ type, region, prefecture }) => {
       w="full"
       flexDirection="column"
       alignItems="center"
-      rowGap={{ base: "4", md: "6" }}
+      rowGap={{ base: "1", md: "2" }}
     >
       <Flex position="relative" w="full">
         <Input

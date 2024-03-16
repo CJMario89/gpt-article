@@ -64,13 +64,18 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
         description={prefectureInfo?.description}
         imageUrl={prefectureInfo?.imageUrl}
       />
-      <Flex w="full" flexDirection="column" mt="12" position="relative">
+      <Flex
+        w="full"
+        flexDirection="column"
+        mt={{ base: "0", lg: "8" }}
+        position="relative"
+      >
         <Container
           maxW="container.lg"
           as={Flex}
           px={{ base: "2", md: "4" }}
           flexDirection="column"
-          rowGap="4"
+          rowGap="2"
         >
           <Tabs
             index={regions.indexOf(region)}

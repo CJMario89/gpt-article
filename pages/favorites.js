@@ -49,7 +49,7 @@ const Favorites = () => {
     <Container
       maxW="container.lg"
       as={Flex}
-      px={{ base: "2", md: "4" }}
+      px="4"
       flexDirection="column"
       rowGap="4"
       minH="50vh"
@@ -64,7 +64,7 @@ const Favorites = () => {
         >
           {options.map((option) => (
             <Tab key={option} mb="0" px="5">
-              {t(placesText[option])}
+              {placesText[option]}
             </Tab>
           ))}
         </TabList>

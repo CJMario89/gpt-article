@@ -1,15 +1,16 @@
 import { infoInstance, instance } from "backend-service/common";
 import { translateText } from "./translate";
 
-const target = "zh-TW";
-const targetInstance = "PlaceInfoZhTW";
-// const target="ja";
+// const target = "zh-TW";
+// const targetInstance = "PlaceInfoZhTW";
+const target = "ja-JP";
+const targetInstance = "PlaceInfoJaJP";
 const amount = 1;
 export const batchTranslate = async () => {
-  // await regionTranslate();
-  // await prefectureTranslate();
-  // await cityTranslate();
-  // await spotTranslate();
+  await regionTranslate();
+  await prefectureTranslate();
+  await cityTranslate();
+  await spotTranslate();
   // await spotTranslateX();
 };
 
@@ -192,7 +193,8 @@ const appendJapanWord = (text, place) => {
 };
 
 const removeJapanWord = (text) => {
-  const regex = new RegExp(`日本`, "g");
+  // const regex = new RegExp(`日本`, "g");
+  const regex = new RegExp(`,Japan`, "g");
   return text.replace(regex, "");
 };
 

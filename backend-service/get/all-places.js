@@ -1,5 +1,4 @@
 import { instance } from "backend-service/common";
-import { localeInfo } from "./article";
 
 const query = {
   spot: `SELECT CityInfo.region, SpotInfo.prefecture, SpotInfo.city, SpotInfo.spot from SpotInfo
@@ -10,13 +9,8 @@ const query = {
   region: `SELECT id, region from PrefectureInfo WHERE prefecture = 'All'`,
 };
 
-export const getAllPlaces = async (params = {}, locale) => {
+export const getAllPlaces = async (params = {}) => {
   const { type } = params;
   const places = await instance.raw(query[type]);
-  if (locale !== "en-US") {
-    const placesId = places.map((place) => `${place[type]}-${place.id}`);
-    const transInfo = await instance(localeInfo).whereIn("placeId", placesId);
-    places.transInfo = transInfo;
-  }
   return places;
 };

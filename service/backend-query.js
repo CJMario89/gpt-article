@@ -16,3 +16,5 @@ export const batchGenerate = (body) =>
   postRequest(`/api/post/batch-generate`, body);
 export const batchGenerateJapan = (body) =>
   postRequest(`/api/post/batch-generate-japan`, body);
+export const getPlacesWithTranslation = (query) =>
+  getRequest(`/api/get/places-with-translation`, query);

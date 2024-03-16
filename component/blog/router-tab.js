@@ -10,6 +10,7 @@ const RouterLink = ({ href, place, ...restProps }) => {
       color="neutral.600"
       href={href}
       prefetch={false}
+      _hover={{ color: "primary.700" }}
       {...restProps}
     >
       {place === "All" ? t("All") : place}
@@ -17,20 +18,20 @@ const RouterLink = ({ href, place, ...restProps }) => {
   );
 };
 
-const RouterTab = ({ region, prefecture, city, spot }) => {
+const RouterTab = ({ region, prefecture, city, spot, index }) => {
   return (
-    <Flex columnGap="2">
-      <RouterLink href={`/explore/${region}/All`} place={region} />
+    <Flex columnGap="4" mt="1" mb="2">
+      <RouterLink href={`/explore/${index?.region}/All`} place={region} />
       <Text color="neutral.600">{`>`}</Text>
       <RouterLink
-        href={`/explore/${region}/${prefecture}`}
+        href={`/explore/${index?.region}/${index?.prefecture}`}
         place={prefecture}
       />
       {!!city && (
         <>
           <Text color="neutral.600">{`>`}</Text>
           <RouterLink
-            href={`/explore/${region}/${prefecture}/${city}`}
+            href={`/explore/${index?.region}/${index?.prefecture}/${index?.city}`}
             place={city}
             color={spot ? "neutral.600" : "neutral.900"}
             fontWeight={spot ? "normal" : "semibold"}
@@ -41,7 +42,7 @@ const RouterTab = ({ region, prefecture, city, spot }) => {
         <>
           <Text color="neutral.600">{`>`}</Text>
           <RouterLink
-            href={`/explore/${region}/${prefecture}/${city}/${spot}`}
+            href={`/explore/${index?.region}/${index?.prefecture}/${index?.city}/${index?.spot}`}
             place={spot}
             color="neutral.900"
             fontWeight="semibold"

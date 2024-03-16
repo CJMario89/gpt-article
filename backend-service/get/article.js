@@ -1,6 +1,7 @@
 import { instance } from "backend-service/common";
 export const localeInfo = {
   "zh-TW": "PlaceInfoZhTW",
+  "ja-JP": "PlaceInfoJaJP",
 };
 export const getArticle = async (params = {}) => {
   const { type, region, prefecture, city, spot, locale } = params;
@@ -56,6 +57,13 @@ export const getArticle = async (params = {}) => {
     });
   }
 
+  const articleIndex = {
+    ...(region ? { region: article?.region } : {}),
+    ...(prefecture ? { prefecture: article?.prefecture } : {}),
+    ...(city ? { city: article?.city } : {}),
+    ...(spot ? { spot: article?.spot } : {}),
+  };
+
   article = {
     ...article,
     images: article.images.map((image) => {
@@ -69,7 +77,7 @@ export const getArticle = async (params = {}) => {
     }),
   };
   if (locale === "en-US") {
-    return article;
+    return { ...article, articleIndex };
   } else {
     const transInfo = await instance(localeInfo[locale])
       .where(
@@ -79,6 +87,6 @@ export const getArticle = async (params = {}) => {
         }`
       )
       .first();
-    return { ...article, ...transInfo };
+    return { ...article, ...transInfo, articleIndex };
   }
 };

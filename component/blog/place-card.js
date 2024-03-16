@@ -61,7 +61,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
       }
       flexDirection={isHorizontal ? "column" : "row"}
       alignItems={isHorizontal ? "center" : "flex-start"}
-      rowGap="4"
+      rowGap="1"
       onClick={() => {
         router.push(articleUrl, articleUrl, { locale: router.locale });
         if (typeof onClick === "function") {

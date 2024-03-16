@@ -51,7 +51,6 @@ export const getStaticProps = async ({ params, locale }) => {
   });
   return {
     props: { info, nearPrefectures, citiesIn },
-    revalidate: 30000000,
   };
 };
 

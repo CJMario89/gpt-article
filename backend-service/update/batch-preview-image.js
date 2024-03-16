@@ -4,7 +4,7 @@ import Jimp from "jimp";
 export const batchPreviewImage = async () => {
   // await batchPreviewCityImage();
   // await batchPreviewSpotImage();
-  batchPreviewPrefectureImage();
+  // batchPreviewPrefectureImage();
 };
 
 const batchPreviewCityImage = async () => {

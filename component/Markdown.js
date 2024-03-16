@@ -90,7 +90,7 @@ const Markdown = ({ children, node, ...restProps }) => {
           lineHeight="32px"
           color="neutral.700"
           position="relative"
-          pb="8"
+          pb="6"
           mb="6"
           _before={{
             content: '""',

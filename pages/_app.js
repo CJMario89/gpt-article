@@ -4,10 +4,10 @@ import { Header } from "component/blog";
 import Footer from "component/blog/footer";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import theme from "theme";
 import { Fonts } from "theme/component";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
+import getTheme from "theme";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +37,7 @@ function MyApp({ Component, pageProps, props }) {
       timeZone="Asia/Tokyo"
       messages={props.messages}
     >
-      <ChakraProvider theme={theme}>
+      <ChakraProvider theme={getTheme(router.locale)}>
         <Fonts />
         <QueryClientProvider client={queryClient}>
           <GoogleAnalytics gaId="G-M69F1K65XF" />

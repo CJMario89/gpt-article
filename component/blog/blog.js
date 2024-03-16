@@ -27,25 +27,42 @@ import HeartSVG from "assets/heart.svg";
 import HeartFillSVG from "assets/heart-fill.svg";
 import { useTranslations } from "next-intl";
 import LoadingSvg from "assets/loading.svg";
+import { useRouter } from "next/router";
 
 const OtherPlaces = ({ region, type, places, title }) => {
   return (
     <Flex flexDirection="column" mt="8" alignItems="center">
-      <Heading as="h1" color="primary.800" alignSelf="self-start">
+      <Heading
+        as="h1"
+        color="primary.800"
+        alignSelf={{ base: "center", lg: "self-start" }}
+      >
         {title}
       </Heading>
-      <Box overflowX="auto" w="full" pb="1">
-        <Flex flexDirection={{ base: "column", md: "row" }} w="max-content">
-          {places?.map((place) => {
-            return (
-              <PlaceCard
-                key={place?.spot ?? place?.city ?? place?.prefecture}
-                isHorizontal
-                place={{ type, region, ...place }}
-              />
-            );
-          })}
-        </Flex>
+      <Box
+        w="full"
+        mt="4"
+        borderRadius="2xl"
+        p="4"
+        boxShadow="0 0 10px #c2c2c2"
+      >
+        <Box overflowX="auto" w="full" pb="1">
+          <Flex
+            flexDirection={{ base: "column", md: "row" }}
+            w="max-content"
+            m="auto"
+          >
+            {places?.map((place) => {
+              return (
+                <PlaceCard
+                  key={place?.spot ?? place?.city ?? place?.prefecture}
+                  isHorizontal
+                  place={{ type, region, ...place }}
+                />
+              );
+            })}
+          </Flex>
+        </Box>
       </Box>
       {/* <Link
         mt="2"
@@ -74,6 +91,7 @@ const Blog = ({
   citiesIn,
   prefecturesIn,
 }) => {
+  const { locale } = useRouter();
   const {
     region,
     prefecture,
@@ -91,21 +109,33 @@ const Blog = ({
     wheelchairAccessibleEntrance,
     images,
     categories,
+    articleIndex,
   } = info;
   const isSpot = !!spot;
   const isCity = !!city;
   const place = useMemo(() => {
     if (isSpot) {
-      return { name: spot, type: "spot" };
+      return { name: spot, type: "spot", translation: articleIndex?.spot };
     } else if (isCity) {
-      return { name: city, type: "city" };
+      return { name: city, type: "city", translation: articleIndex?.city };
     } else {
       return {
         name: prefecture === "All" ? region : prefecture,
         type: prefecture === "All" ? "region" : "prefecture",
+        translation: articleIndex?.prefecture,
       };
     }
-  }, [city, isCity, isSpot, prefecture, region, spot]);
+  }, [
+    articleIndex?.city,
+    articleIndex?.prefecture,
+    articleIndex?.spot,
+    city,
+    isCity,
+    isSpot,
+    prefecture,
+    region,
+    spot,
+  ]);
   const t = useTranslations();
   const { isFavorited, addFavoritePlace, removeFavoritePlace } =
     useFavoritePlaces({ type: place.type, name: place.name, ...info });
@@ -211,7 +241,7 @@ const Blog = ({
       <Container
         as={Flex}
         maxW="container.lg"
-        px={{ base: "2", md: "8" }}
+        px={{ base: "4", md: "8" }}
         flexDirection="column"
         alignItems="center"
       >
@@ -222,11 +252,19 @@ const Blog = ({
               prefecture={prefecture}
               city={city}
               spot={spot}
+              index={articleIndex}
             />
             <Flex justifyContent="space-between" alignItems="center">
-              <Heading as="h1" color="primary.800">
-                {place?.name?.replace(/-/g, " ")}
-              </Heading>
+              <Flex alignItems="center" gap="8">
+                <Heading as="h1" color="primary.800">
+                  {place?.name?.replace(/-/g, " ")}
+                </Heading>
+                {locale === "zh-TW" && (
+                  <Heading as="h3" color="primary.800">
+                    ( {place?.translation} )
+                  </Heading>
+                )}
+              </Flex>
               {place?.type !== "region" && (
                 <Button
                   display="flex"
@@ -293,7 +331,7 @@ const Blog = ({
                   spot={spot}
                   ref={photoRef}
                 />
-                <Box backgroundColor="primary.50" px="6" py="8">
+                <Box backgroundColor="primary.50" px="6" py="6" mt="4">
                   <Text
                     fontSize="lg"
                     color="neutral.600"

@@ -134,7 +134,7 @@ const buttonBgStyleProps = {
 };
 
 const languageMaps = [
-  // {"ja-JP": "Japanese"},
+  { "ja-JP": "Japanese" },
   { "en-US": "English" },
   { "zh-TW": "Traditional Chinese" },
 ];

@@ -8,7 +8,7 @@ import {
   MenuList,
   Text,
 } from "@chakra-ui/react";
-import { useGetCities, useGetPrefectures } from "hooks/db";
+import { useGetPlaceWithTranslation } from "hooks/db";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
@@ -45,24 +45,34 @@ const RegionalSearch = ({
 }) => {
   const t = useTranslations();
   const { push, locale } = useRouter();
-  const [region, setRegion] = useState("All");
-  const [prefecture, setPrefecture] = useState("All");
-  const [city, setCity] = useState("All");
+  const [region, setRegion] = useState({ label: t("All"), value: "All" });
+  const [prefecture, setPrefecture] = useState({
+    label: t("All"),
+    value: "All",
+  });
+  const [city, setCity] = useState({ label: t("All"), value: "All" });
   // const [spot, setSpot] = useState("All");
+  const { data: prefectures = [] } = useGetPlaceWithTranslation({
+    region: region.value,
+    enabled: Boolean(region.value) && region.value !== "All",
+  });
+  const { data: cities = [] } = useGetPlaceWithTranslation({
+    prefecture: prefecture.value,
+    enabled: Boolean(prefecture.value) && prefecture.value !== "All",
+  });
 
-  const { data: prefectures = [] } = useGetPrefectures({ region });
-  const { data: cities = [] } = useGetCities({ prefecture });
-  // const { data: spots = [] } = useGetSpots({ prefecture, city });
   const placesMenu = [
     {
       name: t("Region"),
       place: region,
-      places: regions,
+      places: regions.map((region) => ({
+        translation: t(region),
+        value: region,
+      })),
       setPlace: (place) => {
         setRegion(place);
-        setPrefecture("All");
-        setCity("All");
-        // setSpot("All");
+        setPrefecture({ label: t("All"), value: "All" });
+        setCity({ label: t("All"), value: "All" });
       },
       disable: false,
     },
@@ -72,10 +82,9 @@ const RegionalSearch = ({
       places: prefectures,
       setPlace: (place) => {
         setPrefecture(place);
-        setCity("All");
-        // setSpot("All");
+        setCity({ label: t("All"), value: "All" });
       },
-      disable: region === "All",
+      disable: region?.value === "All",
     },
     {
       name: t("City"),
@@ -83,9 +92,8 @@ const RegionalSearch = ({
       places: cities,
       setPlace: (place) => {
         setCity(place);
-        // setSpot("All");
       },
-      disable: prefecture === "All",
+      disable: prefecture?.value === "All",
     },
     // {
     //   name: "Spot",
@@ -101,9 +109,9 @@ const RegionalSearch = ({
 
   const currentSearch = useMemo(() => {
     if (region === "All") return;
-    if (prefecture === "All") return `${region}/All`;
-    if (city === "All") return `${region}/${prefecture}`;
-    return `${region}/${prefecture}/${city}`;
+    if (prefecture === "All") return `${region?.value}/All`;
+    if (city === "All") return `${region?.value}/${prefecture?.value}`;
+    return `${region?.value}/${prefecture?.value}/${city?.value}`;
   }, [region, prefecture, city]);
   return (
     <Flex gap="4" flexWrap="wrap" {...restProps}>
@@ -123,7 +131,9 @@ const RegionalSearch = ({
                   {...textStlyeProps}
                   {...menuButtonBgStyleProps}
                 >
-                  {placeMenu.place === "All" ? t("All") : placeMenu.place}
+                  {placeMenu.place?.value === "All"
+                    ? t("All")
+                    : placeMenu.place?.label}
                 </MenuButton>
                 <MenuList
                   display={isOpen ? "block" : "none"}
@@ -135,14 +145,17 @@ const RegionalSearch = ({
                 >
                   {placeMenu.places.map((place) => (
                     <MenuItem
-                      key={place}
+                      key={place?.translation}
                       onClick={() => {
-                        placeMenu.setPlace(place);
+                        placeMenu.setPlace({
+                          label: place?.translation,
+                          value: place?.value,
+                        });
                       }}
                       {...menuItemStyleProps}
                       {...textStlyeProps}
                     >
-                      {place}
+                      {place?.translation}
                     </MenuItem>
                   ))}
                 </MenuList>

@@ -4,3 +4,4 @@ export { default as useGetSearch } from "./use-get-search";
 export { default as useGetCities } from "./use-get-cities";
 export { default as useGetSpots } from "./use-get-spots";
 export { default as useGetPrefectures } from "./use-get-prefectures";
+export { default as useGetPlaceWithTranslation } from "./use-get-places-with-translation";

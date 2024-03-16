@@ -6,7 +6,7 @@ const nextConfig = {
     PLACE_APIKEY: process.env.PLACE_APIKEY,
   },
   i18n: {
-    locales: ["en-US", "zh-TW"],
+    locales: ["en-US", "zh-TW", "ja-JP"],
     defaultLocale: "en-US",
   },
   images: {

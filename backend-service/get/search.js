@@ -1,7 +1,6 @@
 import { instance } from "backend-service/common";
-const localeInfo = {
-  "zh-TW": "PlaceInfoZhTW",
-};
+import { localeInfo } from "./article";
+
 export const search = async ({
   type,
   text,
@@ -40,6 +39,7 @@ export const search = async ({
         SELECT 
           DISTINCT word as city, 
           CityInfo.id,
+          CityInfo.region, 
           CityInfo.prefecture, 
           CityInfo.title, 
           CityInfo.description, 
@@ -186,7 +186,7 @@ export const search = async ({
 
   places = places.map((place) => {
     const imageUrl = {
-      region: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${region}_All_1.webp`,
+      region: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${place.region}_All_1.webp`,
       prefecture: `https://jp-travel.s3.amazonaws.com/1/preview/prefecture/${place.region}_${place.prefecture}_1.webp`,
       city: `https://jp-travel.s3.amazonaws.com/1/preview/city/${place.prefecture}_${place.city}_1.webp`,
       spot: `https://jp-travel.s3.amazonaws.com/1/preview/spot/${place.city}_${place.spot}_1.webp`,
@@ -196,10 +196,10 @@ export const search = async ({
 
   places = places.map((place) => {
     const articleUrl = {
-      region: `/article/${region}/`,
-      prefecture: `/article/${region}/${place.prefecture}/`,
-      city: `/article/${region}/${place.prefecture}/${place.city}/`,
-      spot: `/article/${region}/${place.prefecture}/${place.city}/${place.spot}/`,
+      region: `/article/${place.region}/`,
+      prefecture: `/article/${place.region}/${place.prefecture}/`,
+      city: `/article/${place.region}/${place.prefecture}/${place.city}/`,
+      spot: `/article/${place.region}/${place.prefecture}/${place.city}/${place.spot}/`,
     };
     return { ...place, articleUrl: articleUrl[type] };
   });
@@ -229,7 +229,6 @@ export const search = async ({
       });
     }
   }
-
   const countQuery = getCountQuery(query[type], text, type);
   const total = (await instance.raw(countQuery))?.[0]?.total;
   const totalPage = Math.ceil(total / limit);

@@ -55,7 +55,6 @@ export const getStaticProps = async ({ params, locale }) => {
   });
   return {
     props: { info, spot, nearCities, nearSpots, nearRestuarants },
-    revalidate: 30000000,
   };
 };
 

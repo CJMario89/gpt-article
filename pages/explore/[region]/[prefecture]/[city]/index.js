@@ -6,6 +6,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import SearchIcon from "assets/search.svg";
+import { getAllPlaces, getArticle } from "backend-service/get";
 import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import RouterTab from "component/blog/router-tab";
 import { useGetSearch } from "hooks/db";
@@ -14,34 +15,46 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-// export const getStaticPaths = async () => {
-//   const cities = await getAllPlaces({ type: "city" });
-//   return {
-//     paths: cities.map(({ prefecture, city }) => ({
-//       params: {
-//         prefecture,
-//         city,
-//       },
-//     })),
-//     fallback: true,
-//   };
-// };
-
-// export const getStaticProps = async ({ params }) => {
-//   const { prefecture, city } = params;
-//   const article = await getArticle({ type: "city", prefecture, city });
-//   return {
-//     props: { article: jsonlize(article), prefecture, city },
-//   };
-// };
-export const getServerSideProps = async ({ params }) => {
-  const { region, prefecture, city } = params;
-  return { props: { region, prefecture, city } };
+export const getStaticPaths = async ({ locales }) => {
+  const cities = await getAllPlaces({ type: "city" });
+  return {
+    paths: cities.flatMap(({ region, prefecture, city }) => {
+      return locales.map((locale) => ({
+        params: {
+          region,
+          prefecture,
+          city,
+        },
+        locale,
+      }));
+    }),
+    fallback: true,
+  };
 };
 
-//SEO, share, other function
+export const getStaticProps = async ({ params, locale }) => {
+  const { region, prefecture, city } = params;
+  // const regionData = await getPlacesWithTranslation({ region, locale });
+  // const prefectureData = await getPlacesWithTranslation({ prefecture, locale });
+  // const cityData = await getPlacesWithTranslation({ city, locale });
+  const info = await getArticle({
+    type: "city",
+    region,
+    prefecture,
+    city,
+    locale,
+  });
+  return {
+    props: {
+      info,
+      region,
+      prefecture,
+      city,
+    },
+  };
+};
 
-const Index = ({ region, prefecture, city }) => {
+const Index = ({ info, region, prefecture, city }) => {
   const [page, setPage] = usePage();
   const [text, setText] = useState("");
   const t = useTranslations();
@@ -49,9 +62,9 @@ const Index = ({ region, prefecture, city }) => {
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
     type: "spot",
-    region,
-    prefecture,
-    city,
+    region: region,
+    prefecture: prefecture,
+    city: city,
     text,
     limit: 4,
     locale,
@@ -70,9 +83,14 @@ const Index = ({ region, prefecture, city }) => {
       alignItems="flex-start"
       rowGap="4"
     >
-      <RouterTab region={region} prefecture={prefecture} city={city} />
+      <RouterTab
+        region={info?.region}
+        prefecture={info?.prefecture}
+        city={info?.city}
+        index={info?.articleIndex}
+      />
       <Heading as="h2" alignSelf="flex-start">
-        {t(city)}
+        {info?.city}
       </Heading>
       <Flex position="relative" w="full">
         <Input

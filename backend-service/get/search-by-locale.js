@@ -8,7 +8,6 @@ const SearchByLocale = async ({ type, region, text, limit, page }) => {
     .andWhereLike(type, `%${text}%`)
     .limit(limit)
     .offset((page - 1) * limit);
-  console.log(transInfo);
   const total = await instance(localeInfo)
     .whereLike("placeId", `%${type}%`)
     .andWhereLike("placeId", `%${text}%`)

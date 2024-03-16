@@ -92,7 +92,6 @@ export const getRestuarantInfo = async ({ place }) => {
           try {
             await insertSpot(data, place, allSpots.includes(name));
           } catch (e) {
-            console.log("catched");
             console.log(e);
           }
         }

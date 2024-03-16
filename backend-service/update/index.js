@@ -13,3 +13,5 @@ export * from "./batch-generate-restuarant";
 export * from "./batch-generate-article-prefecture";
 export * from "./batch-generate-article-city";
 export * from "./batch-generate-prefecture-info";
+export * from "./batch-insert-locale-place";
+export * from "./update-japan-locale-info";
