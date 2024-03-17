@@ -155,15 +155,9 @@ const Regions = () => {
       </Heading>
       <Flex gap="2" flexWrap="wrap">
         {Array.isArray(regions) &&
-          regions.map((region) => {
+          regions.map((region, i) => {
             return (
-              <Link
-                // as={NextLink}
-                key={region}
-                href={`/article/${region}`}
-                // prefetch={false}
-                {...linkStyle}
-              >
+              <Link key={region + i} href={`/article/${region}`} {...linkStyle}>
                 {t(region)}
               </Link>
             );
@@ -189,12 +183,11 @@ const Prefectures = () => {
       </Heading>
       <Flex gap="2" flexWrap="wrap">
         {Array.isArray(prefectures) &&
-          prefectures.map(({ prefecture, region }) => {
+          prefectures.map(({ prefecture, region, i }) => {
             return (
               <Link
-                key={region}
+                key={prefecture + region + i}
                 href={`/article/${region}/${prefecture}`}
-                // prefetch={false}
                 {...linkStyle}
               >
                 {t(prefecture)}
@@ -328,7 +321,6 @@ const Footer = () => {
                 {t("Search")}
               </Heading>
               <RegionalSearch
-                isLight
                 menuButtonBgStyleProps={menuButtonBgStyleProps}
                 menuItemStyleProps={menuItemStyleProps}
                 menuListStyleProps={menuListStyleProps}

@@ -4,7 +4,6 @@ import { Header } from "component/blog";
 import Footer from "component/blog/footer";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Fonts } from "theme/component";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import getTheme from "theme";
@@ -38,7 +37,7 @@ function MyApp({ Component, pageProps, props }) {
       messages={props.messages}
     >
       <ChakraProvider theme={getTheme(router.locale)}>
-        <Fonts />
+        {/* <Fonts /> */}
         <QueryClientProvider client={queryClient}>
           <GoogleAnalytics gaId="G-M69F1K65XF" />
           <Header />

@@ -76,6 +76,13 @@ export const getArticle = async (params = {}) => {
       return { ...image, imageUrl: imageUrl[type] };
     }),
   };
+  const articleUrl = {
+    region: `/article/${article.region}/`,
+    prefecture: `/article/${article.region}/${article.prefecture}/`,
+    city: `/article/${article.region}/${article.prefecture}/${article.city}/`,
+    spot: `/article/${article.region}/${article.prefecture}/${article.city}/${article.spot}/`,
+  };
+  article = { ...article, articleUrl: articleUrl[type] };
   if (locale === "en-US") {
     return { ...article, articleIndex };
   } else {

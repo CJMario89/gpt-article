@@ -19,7 +19,7 @@ export const styles = {
       bgColor: "neutral.50",
     },
     "::-webkit-scrollbar-thumb": {
-      bgColor: "neutral.400",
+      bgColor: "primary.300",
     },
   },
 };

@@ -66,9 +66,10 @@ const Index = ({ info, region, prefecture, city }) => {
     prefecture: prefecture,
     city: city,
     text,
-    limit: 4,
+    limit: 8,
     locale,
   });
+
   const index =
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
   const places = data?.pages[index]?.places;

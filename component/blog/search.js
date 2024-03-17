@@ -57,7 +57,7 @@ const Search = ({ onSearch, ...restProps }) => {
                 variant="outline"
                 rightIcon={<ChevronDown />}
               >
-                {region === "All" ? t("All") : region}
+                {region === "All" ? t("All") : t(region)}
               </MenuButton>
               <MenuList display={isOpen ? "block" : "none"}>
                 {regions.map((place) => (
@@ -67,7 +67,7 @@ const Search = ({ onSearch, ...restProps }) => {
                       setRegion(place);
                     }}
                   >
-                    {place}
+                    {t(place)}
                   </MenuItem>
                 ))}
               </MenuList>
@@ -116,7 +116,7 @@ const Search = ({ onSearch, ...restProps }) => {
           >
             <TabList>
               {types.map((type) => (
-                <Tab key={type}>{t(placesText[type])}</Tab>
+                <Tab key={type}>{placesText[type]}</Tab>
               ))}
             </TabList>
             <TabPanels>
@@ -139,22 +139,6 @@ const Search = ({ onSearch, ...restProps }) => {
               ))}
             </TabPanels>
           </Tabs>
-
-          {/* <Box
-              zIndex={-1}
-              position="fixed"
-              top="0px"
-              left="0px"
-              w="100%"
-              h="100%"
-              style={{
-                background: "rgba(0, 0, 0, 0.1)",
-                backdropFilter: "blur(20px)",
-              }}
-              onClick={() => {
-                setSearchOpen(false);
-              }}
-            /> */}
         </>
       )}
     </Flex>

@@ -148,23 +148,6 @@ const Header = () => {
             </Flex>
           </Flex>
         </Flex>
-
-        {/* <Flex position="relative">
-        <Box w="full" height="300px" position="absolute">
-          <Image
-            style={{
-              width: "100%",
-              opacity: "0.3",
-              filter: "brightness(1.1)",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "bottom",
-            }}
-            src={headerBanner1}
-            alt=""
-          />
-        </Box>
-      </Flex> */}
       </Flex>
     </>
   );

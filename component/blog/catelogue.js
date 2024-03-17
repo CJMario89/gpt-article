@@ -36,6 +36,7 @@ const BackToTop = ({ onClick, catelogueMobileRef }) => {
     return () => {
       removeEventListener("wheel", showBackToTop);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <Flex
@@ -282,6 +283,7 @@ function observerContent(ref, isDesktop) {
   const description = document.querySelector("#description");
   clearTimeout(debounceTimeout);
   setTimeout(() => {
+    if (!ref.current) return;
     let iterateCatelogue = null;
     let primaryCatelogue = null;
     let secondaryCatelogue = null;

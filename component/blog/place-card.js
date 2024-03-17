@@ -1,9 +1,16 @@
 import { Box, Flex, Heading, Text, Tooltip } from "@chakra-ui/react";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { useRouter } from "next/router";
+import Image from "./image";
+import LocationSVG from "assets/location.svg";
 //import Link from "components/NextLink";
 // import ExternalLinkSvg from "assets/external-link-svg";
+export const priceMap = {
+  PRICE_LEVEL_INEXPENSIVE: "$",
+  PRICE_LEVEL_MODERATE: "$$",
+  PRICE_LEVEL_EXPENSIVE: "$$$",
+  PRICE_LEVEL_VERY_EXPENSIVE: "$$$$",
+};
 
 const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
   const {
@@ -15,16 +22,16 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
     description,
     imageUrl,
     articleUrl,
+    distance,
+    priceLevel,
   } = place;
   const t = useTranslations();
   const router = useRouter();
-
   const placeName = {
     prefecture: prefecture,
     city: city,
     spot: spot?.replace(/-/g, " ").replace(/_/g, " / "),
   };
-
   return (
     <Flex
       w="100%"
@@ -79,11 +86,10 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
         {imageUrl && (
           <Image
             alt={placeName?.[type]}
-            width="2048"
-            height="2048"
+            width="250"
+            height="250"
             src={imageUrl}
             style={{
-              objectFit: "cover",
               width: "inherit",
               height: "inherit",
             }}
@@ -181,6 +187,18 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
             {t("Read more")}...
           </Text>
         </Tooltip>
+        {Boolean(distance) && (
+          <Flex alignItems="center">
+            <LocationSVG color="primary.600" />
+            <Text>
+              ~{distance.toFixed(2)}
+              {t("km")}
+            </Text>
+          </Flex>
+        )}
+        {Boolean(priceLevel) && (
+          <Text color="primary.700">{priceMap[priceLevel]}</Text>
+        )}
       </Flex>
     </Flex>
   );

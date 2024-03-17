@@ -1,22 +1,9 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import ExternalLinkSvg from "assets/external-link-svg";
-import Image from "next/image";
 import Link from "component/NextLink";
+import Image from "./image";
 
-const PhotoDisplayer = ({
-  image,
-  name,
-  // setPhotoFloat,
-  ...restProps
-}) => {
-  // const photoRef = useRef(null);
-  // useEffect(() => {
-  //   const width = photoRef.current?.clientWidth;
-  //   const height = photoRef.current?.clientHeight;
-  //   if (width / height < 1) {
-  //     setPhotoFloat(true);
-  //   }
-  // }, [setPhotoFloat]);
+const PhotoDisplayer = ({ image, name, ...restProps }) => {
   return (
     <Flex
       flexDirection="column"
@@ -27,25 +14,13 @@ const PhotoDisplayer = ({
       {...restProps}
     >
       {image && (
-        <Box position="relative" w="full" pt="50%">
-          <Image
-            alt={name}
-            width="960"
-            height="480"
-            // ref={photoRef}
-            style={{
-              top: "0",
-              width: "100%",
-              height: "100%",
-              position: "absolute",
-              objectFit: "cover",
-              _hover: {
-                objectFit: "none",
-              },
-            }}
-            src={image?.imageUrl}
-          />
-        </Box>
+        <Image
+          alt={name}
+          width="600"
+          height="300"
+          errorImageContainerProps={{ w: "600px", h: "300px" }}
+          src={image?.imageUrl}
+        />
       )}
       <Flex
         fontSize="xs"

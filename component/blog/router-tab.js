@@ -20,7 +20,7 @@ const RouterLink = ({ href, place, ...restProps }) => {
 
 const RouterTab = ({ region, prefecture, city, spot, index }) => {
   return (
-    <Flex columnGap="4" mt="1" mb="2">
+    <Flex columnGap="4" mt="1" mb="2" flexWrap="wrap" rowGap="2">
       <RouterLink href={`/explore/${index?.region}/All`} place={region} />
       <Text color="neutral.600">{`>`}</Text>
       <RouterLink

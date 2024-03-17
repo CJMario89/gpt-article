@@ -3,7 +3,7 @@ import { Global } from "@emotion/react";
 export const fontMap = {
   "en-US": "PTSerif",
   "zh-TW": "Iansui",
-  "ja-JP": "NotoSerifTC",
+  "ja-JP": "Iansui",
 };
 
 const Fonts = () => {

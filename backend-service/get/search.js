@@ -22,7 +22,8 @@ export const search = async ({
           SpotInfo.prefecture, 
           SpotInfo.city, 
           SpotInfo.title, 
-          SpotInfo.description 
+          SpotInfo.description, 
+          SpotInfo.priceLevel AS priceLevel
         FROM SpotInfo_spellfix 
         LEFT OUTER JOIN SpotInfo ON 
           SpotInfo_spellfix.word = SpotInfo.spot 
@@ -110,7 +111,8 @@ export const search = async ({
             SpotInfo.prefecture AS prefecture, 
             SpotInfo.spot AS spot, 
             SpotInfo.title as title, 
-            SpotInfo.description AS description 
+            SpotInfo.description AS description, 
+            SpotInfo.priceLevel AS priceLevel
           FROM SpotInfo 
         INNER JOIN CityInfo ON 
           CityInfo.city = SpotInfo.city AND 

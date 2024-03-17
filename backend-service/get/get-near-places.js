@@ -40,8 +40,9 @@ export const getNearPlaces = async ({
             SpotInfo.city, 
             SpotInfo.spot, 
             title, 
-            description, 
-            POWER(${latitude} - substr(location, 0, instr(location, ',')), 2) + POWER(${longitude} - substr(location, instr(location, ',') + 1), 2) AS distance 
+            description,
+            priceLevel,
+            ${getDistanceQueryByLatLong(latitude, longitude)}
           FROM 
             SpotInfo
           WHERE 
@@ -73,7 +74,7 @@ export const getNearPlaces = async ({
           SpotInfo.spot, 
           title, 
           description, 
-          POWER(${latitude} - substr(location, 0, instr(location, ',')), 2) + POWER(${longitude} - substr(location, instr(location, ',') + 1), 2) AS distance 
+          ${getDistanceQueryByLatLong(latitude, longitude)}
         FROM 
           SpotInfo 
         WHERE 
@@ -104,7 +105,7 @@ export const getNearPlaces = async ({
           CityInfo.city, 
           title, 
           description,  
-          POWER(${latitude} - substr(location, 0, instr(location, ',')), 2) + POWER(${longitude} - substr(location, instr(location, ',') + 1), 2) AS distance 
+          ${getDistanceQueryByLatLong(latitude, longitude)}
         FROM 
           CityInfo 
         ORDER BY distance 
@@ -132,7 +133,7 @@ export const getNearPlaces = async ({
           prefecture, 
           title, 
           description,  
-          POWER(${latitude} - substr(location, 0, instr(location, ',')), 2) + POWER(${longitude} - substr(location, instr(location, ',') + 1), 2) AS distance 
+          ${getDistanceQueryByLatLong(latitude, longitude)}
         FROM 
           PrefectureInfo 
         WHERE 
@@ -197,3 +198,7 @@ export const getNearPlaces = async ({
   }
   return places;
 };
+
+function getDistanceQueryByLatLong(latitude, longitude) {
+  return `SQRT(POWER(((${latitude} - substr(location, 0, instr(location, ','))) * 110.574), 2) + POWER(((${longitude} - substr(location, instr(location, ',') + 1)) * 111.320 * cos(${latitude})), 2)) AS distance `;
+}

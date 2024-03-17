@@ -30,7 +30,7 @@ const Button = {
       bgColor: "primary.300",
       color: "neutral.50",
       _hover: {
-        bgColor: "primary.600",
+        bgColor: "primary.800",
         _disabled: {
           bgColor: "primary.200",
           color: "neutral.100",

@@ -1,28 +1,23 @@
 import { infoInstance, instance } from "backend-service/common";
 import { localeInfo } from "./article";
 
-const SearchByLocale = async ({ type, region, text, limit, page }) => {
+const SearchByLocale = async ({ type, region, text, limit, page, locale }) => {
   //search by placeInfo localeInfo
-  const transInfo = await instance(localeInfo)
+  const transInfo = await instance(localeInfo[locale])
     .whereLike("placeId", `%${type}%`)
     .andWhereLike(type, `%${text}%`)
     .limit(limit)
     .offset((page - 1) * limit);
-  const total = await instance(localeInfo)
+  const total = await instance(localeInfo[locale])
     .whereLike("placeId", `%${type}%`)
-    .andWhereLike("placeId", `%${text}%`)
+    .andWhereLike(type, `%${text}%`)
     .count();
   //imageUrl
   //articleUrl
-  const params = transInfo.map((place) => {
-    const [placeName, id, type] = place.placeId.split("-");
-    return {
-      placeName,
-      id,
-      type,
-    };
+  const ids = transInfo.map((place) => {
+    const arr = place.placeId.split("-");
+    return arr[arr.length - 2];
   });
-  const ids = params.map((param) => Number(param.id));
   let places = await infoInstance({ type }).whereIn("id", ids);
   places = places.map((place) => {
     const imageUrl = {

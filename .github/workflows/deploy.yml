@@ -7,14 +7,16 @@ on:
 
 jobs:
   deploy:
-    timeout-minutes: 600
     runs-on: ubuntu-latest
+    timeout-minutes: 600
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
+        timeout-minutes: 600
 
       - name: SSH and deploy
         uses: appleboy/ssh-action@master
+        timeout-minutes: 600
         with:
           username: ${{ secrets.SERVER_USERNAME }}
           host: ${{ secrets.SERVER_HOST }}

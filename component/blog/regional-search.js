@@ -35,7 +35,6 @@ export const ChevronDown = ({ ...props }) => {
 
 const RegionalSearch = ({
   onSearch,
-  isLight,
   textStlyeProps,
   menuItemStyleProps,
   menuButtonBgStyleProps,
@@ -120,7 +119,7 @@ const RegionalSearch = ({
           <Text {...textStlyeProps} opacity={placeMenu.disable ? "0.5" : "1"}>
             {placeMenu.name}:{" "}
           </Text>
-          <Menu placement={isLight ? "right" : "auto"}>
+          <Menu placement="bottom">
             {({ isOpen }) => (
               <>
                 <MenuButton
