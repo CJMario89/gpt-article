@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Heading,
   Input,
   Menu,
   MenuButton,
@@ -22,11 +23,15 @@ import SearchIcon from "assets/search.svg";
 import PlaceCard from "./place-card";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
+import LoadingSvg from "assets/loading.svg";
+import useDebounce from "utils/use-debounce";
 
 const Search = ({ onSearch, ...restProps }) => {
   const types = ["prefecture", "city", "spot"];
   const t = useTranslations();
   const { locale } = useRouter();
+  const debounce = useDebounce();
+  const [searchText, setSearchText] = useState("");
 
   const placesText = {
     prefecture: t("Prefecture"),
@@ -36,72 +41,100 @@ const Search = ({ onSearch, ...restProps }) => {
   const [region, setRegion] = useState("All");
 
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchText, setSearchText] = useState();
   const [type, setType] = useState("city");
-  const { data } = useGetSearch(
+  const { data, isFetching } = useGetSearch(
     { type, text: searchText, region, locale },
     { enabled: Boolean(searchText) }
   );
+  console.log(data);
   const places = data?.pages[0]?.places ?? [];
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   return (
-    <Flex flexDirection="column" alignItems="flex-start" rowGap="4">
-      <Flex columnGap="2" alignItems="center">
-        <Text flexShrink="0">{t("Region")}: </Text>
-        <Menu>
-          {({ isOpen }) => (
-            <>
-              <MenuButton
-                flexShrink="0"
-                as={Button}
-                variant="outline"
-                rightIcon={<ChevronDown />}
-              >
-                {region === "All" ? t("All") : t(region)}
-              </MenuButton>
-              <MenuList display={isOpen ? "block" : "none"}>
-                {regions.map((place) => (
-                  <MenuItem
-                    key={place}
-                    onClick={() => {
-                      setRegion(place);
-                    }}
-                  >
-                    {t(place)}
-                  </MenuItem>
-                ))}
-              </MenuList>
-            </>
-          )}
-        </Menu>
+    <Flex
+      flexDirection="column"
+      alignItems="flex-start"
+      w="full"
+      overflow="auto"
+      h={{ base: "full", lg: "80vh" }}
+    >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          console.log(e);
+        }}
+        style={{
+          position: "sticky",
+          top: "0",
+          zIndex: "1",
+          width: "100%",
+          background: "white",
+          paddingBottom: "4px",
+        }}
+      >
         <Flex
-          position="relative"
-          w="full"
-          maxW="full"
-          transition="all 0.3s ease-out"
-          {...restProps}
+          columnGap="2"
+          alignItems="center"
+          flexWrap={{ base: "wrap", md: "nowrap" }}
+          gap="2"
         >
-          <Input
-            w="full"
-            type="text"
-            placeholder={t("Search Place")}
-            onInput={(e) => {
-              setSearchText(e.target.value);
-            }}
-            onFocus={() => {
-              setSearchOpen(true);
-            }}
-          />
-          <SearchIcon
-            position="absolute"
-            left="12px"
-            top="50%"
-            transform="translateY(-50%)"
-            color="neutral.800"
-          />
+          <Text flexShrink="0">{t("Region")}: </Text>
+          <Menu>
+            {({ isOpen }) => (
+              <>
+                <MenuButton
+                  flexShrink="0"
+                  as={Button}
+                  variant="outline"
+                  rightIcon={<ChevronDown />}
+                >
+                  {region === "All" ? t("All") : t(region)}
+                </MenuButton>
+                <MenuList display={isOpen ? "block" : "none"}>
+                  {regions.map((place) => (
+                    <MenuItem
+                      key={place}
+                      onClick={() => {
+                        setRegion(place);
+                      }}
+                    >
+                      {t(place)}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </>
+            )}
+          </Menu>
+          <Flex position="relative" w="full" maxW="full" gap="2" {...restProps}>
+            <Input
+              w="auto"
+              type="text"
+              placeholder={t("Search Place")}
+              onInput={(e) => {
+                debounce(() => setSearchText(e.target.value), 700);
+              }}
+              onFocus={() => {
+                setSearchOpen(true);
+              }}
+            />
+            <SearchIcon
+              position="absolute"
+              left="12px"
+              top="50%"
+              transform="translateY(-50%)"
+              color="neutral.800"
+            />
+            <Button type="submit" variant="solid" bgColor="primary.300">
+              {t("Search")}
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
-      {searchOpen && searchText && (
+      </form>
+      {isFetching && (
+        <Flex w="full" h="full" justifyContent="center" alignItems="center">
+          <LoadingSvg w="6" h="6" />
+        </Flex>
+      )}
+      {searchOpen && searchText && !isFetching && (
         <>
           <Tabs
             onChange={(index) => {
@@ -114,16 +147,23 @@ const Search = ({ onSearch, ...restProps }) => {
             position="relative"
             {...restProps}
           >
-            <TabList>
+            <TabList
+              position="sticky"
+              top={{ base: "86px", md: "44px" }}
+              bgColor="white"
+              pt="4"
+              w="full"
+              zIndex="1"
+            >
               {types.map((type) => (
                 <Tab key={type}>{placesText[type]}</Tab>
               ))}
             </TabList>
             <TabPanels>
               {types.map((type) => (
-                <TabPanel key={type} px="0" py="0" h="70vh" overflow="auto">
-                  <Flex flexDirection="column">
-                    {Array.isArray(places) &&
+                <TabPanel key={type} px="0" py="0">
+                  <Flex flexDirection="column" h="full">
+                    {places.length > 0 ? (
                       places.map((place) => (
                         <PlaceCard
                           onClick={() => {
@@ -133,7 +173,19 @@ const Search = ({ onSearch, ...restProps }) => {
                           key={place?.title}
                           place={{ type, ...place }}
                         />
-                      ))}
+                      ))
+                    ) : (
+                      <Flex
+                        w="full"
+                        h="full"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Heading as="h2" mt="4">
+                          {t("No result")}
+                        </Heading>
+                      </Flex>
+                    )}
                   </Flex>
                 </TabPanel>
               ))}

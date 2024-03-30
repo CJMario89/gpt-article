@@ -7,6 +7,8 @@ import { useEffect } from "react";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import { NextIntlClientProvider } from "next-intl";
 import getTheme from "theme";
+import "styles/globals.css";
+import LoadingBar from "component/loading-progress";
 
 const queryClient = new QueryClient();
 
@@ -37,22 +39,12 @@ function MyApp({ Component, pageProps, props }) {
       messages={props.messages}
     >
       <ChakraProvider theme={getTheme(router.locale)}>
-        {/* <Fonts /> */}
         <QueryClientProvider client={queryClient}>
           <GoogleAnalytics gaId="G-M69F1K65XF" />
+          <LoadingBar />
           <Header />
-          {/* <Box
-          position="relative"
-          w="full"
-          h="100vh"
-          zIndex={1}
-          pt={{ base: "64px", lg: "84px" }}
-          id="container"
-          style={{ WebkitOverflowScrolling: "touch" }}
-        > */}
           <Component {...pageProps} />
           <Footer />
-          {/* </Box> */}
         </QueryClientProvider>
       </ChakraProvider>
     </NextIntlClientProvider>

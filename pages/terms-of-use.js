@@ -8,11 +8,13 @@ const TermsOfUse = () => {
       flexDirection="column"
       gap="4"
       maxW="container.lg"
-      py="4"
+      py={{ base: "1", lg: "4" }}
+      px="8"
+      lineHeight="8"
     >
-      <Heading as="h2">Terms of Use</Heading>
-
-      <p>Version 1.0</p>
+      <Heading as="h2" color="primary.700">
+        Terms of Use
+      </Heading>
 
       <p>
         The Japan Tour website located at japantour.site is a copyrighted work

@@ -59,7 +59,7 @@ const RegionalSearch = ({
     prefecture: prefecture.value,
     enabled: Boolean(prefecture.value) && prefecture.value !== "All",
   });
-
+  console.log(region);
   const placesMenu = [
     {
       name: t("Region"),
@@ -107,9 +107,9 @@ const RegionalSearch = ({
   ];
 
   const currentSearch = useMemo(() => {
-    if (region === "All") return;
-    if (prefecture === "All") return `${region?.value}/All`;
-    if (city === "All") return `${region?.value}/${prefecture?.value}`;
+    if (region?.value === "All") return;
+    if (prefecture?.value === "All") return `${region?.value}/All`;
+    if (city?.value === "All") return `${region?.value}/${prefecture?.value}`;
     return `${region?.value}/${prefecture?.value}/${city?.value}`;
   }, [region, prefecture, city]);
   return (

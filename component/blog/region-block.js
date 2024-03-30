@@ -1,4 +1,4 @@
-import { Flex, Input, useMediaQuery } from "@chakra-ui/react";
+import { Button, Flex, Heading, Input, useMediaQuery } from "@chakra-ui/react";
 import { useGetSearch } from "hooks/db";
 import { useState } from "react";
 import PlaceCard from "./place-card";
@@ -8,10 +8,12 @@ import SearchIcon from "assets/search.svg";
 import usePage from "hooks/use-page";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
+import useDebounce from "utils/use-debounce";
 
 const RegionBlock = ({ type, region, prefecture }) => {
   const [page, setPage] = usePage();
   const [text, setText] = useState("");
+  const debounce = useDebounce();
   const t = useTranslations();
   const { locale } = useRouter();
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
@@ -24,7 +26,8 @@ const RegionBlock = ({ type, region, prefecture }) => {
     locale,
   });
 
-  const { fetchNextPage, data, isLoading, isFetchingNextPage } = query;
+  const { fetchNextPage, data, isFetching, isFetchingNextPage, isFetched } =
+    query;
 
   const index =
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
@@ -38,25 +41,37 @@ const RegionBlock = ({ type, region, prefecture }) => {
       alignItems="center"
       rowGap={{ base: "1", md: "2" }}
     >
-      <Flex position="relative" w="full">
-        <Input
-          type="text"
-          placeholder={t("Search Place")}
-          onInput={(e) => {
-            setPage(1);
-            setText(e.target.value);
-          }}
-        />
-        <SearchIcon
-          position="absolute"
-          left="4"
-          top="50%"
-          transform="translateY(-50%)"
-          color="neutral.800"
-        />
-      </Flex>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+        style={{ width: "100%" }}
+      >
+        <Flex position="relative" w="full" gap="2">
+          <Input
+            type="text"
+            placeholder={t("Search Place")}
+            onInput={(e) => {
+              debounce(() => {
+                setPage(1);
+                setText(e.target.value);
+              }, 700);
+            }}
+          />
+          <SearchIcon
+            position="absolute"
+            left="4"
+            top="50%"
+            transform="translateY(-50%)"
+            color="neutral.800"
+          />
+          <Button variant="solid" type="submit">
+            {t("Search")}
+          </Button>
+        </Flex>
+      </form>
       {places &&
-        !isLoading &&
+        !isFetching &&
         !isFetchingNextPage &&
         places.map((place) => {
           return (
@@ -67,7 +82,22 @@ const RegionBlock = ({ type, region, prefecture }) => {
             />
           );
         })}
-      <PlaceCardSkeleton isLoading={isLoading || isFetchingNextPage} />
+      {!isFetching &&
+        isFetched &&
+        Array.isArray(places) &&
+        places.length === 0 && (
+          <Flex
+            w="full"
+            h="100vh"
+            justifyContent="center"
+            alignItems="flex-start"
+          >
+            <Heading as="h3" mt="8">
+              {t("No result")}
+            </Heading>
+          </Flex>
+        )}
+      <PlaceCardSkeleton isLoading={isFetching || isFetchingNextPage} />
       {totalPage > 0 && (
         <Pagination
           currentPage={page}

@@ -96,7 +96,7 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
               borderColor="primary.100"
             >
               {regions.map((region) => (
-                <Tab key={`${region}-t`} mb="0" px="5">
+                <Tab key={`${region}-t`} mb="0" px={{ base: "3", lg: "5" }}>
                   {t(region)}
                 </Tab>
               ))}
@@ -123,7 +123,11 @@ const Index = ({ region, prefecture, prefectureInfo }) => {
                       borderColor="primary.100"
                     >
                       {prefectures.map((prefecture) => (
-                        <Tab key={`${prefecture}-t`} mb="0">
+                        <Tab
+                          key={`${prefecture}-t`}
+                          mb="0"
+                          px={{ base: "3", lg: "5" }}
+                        >
                           {prefecture === "All" ? t("All") : t(prefecture)}
                         </Tab>
                       ))}

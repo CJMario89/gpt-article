@@ -51,7 +51,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
       cursor="pointer"
       transition="all 0.5s ease-in-out"
       overflow="hidden"
-      p="6"
+      p={{ base: "2", lg: "6" }}
       pb="8"
       _before={
         isHorizontal
@@ -95,29 +95,6 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
             }}
           />
         )}
-        {/* <Flex
-          fontSize="xs"
-          w="full"
-          color="neutral.600"
-          whiteSpace="nowrap"
-          justifyContent="flex-end"
-          mt="1"
-        >
-          <Link
-            href={referenceLink ?? ""}
-            display="flex"
-            alignItems="center"
-            columnGap="1"
-            target="_blank"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            {referenceName}. {placeName}.{" "}
-            <ExternalLinkSvg w="3" h="3" color="neutral.600" />
-          </Link>
-        </Flex> */}
       </Box>
       <Flex
         flexDirection="column"
@@ -156,7 +133,6 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
                 WebkitLineClamp: "1",
                 WebkitBoxOrient: "vertical",
               }}
-              // color="neutral.700"
             >
               {title}
             </Heading>

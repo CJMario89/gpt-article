@@ -10,14 +10,14 @@ import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 
 const navbarIconProps = {
-  w: { base: "4", lg: "4" },
-  h: { base: "4", lg: "4" },
+  w: { base: "3", lg: "4" },
+  h: { base: "3", lg: "4" },
   color: "primary.700",
 };
 
 const navbarTextProps = {
   color: "primary.700",
-  fontSize: { base: "sm", lg: "md" },
+  fontSize: { base: "xs", lg: "md" },
   fontWeight: "semibold",
 };
 
@@ -98,8 +98,9 @@ const Header = () => {
         <Flex
           w="full"
           margin="0 auto"
-          p={{ base: "2", md: "4" }}
-          columnGap="16"
+          p={{ base: "2", lg: "4" }}
+          px="4"
+          columnGap={{ base: "4", lg: "16" }}
           alignItems="center"
           justifyContent="space-between"
           zIndex={1000}
@@ -107,28 +108,28 @@ const Header = () => {
           maxW="container.lg"
         >
           <Link href="/">
-            <LogoSvg color="primary.700" w="22" h="12" ml="4" />
+            <LogoSvg
+              color="primary.700"
+              w={{ base: "18", lg: "22" }}
+              h={{ base: "10", lg: "12" }}
+              ml={{ base: "1", lg: "4" }}
+            />
           </Link>
           <Flex
-            position={{ base: "fixed", lg: "relative" }}
-            bgColor={{ base: "white", lg: "transparent" }}
+            position="relative"
             bottom="0"
             left="0"
             w="full"
-            pr={{ base: "0", lg: "24" }}
-            py={{ base: "1", lg: "0" }}
-            justifyContent={{ base: "center", lg: "flex-end" }}
-            boxShadow={{
-              base: "0 0 10px 0 rgba(100, 100, 100, 0.5), 0 0 5px 0 rgba(100, 100, 100, 0.5)",
-              lg: "none",
-            }}
+            pr={{ base: "1", lg: "24" }}
+            py="0"
+            justifyContent="flex-end"
           >
             <Flex
               w="full"
-              maxW={{ base: "300px", lg: "72" }}
-              p={{ base: "2", lg: "0" }}
-              justifyContent={{ base: "space-between", lg: "space-between" }}
-              alignItems={{ base: "flex-start", lg: "center" }}
+              maxW={{ base: "auto", lg: "72" }}
+              justifyContent={{ base: "flex-end", lg: "space-between" }}
+              gap="6"
+              alignItems="center"
             >
               {navbarLinks.map((link, index) => {
                 return (

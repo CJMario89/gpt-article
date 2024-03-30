@@ -281,7 +281,12 @@ const Blog = ({
         alignItems="center"
       >
         {info?.title ? (
-          <Flex w="inherit" flexDirection="column" rowGap="2" mt="6">
+          <Flex
+            w="inherit"
+            flexDirection="column"
+            rowGap={{ base: "1", lg: "2" }}
+            mt={{ base: "2", lg: "6" }}
+          >
             <RouterTab
               region={region}
               prefecture={prefecture}
@@ -415,7 +420,7 @@ const Blog = ({
                 })}
 
                 {isSpot && (
-                  <Flex flexDirection="column" py="8">
+                  <Flex flexDirection="column" py="8" gap="4">
                     <Flex
                       flexDirection={{ base: "column", lg: "row" }}
                       id="detail"

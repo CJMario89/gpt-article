@@ -23,6 +23,7 @@
   "No prefecture in favorites yet": "まだ都道府県に場所がありません",
   "No city in favorites yet": "まだ市町村に場所がありません",
   "No spot in favorites yet": "まだスポットに場所がありません",
+  "No result": "結果がありません",
   "Spots in {city}": "{city}のスポット",
   "Cities in {prefecture}": "{prefecture}の市町村",
   "Cities nearby {city}": "{city}の近隣市町村",

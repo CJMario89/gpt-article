@@ -1,10 +1,13 @@
 import {
-  Divider,
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
   DrawerContent,
-  DrawerHeader,
   DrawerOverlay,
   Flex,
   Heading,
@@ -18,18 +21,38 @@ const SearchDrawer = ({ onClose, isOpen }) => {
   return (
     <Drawer placement="top" size="xl" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay />
-      <DrawerContent>
-        <DrawerHeader borderBottomWidth="1px">
-          <Heading as="h2">{t("Search")}</Heading>
-          <DrawerCloseButton mt="1" />
-        </DrawerHeader>
-        <DrawerBody>
+      <DrawerContent w="full" h="100dvh">
+        <DrawerCloseButton mt="1" right={{ base: "1", md: "2" }} />
+        <DrawerBody maxW="container.xl" m="0 auto" w="full">
           <Flex flexDirection="column" rowGap="4">
-            <Heading as="h3">{t("Regional Search")}</Heading>
-            <RegionalSearch onSearch={onClose} zIndex={1} />
-            <Divider />
-            <Heading as="h3">{t("Text Search")}</Heading>
-            <Search onSearch={onClose} />
+            <Accordion defaultIndex={[0]}>
+              <AccordionItem>
+                <AccordionButton
+                  as={Flex}
+                  cursor="pointer"
+                  justifyContent="space-between"
+                >
+                  <Heading as="h4">{t("Regional Search")}</Heading>
+                  <AccordionIcon w="6" h="6" />
+                </AccordionButton>
+                <AccordionPanel>
+                  <RegionalSearch onSearch={onClose} zIndex={1} />
+                </AccordionPanel>
+              </AccordionItem>
+              <AccordionItem>
+                <AccordionButton
+                  as={Flex}
+                  cursor="pointer"
+                  justifyContent="space-between"
+                >
+                  <Heading as="h4">{t("Text Search")}</Heading>
+                  <AccordionIcon w="6" h="6" />
+                </AccordionButton>
+                <AccordionPanel>
+                  <Search onSearch={onClose} />
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </Flex>
         </DrawerBody>
       </DrawerContent>

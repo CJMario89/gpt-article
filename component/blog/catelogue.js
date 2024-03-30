@@ -33,8 +33,11 @@ const BackToTop = ({ onClick, catelogueMobileRef }) => {
     };
 
     addEventListener("wheel", showBackToTop);
+    addEventListener("scroll", showBackToTop);
+
     return () => {
       removeEventListener("wheel", showBackToTop);
+      removeEventListener("scroll", showBackToTop);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -82,9 +85,11 @@ const Catelogue = ({ contents, place, isSpot }) => {
       observerContent(ref, isDesktop);
     };
     window.addEventListener("wheel", wheelEvent);
+    window.addEventListener("scroll", wheelEvent);
     observerContent(ref, isDesktop);
     return () => {
       window.removeEventListener("wheel", wheelEvent);
+      window.removeEventListener("scroll", wheelEvent);
     };
   }, [isDesktop]);
   return (
@@ -94,7 +99,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
           <Flex
             position="fixed"
             right="0"
-            bottom="70px"
+            bottom="4"
             overflow="hidden"
             zIndex={101}
             columnGap="1"
@@ -148,7 +153,7 @@ const Catelogue = ({ contents, place, isSpot }) => {
         ref={ref}
         display={{ base: "none", lg: "flex" }}
         position={{ base: "fixed", lg: "sticky" }}
-        top={{ base: "84", lg: "84px" }}
+        top={{ base: "56px", lg: "84px" }}
         border="1px solid"
         borderColor="primary.300"
         borderRadius="lg"

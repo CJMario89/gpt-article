@@ -1,4 +1,5 @@
 import {
+  Button,
   Container,
   Flex,
   Heading,
@@ -79,7 +80,8 @@ const Index = ({ info, region, prefecture, city }) => {
     <Container
       as={Flex}
       maxW="container.lg"
-      p="8"
+      p={{ base: "4", lg: "8" }}
+      py={{ base: "2", lg: "8" }}
       flexDirection="column"
       alignItems="flex-start"
       rowGap="4"
@@ -93,7 +95,7 @@ const Index = ({ info, region, prefecture, city }) => {
       <Heading as="h2" alignSelf="flex-start">
         {info?.city}
       </Heading>
-      <Flex position="relative" w="full">
+      <Flex position="relative" w="full" columnGap="2">
         <Input
           type="text"
           pl="8"
@@ -113,6 +115,9 @@ const Index = ({ info, region, prefecture, city }) => {
           transform="translateY(-50%)"
           color="neutral.800"
         />
+        <Button variant="solid" type="submit">
+          {t("Search")}
+        </Button>
       </Flex>
       {places &&
         !isLoading &&

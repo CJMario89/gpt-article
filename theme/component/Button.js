@@ -1,7 +1,7 @@
 const Button = {
   baseStyle: {
     // ...define your base styles
-    borderRadius: "xl",
+    borderRadius: "md",
   },
   sizes: {
     md: {

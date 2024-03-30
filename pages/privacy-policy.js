@@ -8,9 +8,13 @@ const PrivacyPolicy = () => {
       flexDirection="column"
       gap="4"
       maxW="container.lg"
-      py="4"
+      py={{ base: "1", lg: "4" }}
+      px="8"
+      lineHeight="8"
     >
-      <Heading as="h2">Privacy Policy</Heading>
+      <Heading as="h2" color="primary.700">
+        Privacy Policy
+      </Heading>
       <p>Last updated: February 09, 2024</p>
       <p>
         This Privacy Policy describes Our policies and procedures on the

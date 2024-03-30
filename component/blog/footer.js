@@ -302,7 +302,7 @@ const Footer = () => {
       bgColor="primary.900"
       mt="16"
       pt="8"
-      pb={{ base: "55px", md: "0" }}
+      pb={{ base: "30px", md: "0" }}
     >
       <Container
         maxW="container.lg"
@@ -334,7 +334,13 @@ const Footer = () => {
           </Flex>
         </Flex>
       </Container>
-      <Text color="neutral.50" fontSize="sm" alignSelf="center" pt="8" pb="4">
+      <Text
+        color="neutral.50"
+        fontSize="sm"
+        alignSelf="center"
+        pt={{ base: "4", lg: "8" }}
+        pb={{ base: "0", lg: "4" }}
+      >
         © 2020-2024 japantour.site
       </Text>
     </Flex>
