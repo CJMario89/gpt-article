@@ -1,7 +1,7 @@
 import { imageInstance } from "backend-service/common";
 import Jimp from "jimp";
 
-const version = "3";
+const version = "4";
 
 export const batchBlogImage = async () => {
   // await batchBlogCityImage();
@@ -16,7 +16,7 @@ const batchBlogCityImage = async () => {
   console.log(locations);
   locations.slice(0, 10000).map(({ fetched, prefecture, city }) => {
     Jimp.read(
-      `./public/photo/${fetched}/blog/city/${prefecture}_${city}_${fetched}.webp`,
+      `./public/photo/${fetched}/image/city/${prefecture}_${city}_${fetched}.webp`,
       async (err, image) => {
         if (err) {
           console.error(err);
@@ -58,7 +58,7 @@ const batchBlogSpotImage = async () => {
       const { fetched, city, spot } = locations[i];
       await new Promise((resolve) => {
         Jimp.read(
-          `./public/photo/${fetched}/blog/spot/${city}_${spot}_${fetched}.webp`,
+          `./public/photo/${fetched}/image/spot/${city}_${spot}_${fetched}.webp`,
           async (err, image) => {
             if (err) {
               console.error(err);
@@ -104,7 +104,7 @@ const batchBlogPrefectureImage = async () => {
     .select("region", "prefecture", "fetched");
   locations.slice(0, 10000).map(({ fetched, prefecture, region }) => {
     Jimp.read(
-      `./public/photo/${fetched}/blog/prefecture/${region}_${prefecture}_${fetched}.webp`,
+      `./public/photo/${fetched}/image/prefecture/${region}_${prefecture}_${fetched}.webp`,
       async (err, image) => {
         if (err) {
           console.error(err);

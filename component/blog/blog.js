@@ -173,7 +173,6 @@ const Blog = ({
       }
     );
   };
-
   const friendlyList = goodForChildren
     ? [
         {
@@ -398,25 +397,61 @@ const Blog = ({
                   </Text>
                 </Box>
                 {contents.map((content, i) => {
-                  return i === 11 && images?.[1] ? (
-                    <Flex key={i} flexDirection="column" mt="8">
-                      <PhotoDisplayer
-                        image={images?.[1]}
-                        name={place?.name}
-                        region={region}
-                        prefecture={prefecture}
-                        city={city}
-                        spot={spot}
-                      />
+                  if (i === 6 && images?.[1]) {
+                    return (
+                      <Flex key={i} flexDirection="column" mt="8">
+                        <PhotoDisplayer
+                          image={images?.[1]}
+                          name={place?.name}
+                          region={region}
+                          prefecture={prefecture}
+                          city={city}
+                          spot={spot}
+                        />
+                        <Markdown key={i} className="_md" id={`M${i}`}>
+                          {content}
+                        </Markdown>
+                      </Flex>
+                    );
+                  } else if (i === 14 && images?.[2]) {
+                    return (
+                      <Flex key={i} flexDirection="column" mt="8">
+                        <PhotoDisplayer
+                          image={images?.[2]}
+                          name={place?.name}
+                          region={region}
+                          prefecture={prefecture}
+                          city={city}
+                          spot={spot}
+                        />
+                        <Markdown key={i} className="_md" id={`M${i}`}>
+                          {content}
+                        </Markdown>
+                      </Flex>
+                    );
+                  } else if (i === 20 && images?.[3]) {
+                    return (
+                      <Flex key={i} flexDirection="column" mt="8">
+                        <PhotoDisplayer
+                          image={images?.[3]}
+                          name={place?.name}
+                          region={region}
+                          prefecture={prefecture}
+                          city={city}
+                          spot={spot}
+                        />
+                        <Markdown key={i} className="_md" id={`M${i}`}>
+                          {content}
+                        </Markdown>
+                      </Flex>
+                    );
+                  } else {
+                    return (
                       <Markdown key={i} className="_md" id={`M${i}`}>
                         {content}
                       </Markdown>
-                    </Flex>
-                  ) : (
-                    <Markdown key={i} className="_md" id={`M${i}`}>
-                      {content}
-                    </Markdown>
-                  );
+                    );
+                  }
                 })}
 
                 {isSpot && (

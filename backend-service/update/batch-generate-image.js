@@ -3,7 +3,7 @@ import { getGooglePhoto } from "backend-service/generate";
 
 // const requestNumber = 10000;
 const requestNumber = 10000;
-const version = "3";
+const version = "4";
 export const batchGenerateImage = async () => {
   // await batchCityImage();
   // await batchSpotImage();
