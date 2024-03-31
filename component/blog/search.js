@@ -46,7 +46,6 @@ const Search = ({ onSearch, ...restProps }) => {
     { type, text: searchText, region, locale },
     { enabled: Boolean(searchText) }
   );
-  console.log(data);
   const places = data?.pages[0]?.places ?? [];
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   return (

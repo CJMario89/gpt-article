@@ -59,7 +59,6 @@ const RegionalSearch = ({
     prefecture: prefecture.value,
     enabled: Boolean(prefecture.value) && prefecture.value !== "All",
   });
-  console.log(region);
   const placesMenu = [
     {
       name: t("Region"),
