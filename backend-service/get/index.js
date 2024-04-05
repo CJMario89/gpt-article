@@ -8,3 +8,4 @@ export * from "./get-near-places";
 export * from "./prefecture-info";
 export * from "./search-by-locale";
 export * from "./places-with-translation";
+export * from "./popular-places";

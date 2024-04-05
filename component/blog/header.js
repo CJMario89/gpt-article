@@ -127,8 +127,8 @@ const Header = () => {
             <Flex
               w="full"
               maxW={{ base: "auto", lg: "72" }}
-              justifyContent={{ base: "flex-end", lg: "space-between" }}
-              gap="6"
+              justifyContent={{ base: "flex-end", lg: "flex-end" }}
+              gap={{ base: "6", md: "20" }}
               alignItems="center"
             >
               {navbarLinks.map((link, index) => {

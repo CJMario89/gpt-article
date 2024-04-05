@@ -151,7 +151,7 @@ const Regions = () => {
       w={{ base: "100%", md: "100%" }}
     >
       <Heading w="full" color="neutral.200" as="h3">
-        {t("Region")}
+        {t("Region")} ({t("Introduction")})
       </Heading>
       <Flex gap="2" flexWrap="wrap">
         {Array.isArray(regions) &&
@@ -179,7 +179,7 @@ const Prefectures = () => {
       w={{ base: "100%", md: "100%" }}
     >
       <Heading w="full" as="h3" color="neutral.200">
-        {t("Prefecture")}
+        {t("Prefecture")} ({t("Introduction")})
       </Heading>
       <Flex gap="2" flexWrap="wrap">
         {Array.isArray(prefectures) &&
@@ -188,6 +188,66 @@ const Prefectures = () => {
               <Link
                 key={prefecture + region + i}
                 href={`/article/${region}/${prefecture}`}
+                {...linkStyle}
+              >
+                {t(prefecture)}
+              </Link>
+            );
+          })}
+      </Flex>
+    </Flex>
+  );
+};
+
+const PopularRegions = () => {
+  const t = useTranslations();
+  return (
+    <Flex
+      flexDirection="column"
+      gap="4"
+      borderBottom="1px solid"
+      borderColor="neutral.50"
+      pb="5"
+      w={{ base: "100%", md: "100%" }}
+    >
+      <Heading w="full" color="neutral.200" as="h3">
+        {t("Region")} ({t("Top 30 spots")})
+      </Heading>
+      <Flex gap="2" flexWrap="wrap">
+        {Array.isArray(regions) &&
+          regions.map((region, i) => {
+            return (
+              <Link key={region + i} href={`/popular/${region}`} {...linkStyle}>
+                {t(region)}
+              </Link>
+            );
+          })}
+      </Flex>
+    </Flex>
+  );
+};
+
+const PopularPrefectures = () => {
+  const t = useTranslations();
+  return (
+    <Flex
+      flexDirection="column"
+      gap="4"
+      borderBottom="1px solid"
+      borderColor="neutral.50"
+      pb="5"
+      w={{ base: "100%", md: "100%" }}
+    >
+      <Heading w="full" as="h3" color="neutral.200">
+        {t("Prefecture")} ({t("Top 30 spots")})
+      </Heading>
+      <Flex gap="2" flexWrap="wrap">
+        {Array.isArray(prefectures) &&
+          prefectures.map(({ prefecture, region, i }) => {
+            return (
+              <Link
+                key={prefecture + region + i}
+                href={`/popular/${region}/${prefecture}`}
                 {...linkStyle}
               >
                 {t(prefecture)}
@@ -273,7 +333,7 @@ const Language = () => {
 const Contact = () => {
   const t = useTranslations();
   return (
-    <Flex gap="4" flexDirection="column" mt="auto">
+    <Flex gap="4" flexDirection="column">
       <Heading w="full" as="h3" color="neutral.200">
         {t("Contact")}
       </Heading>
@@ -312,10 +372,8 @@ const Footer = () => {
       >
         <Flex flexDirection={{ base: "column", md: "row" }} w="full" gap="12">
           <Flex flexDirection="column" gap="8" flex="1" w="full">
-            <Regions />
-            <Prefectures />
-          </Flex>
-          <Flex flexDirection="column" gap="8" flex="1" w="full">
+            <PopularRegions />
+            <PopularPrefectures />
             <Flex flexDirection="column" gap="4">
               <Heading as="h3" color="neutral.200">
                 {t("Search")}
@@ -328,8 +386,14 @@ const Footer = () => {
                 textStlyeProps={textStlyeProps}
               />
             </Flex>
-            <Language />
-            <Contact />
+          </Flex>
+          <Flex flexDirection="column" gap="8" flex="1" w="full">
+            <Regions />
+            <Prefectures />
+            <Flex gap="12">
+              <Contact />
+              <Language />
+            </Flex>
             <Claims />
           </Flex>
         </Flex>

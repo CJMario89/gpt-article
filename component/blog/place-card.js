@@ -18,7 +18,6 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
     prefecture,
     city,
     spot,
-    title,
     description,
     imageUrl,
     articleUrl,
@@ -121,7 +120,7 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
             {placeName?.[type]}
           </Heading>
         </Tooltip>
-        {isHorizontal && (
+        {/* {isHorizontal && (
           <Tooltip label={title}>
             <Heading
               as="h4"
@@ -137,13 +136,13 @@ const PlaceCard = ({ onClick, place, isHorizontal, ...restProps }) => {
               {title}
             </Heading>
           </Tooltip>
-        )}
+        )} */}
         <Text
-          height="72px"
+          height="96px"
           overflow="hidden"
           style={{
             display: "-webkit-box",
-            WebkitLineClamp: "3",
+            WebkitLineClamp: "4",
             WebkitBoxOrient: "vertical",
           }}
           color="neutral.700"
