@@ -128,14 +128,18 @@ const Blog = ({
       return { name: city, type: "city", translation: articleIndex?.city };
     } else {
       return {
-        name: prefecture === "All" ? region : prefecture,
-        type: prefecture === "All" ? "region" : "prefecture",
-        translation: articleIndex?.prefecture,
+        name: prefecture === "All" || !prefecture ? region : prefecture,
+        type: prefecture === "All" || !prefecture ? "region" : "prefecture",
+        translation:
+          prefecture === "All" || !prefecture
+            ? articleIndex?.region
+            : articleIndex?.prefecture,
       };
     }
   }, [
     articleIndex?.city,
     articleIndex?.prefecture,
+    articleIndex?.region,
     articleIndex?.spot,
     city,
     isCity,
@@ -326,10 +330,18 @@ const Blog = ({
                           });
                         }
                       : () => {
+                          console.log(
+                            images?.[0]?.imageUrl?.replace("blog", "preview")
+                          );
                           addFavoritePlace({
                             name: place?.name,
                             type: place?.type,
+
                             ...info,
+                            imageUrl: images?.[0]?.imageUrl?.replace(
+                              "blog",
+                              "preview"
+                            ),
                           });
                         }
                   }

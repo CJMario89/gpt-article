@@ -9,7 +9,7 @@ const initValue = {
 
 const key = "favorite-places";
 const useFavoritePlaces = (place) => {
-  const { type = "", name = "", ...info } = place ?? {};
+  const { type = "", name = "" } = place ?? {};
   const [favoritePlace, setFavoritePlace] = useLocalStorageState(
     key,
     initValue
@@ -23,8 +23,9 @@ const useFavoritePlaces = (place) => {
     }
   }, [favoritePlace, name, type]);
 
-  const addFavoritePlace = () => {
+  const addFavoritePlace = (place) => {
     if (isFavorited) return;
+    const { type = "", name = "", ...info } = place ?? {};
     setFavoritePlace((favoritePlace) => {
       const newPlace = favoritePlace?.[type] ? favoritePlace : initValue;
       if (newPlace[type]?.some((place) => place.name === name)) return newPlace;
