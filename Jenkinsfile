@@ -36,17 +36,17 @@ pipeline {
                 }
             }
         }
-
-        stage("Start Application") {
-            steps {
-                script {
-                    // Stop any running instances of the application
-                    sh "pm2 delete all || true" // Replace <app_name> with the name of your application managed by pm2
+        //// change to manual start
+        // stage("Start Application") {
+        //     steps {
+        //         script {
+        //             // Stop any running instances of the application
+        //             sh "pm2 delete all || true" // Replace <app_name> with the name of your application managed by pm2
                     
-                    // Start the application with pm2
-                    sh "pm2 start 'npm run start'" // Replace <app_name> with the name of your application managed by pm2
-                }
-            }
-        }
+        //             // Start the application with pm2
+        //             sh "pm2 start 'npm run start'" // Replace <app_name> with the name of your application managed by pm2
+        //         }
+        //     }
+        // }
     }
 }
