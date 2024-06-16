@@ -1,28 +1,28 @@
 import {
-  getAllPlaces,
+  // getAllPlaces,
   getArticle,
   getNearPlaces,
   search,
 } from "backend-service/get";
 import { Blog } from "component/blog";
 
-export const getStaticPaths = async ({ locales }) => {
-  const prefectures = await getAllPlaces({ type: "prefecture" });
-  return {
-    paths: prefectures.flatMap(({ region, prefecture }) => {
-      return locales.map((locale) => ({
-        params: {
-          region,
-          prefecture,
-        },
-        locale,
-      }));
-    }),
-    fallback: true,
-  };
-};
+// export const getStaticPaths = async ({ locales }) => {
+//   const prefectures = await getAllPlaces({ type: "prefecture" });
+//   return {
+//     paths: prefectures.flatMap(({ region, prefecture }) => {
+//       return locales.map((locale) => ({
+//         params: {
+//           region,
+//           prefecture,
+//         },
+//         locale,
+//       }));
+//     }),
+//     fallback: true,
+//   };
+// };
 
-export const getStaticProps = async ({ params, locale }) => {
+export const getServerSideProps = async ({ params, locale }) => {
   const { region, prefecture } = params;
   const nearPrefectures = await getNearPlaces({
     type: "prefecture",

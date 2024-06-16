@@ -19,7 +19,7 @@
 //   };
 // };
 
-// export const getStaticProps = async ({ params }) => {
+// export const getServerSideProps = async ({ params }) => {
 //   const { country, city, spot } = params;
 //   const article = await getArticle({ type: "spot", country, city, spot });
 //   return {

@@ -7,7 +7,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import { getPrefectureInfo, getPrefectures } from "backend-service/get";
+import { getPrefectureInfo } from "backend-service/get";
 import { Seo } from "component/blog";
 import RegionBlock from "component/blog/region-block";
 import { useGetPrefectures } from "hooks/db";
@@ -27,26 +27,26 @@ const regions = [
   "Okinawa",
 ];
 
-export const getStaticPaths = async () => {
-  const locations = await Promise.all(
-    regions.map(async (region) => {
-      const _prefectures = await getPrefectures({ region });
-      const prefectures = ["All", ..._prefectures];
-      return prefectures.map((prefecture) => ({ region, prefecture }));
-    })
-  );
-  return {
-    paths: locations.flat(1).map(({ region, prefecture }) => ({
-      params: {
-        region,
-        prefecture,
-      },
-    })),
-    fallback: true,
-  };
-};
+// export const getStaticPaths = async () => {
+//   const locations = await Promise.all(
+//     regions.map(async (region) => {
+//       const _prefectures = await getPrefectures({ region });
+//       const prefectures = ["All", ..._prefectures];
+//       return prefectures.map((prefecture) => ({ region, prefecture }));
+//     })
+//   );
+//   return {
+//     paths: locations.flat(1).map(({ region, prefecture }) => ({
+//       params: {
+//         region,
+//         prefecture,
+//       },
+//     })),
+//     fallback: true,
+//   };
+// };
 
-export const getStaticProps = async ({ params }) => {
+export const getServerSideProps = async ({ params }) => {
   const { region, prefecture } = params;
   const prefectureInfo = await getPrefectureInfo({ region, prefecture });
   return { props: { region, prefecture, prefectureInfo } };

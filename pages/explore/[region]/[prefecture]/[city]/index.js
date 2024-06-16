@@ -7,7 +7,7 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import SearchIcon from "assets/search.svg";
-import { getAllPlaces, getArticle } from "backend-service/get";
+import { getArticle } from "backend-service/get";
 import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import RouterTab from "component/blog/router-tab";
 import { useGetSearch } from "hooks/db";
@@ -16,24 +16,24 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export const getStaticPaths = async ({ locales }) => {
-  const cities = await getAllPlaces({ type: "city" });
-  return {
-    paths: cities.flatMap(({ region, prefecture, city }) => {
-      return locales.map((locale) => ({
-        params: {
-          region,
-          prefecture,
-          city,
-        },
-        locale,
-      }));
-    }),
-    fallback: true,
-  };
-};
+// export const getStaticPaths = async ({ locales }) => {
+//   const cities = await getAllPlaces({ type: "city" });
+//   return {
+//     paths: cities.flatMap(({ region, prefecture, city }) => {
+//       return locales.map((locale) => ({
+//         params: {
+//           region,
+//           prefecture,
+//           city,
+//         },
+//         locale,
+//       }));
+//     }),
+//     fallback: true,
+//   };
+// };
 
-export const getStaticProps = async ({ params, locale }) => {
+export const getServerSideProps = async ({ params, locale }) => {
   const { region, prefecture, city } = params;
   // const regionData = await getPlacesWithTranslation({ region, locale });
   // const prefectureData = await getPlacesWithTranslation({ prefecture, locale });

@@ -1,33 +1,33 @@
 import { getArticle, search } from "backend-service/get";
 import { Blog } from "component/blog";
 
-const regions = [
-  "Hokkaido",
-  "Tohoku",
-  "Kanto",
-  "Chubu",
-  "Kansai",
-  "Chugoku",
-  "Shikoku",
-  "Kyushu",
-  "Okinawa",
-];
+// const regions = [
+//   "Hokkaido",
+//   "Tohoku",
+//   "Kanto",
+//   "Chubu",
+//   "Kansai",
+//   "Chugoku",
+//   "Shikoku",
+//   "Kyushu",
+//   "Okinawa",
+// ];
 
-export const getStaticPaths = async ({ locales }) => {
-  return {
-    paths: regions.flatMap((region) => {
-      return locales.map((locale) => ({
-        params: {
-          region,
-        },
-        locale,
-      }));
-    }),
-    fallback: true,
-  };
-};
+// export const getStaticPaths = async ({ locales }) => {
+//   return {
+//     paths: regions.flatMap((region) => {
+//       return locales.map((locale) => ({
+//         params: {
+//           region,
+//         },
+//         locale,
+//       }));
+//     }),
+//     fallback: true,
+//   };
+// };
 
-export const getStaticProps = async ({ params, locale }) => {
+export const getServerSideProps = async ({ params, locale }) => {
   const { region } = params;
   const prefecturesIn = (
     await search({

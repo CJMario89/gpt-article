@@ -5,26 +5,26 @@ import {
   Heading,
   Divider,
 } from "@chakra-ui/react";
-import { getAllPlaces, getPopularPlaces } from "backend-service/get";
+import { getPopularPlaces } from "backend-service/get";
 import { PlaceCard, Seo } from "component/blog";
 import { useTranslations } from "next-intl";
 
-export const getStaticPaths = async ({ locales }) => {
-  const prefectures = await getAllPlaces({ type: "region" });
-  return {
-    paths: prefectures.flatMap(({ region }) => {
-      return locales.map((locale) => ({
-        params: {
-          region,
-        },
-        locale,
-      }));
-    }),
-    fallback: true,
-  };
-};
+// export const getStaticPaths = async ({ locales }) => {
+//   const prefectures = await getAllPlaces({ type: "region" });
+//   return {
+//     paths: prefectures.flatMap(({ region }) => {
+//       return locales.map((locale) => ({
+//         params: {
+//           region,
+//         },
+//         locale,
+//       }));
+//     }),
+//     fallback: true,
+//   };
+// };
 
-export const getStaticProps = async ({ params, locale }) => {
+export const getServerSideProps = async ({ params, locale }) => {
   const { region } = params;
   const spots = await getPopularPlaces({
     type: "region",
