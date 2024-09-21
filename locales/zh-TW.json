@@ -1,5 +1,5 @@
 {
-  "All":"全部",
+  "All": "全部",
   "Region": "地區",
   "Prefecture": "縣",
   "City": "市",
@@ -9,6 +9,8 @@
   "Search": "搜尋",
   "Regional Search": "地區搜尋",
   "Text Search": "文字搜尋",
+  "Search prefecture": "搜尋縣",
+  "Explore prefecture": "探索縣",
   "Search Place": "搜尋地點",
   "Contact": "聯絡",
   "About": "關於",

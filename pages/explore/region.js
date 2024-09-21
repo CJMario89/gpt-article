@@ -9,16 +9,21 @@ import SearchIcon from "assets/search.svg";
 import { Pagination, PlaceCard, PlaceCardSkeleton } from "component/blog";
 import { useGetSearch } from "hooks/db";
 import usePage from "hooks/use-page";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
 const Index = () => {
   const [page, setPage] = usePage();
   const [isDesktop] = useMediaQuery("(min-width: 768px)");
   const [text, setText] = useState("");
+  const { locale } = useRouter();
+  const t = useTranslations();
   const { fetchNextPage, data, isLoading, isFetchingNextPage } = useGetSearch({
     type: "prefecture",
     text,
     limit: 4,
+    locale,
   });
   const index =
     data?.pageParams.indexOf(page) > 0 ? data?.pageParams.indexOf(page) : 0;
@@ -34,14 +39,14 @@ const Index = () => {
       rowGap="4"
     >
       <Heading as="h2" alignSelf="flex-start">
-        Explore Prefecture
+        {t("Explore prefecture")}
       </Heading>
       <Flex position="relative" w="full">
         <Input
           type="text"
           pl="8"
           pr="6"
-          placeholder="Search prefecture"
+          placeholder={t("Search prefecture")}
           background="rgba(245, 245, 245, 0.2)"
           onInput={(e) => {
             setPage(1);

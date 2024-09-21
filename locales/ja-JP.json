@@ -1,6 +1,6 @@
 {
-  "All":"全て",
-  "Region":"地域",
+  "All": "全て",
+  "Region": "地域",
   "Prefecture": "都道府県",
   "City": "市町村",
   "Spot": "スポット",
@@ -10,6 +10,8 @@
   "Regional Search": "地域検索",
   "Text Search": "テキスト検索",
   "Search Place": "場所を検索",
+  "Search prefecture": "都道府県を検索",
+  "Explore prefecture": "都道府県を探索",
   "About": "情報",
   "Catelogue": "カタログ",
   "Contact": "お問い合わせ",
